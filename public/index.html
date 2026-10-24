@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -7,8 +6,92 @@
 <title>Future Investment AI</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,Tahoma,sans-serif;background:#0b1020;color:white;padding:20px}
-.container{max-width:600px;margin:40px auto}
-.card{background:#17233b;border:1px solid #30415e;border-radius:18px;padding:24px;margin-bottom:20px}
-h1{color:#30e0ae;text-align:center}
-p{line
+body{margin:0;padding:20px;background:#0b1020;color:white;font-family:Arial,sans-serif}
+.container{max-width:550px;margin:30px auto}
+.card{background:#17233b;border:1px solid #30415e;border-radius:15px;padding:22px;margin-bottom:18px}
+h1{text-align:center;color:#30e0ae}
+h2{font-size:20px}
+p{line-height:1.8}
+.notice{background:#292b42;padding:12px;border-radius:8px;line-height:1.8}
+label{display:block;margin:12px 0 6px}
+input{width:100%;padding:12px;border-radius:8px;border:1px solid #536582;background:#0b1020;color:white}
+button{width:100%;padding:13px;margin-top:15px;border:0;border-radius:8px;background:#30e0ae;color:#062019;font-size:16px;font-weight:bold}
+#message{margin-top:15px;line-height:1.8;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<main class="container">
+<section class="card">
+<h1>Future Investment AI</h1>
+<p>مرحبًا بك في منصتنا التجريبية.</p>
+<div class="notice">
+هذه نسخة تجريبية للتسجيل والدخول فقط. لا توجد إيداعات أو سحوبات أو استثمارات أو أرباح مالية حقيقية.
+</div>
+<div id="message"></div>
+</section>
+
+<section class="card">
+<h2>إنشاء حساب تجريبي</h2>
+<form id="register">
+<label>الاسم</label>
+<input name="name" required minlength="2">
+<label>البريد الإلكتروني</label>
+<input name="email" type="email" required>
+<label>كلمة المرور (8 أحرف على الأقل)</label>
+<input name="password" type="password" required minlength="8">
+<label>كود الدعوة (اختياري)</label>
+<input name="referralCode">
+<button type="submit">إنشاء حساب</button>
+</form>
+</section>
+
+<section class="card">
+<h2>تسجيل الدخول</h2>
+<form id="login">
+<label>البريد الإلكتروني</label>
+<input name="email" type="email" required>
+<label>كلمة المرور</label>
+<input name="password" type="password" required>
+<button type="submit">دخول</button>
+</form>
+</section>
+<p style="text-align:center;font-size:13px;color:#aebbd0">
+نسخة تجريبية فقط. لا تدخل معلوماتك البنكية.
+</p>
+</main>
+
+<script>
+const message=document.getElementById('message');
+
+async function send(url,form){
+  message.textContent='جارٍ المعالجة...';
+  const data=Object.fromEntries(new FormData(form).entries());
+  try{
+    const response=await fetch(url,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(data)
+    });
+    const result=await response.json();
+    if(!response.ok) throw new Error(result.error||'حدث خطأ');
+    message.textContent=result.message||'تمت العملية بنجاح';
+    message.style.color='#30e0ae';
+    form.reset();
+  }catch(error){
+    message.textContent=error.message||'تعذر الاتصال بالخادم';
+    message.style.color='#ff9999';
+  }
+}
+
+document.getElementById('register').addEventListener('submit',function(e){
+  e.preventDefault();
+  send('/api/register',this);
+});
+
+document.getElementById('login').addEventListener('submit',function(e){
+  e.preventDefault();
+  send('/api/login',this);
+});
+</script>
+</body>
+</html>
