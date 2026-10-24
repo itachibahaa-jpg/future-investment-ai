@@ -5,7 +5,7 @@
   "description": "Demo authentication and referral tracking backend; no financial transactions.",
   "main": "server.js",
   "scripts": {"start": "node server.js"},
-  "engines": {"node": ">=20"},
+  "engines": {"node": "node": "22.x"
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^11.8.1",
