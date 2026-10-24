@@ -2,38 +2,80 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Future Investment AI</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;padding:16px;background:#0b1020;color:#fff;font-family:Arial,sans-serif}
-.container{max-width:550px;margin:25px auto}
-.card{background:#17233b;border:1px solid #30415e;border-radius:15px;padding:20px;margin-bottom:15px}
-h1{text-align:center;color:#30e0ae}
+body{background:#0b1020;color:white;font-family:Arial,sans-serif;margin:0;padding:18px}
+main{max-width:500px;margin:auto}
+.card{background:#17233b;padding:20px;margin-bottom:16px;border-radius:14px}
+h1{color:#30e0ae;text-align:center}
 label{display:block;margin:12px 0 6px}
-input{width:100%;padding:13px;border-radius:8px;border:1px solid #536582;background:#0b1020;color:white;font-size:16px}
-button{width:100%;padding:13px;margin-top:14px;border:0;border-radius:8px;background:#30e0ae;color:#062019;font-size:16px;font-weight:bold}
-#message{display:none;padding:12px;margin-top:12px;border-radius:8px;overflow-wrap:anywhere;line-height:1.8}
-.small{color:#c4cfe0;font-size:14px;line-height:1.8}
+input{width:100%;padding:12px;box-sizing:border-box;background:#0b1020;color:white;border:1px solid #536582;border-radius:7px}
+button{width:100%;padding:13px;margin-top:14px;background:#30e0ae;border:0;border-radius:7px;font-weight:bold}
+#msg{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8}
+.small{line-height:1.8;color:#cbd5e1}
 </style>
 </head>
 <body>
-<main class="container">
-
+<main>
 <section class="card">
 <h1>Future Investment AI</h1>
-<p>مرحبًا بك في منصتنا التجريبية.</p>
-<p class="small">هذه نسخة تجريبية فقط. لا توجد إيداعات أو سحوبات أو أرباح مالية حقيقية.</p>
-<div id="message"></div>
+<p class="small">مرحبًا بك في المنصة التجريبية. لا توجد معاملات مالية حقيقية.</p>
+<p id="msg"></p>
 </section>
 
-<section class="card" id="registerCard">
+<section class="card" id="reg">
 <h2>إنشاء حساب</h2>
-<form id="registerForm">
-<label>الاسم</label>
-<input name="name" required minlength="2">
-<label>البريد الإلكتروني</label>
-<input name="email" type="email" required>
-<label>كلمة المرور (8 أحرف على الأقل)</label>
-<input name="password" type="password" required minlength="8">
-<label>كود الدعوة (اختياري)</
+<form id="rf">
+<label>الاسم</label><input name="name" required minlength="2">
+<label>البريد الإلكتروني</label><input name="email" type="email" required>
+<label>كلمة المرور (8 أحرف على الأقل)</label><input name="password" type="password" required minlength="8">
+<label>كود الدعوة (اختياري)</label><input name="referralCode">
+<button>إنشاء حساب</button>
+</form>
+</section>
+
+<section class="card" id="log">
+<h2>تسجيل الدخول</h2>
+<form id="lf">
+<label>البريد الإلكتروني</label><input name="email" type="email" required>
+<label>كلمة المرور</label><input name="password" type="password" required>
+<button>دخول</button>
+</form>
+</section>
+
+<section class="card" id="account" hidden>
+<h2>حسابك التجريبي</h2>
+<p id="name"></p>
+<p id="email"></p>
+<p>كود الدعوة: <b id="code"></b></p>
+<p>عدد الدعوات: <b id="count">0</b></p>
+<p class="small">لا توجد إيداعات أو سحوبات أو أرباح حقيقية.</p>
+<button type="button" id="logout">تسجيل الخروج</button>
+</section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+function msg(t){$('msg').textContent=t}
+async function api(url,data,token){
+ const opt={method:data?'POST':'GET',headers:{}};
+ if(data){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(data)}
+ if(token)opt.headers.Authorization='Bearer '+token;
+ const r=await fetch(url,opt);
+ const j=await r.json().catch(()=>({}));
+ if(!r.ok)throw Error(j.error||'حدث خطأ في الخادم');
+ return j;
+}
+async function showAccount(token){
+ const d=await api('/api/me',null,token);
+ $('name').textContent='مرحبًا '+d.user.name;
+ $('email').textContent=d.user.email;
+ $('code').textContent=d.user.referralCode||'غير متوفر';
+ $('count').textContent=d.referralCount??0;
+ $('reg').hidden=true;
+ $('log').hidden=true;
+ $('account').hidden=false;
+ msg('تم الدخول بنجاح.');
+}
+async function submit
