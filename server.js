@@ -70,7 +70,7 @@ app.post('/api/login', async (req,res) => {
  res.json({ token: issueToken(user), user: publicUser(user) });
 });
 app.get('/api/me', auth, (req,res) => {
- const user = db.prepare('SELECT * FROM users WHERE id=? AND status="active"').get(req.userId);
+ const user = db.prepare("SELECT * FROM users WHERE id=? AND status='active'").get(req.userId);
  if (!user) return res.status(401).json({ error: 'الحساب غير موجود أو غير نشط.' });
  const referralCount = countRefs.get(user.id).n;
  res.json({ user: publicUser(user), referralCount, referralGoal: 10, proposedRewardDA: referralCount >= 10 ? 5000 : null, rewardStatus: 'not_enabled_no_payment', notice: 'الوصول إلى 10 دعوات لا ينشئ رصيدًا ماليًا أو حقًا بالدفع تلقائيًا؛ المكافأة غير مفعّلة في النسخة التجريبية.' });
