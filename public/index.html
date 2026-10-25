@@ -138,5 +138,69 @@ $('logout').addEventListener('click', () => {
   }
 })();
 </script>
+async function submit(event) {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const button = form.querySelector('button');
+    const isRegister = form.id === 'rf';
+
+    button.disabled = true;
+    msg('جارٍ إنشاء الحساب...');
+
+    const data = Object.fromEntries(
+        new FormData(form).entries()
+    );
+
+    try {
+        const result = await api(
+            isRegister ? '/api/register' : '/api/login',
+            data
+        );
+
+        if (!result.token) {
+            throw new Error('لم يتم إنشاء جلسة الدخول.');
+        }
+
+        localStorage.setItem(
+            'futureAI_demo_token',
+            result.token
+        );
+
+        await showAccount(result.token);
+
+        if (result.message) {
+            msg(result.message);
+        }
+    } catch (error) {
+        msg(error.message || 'حدث خطأ. حاول مرة أخرى.');
+    } finally {
+        button.disabled = false;
+    }
+}
+
+$('rf').addEventListener('submit', submit);
+$('lf').addEventListener('submit', submit);
+
+$('logout').addEventListener('click', () => {
+    localStorage.removeItem('futureAI_demo_token');
+    $('account').hidden = true;
+    $('reg').hidden = false;
+    $('log').hidden = false;
+    msg('تم تسجيل الخروج.');
+});
+
+(async () => {
+    const token = localStorage.getItem('futureAI_demo_token');
+
+    if (token) {
+        try {
+            await showAccount(token);
+        } catch (error) {
+            localStorage.removeItem('futureAI_demo_token');
+            msg('انتهت جلسة الدخول. يرجى تسجيل الدخول مجددًا.');
+        }
+    }
+})();
 </body>
 </html>
