@@ -1,169 +1,144 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b1020">
 <title>Future Investment AI</title>
 
 <style>
-:root{
---bg:#0b1020;
---panel:#131f35;
---panel2:#192944;
---line:#2b3b58;
---text:#f3f6fc;
---muted:#aebbd0;
---green:#30e0ae;
---blue:#6da9ff;
---red:#ff7c8b
+:root {
+  --bg: #0b1020;
+  --panel: #131f35;
+  --panel2: #192944;
+  --line: #2b3b58;
+  --text: #f3f6fc;
+  --muted: #aebbd0;
+  --green: #30e0ae;
+  --blue: #6da9ff;
+  --red: #ff7c8b;
 }
-*{box-sizing:border-box}
-body{
-margin:0;
-background:radial-gradient(ellipse at top,#142544 0,#0b1020 55%);
-color:var(--text);
-font-family:Arial,Tahoma,sans-serif;
-min-height:100vh
-}
-button,input{font:inherit}
-button{
-cursor:pointer;
-border:0;
-border-radius:10px;
-padding:12px 16px;
-font-weight:700;
-background:var(--green);
-color:#07151b
-}
-button:disabled{opacity:.55;cursor:wait}
-.wrap{width:min(1150px,100%);margin:auto;padding:20px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{
-width:46px;height:46px;border-radius:14px;
-background:linear-gradient(135deg,var(--green),var(--blue));
-display:grid;place-items:center;color:#061321;
-font-weight:900;font-size:20px
-}
-.brand h1{font-size:20px;margin:0}
-.brand p{color:var(--muted);margin:5px 0 0;font-size:13px}
-.top{
-display:flex;justify-content:space-between;align-items:center;
-gap:15px;margin-bottom:22px
-}
-.pill{
-border:1px solid var(--line);padding:8px 12px;
-border-radius:999px;color:var(--muted);font-size:12px
-}
-.card{
-background:linear-gradient(150deg,rgba(25,41,68,.96),rgba(17,29,49,.96));
-border:1px solid var(--line);border-radius:18px;padding:20px;
-box-shadow:0 12px 35px #0002;margin-bottom:16px
-}
-.hero{padding:28px}
-.hero h2{font-size:clamp(24px,4vw,36px);margin:0 0 10px}
-.hero p,.muted{color:var(--muted);line-height:1.8}
-.grid{
-display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px
-}
-.stats{
-display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px
-}
-.stat{
-background:#0d182a;border:1px solid var(--line);
-border-radius:14px;padding:16px
-}
-.stat small{color:var(--muted)}
-.stat strong{
-display:block;font-size:23px;margin-top:10px;overflow-wrap:anywhere
-}
-.auth{max-width:500px;margin:7vh auto}
-.auth h2,.section-title{margin-top:0}
-label{
-display:block;color:var(--muted);font-size:14px;margin:13px 0 7px
-}
-input{
-width:100%;padding:13px;background:#0a1425;
-border:1px solid #344765;border-radius:10px;
-color:var(--text);outline:none
-}
-input:focus{border-color:var(--green)}
-form button{width:100%;margin-top:17px}
-.switch{display:flex;gap:8px;margin-bottom:15px}
-.switch button{flex:1;background:#263854;color:var(--text)}
-.switch button.active{background:var(--green);color:#07151b}
-.msg{white-space:pre-wrap;line-height:1.7;color:var(--green);overflow-wrap:anywhere}
-.error{color:var(--red)}
-[hidden]{display:none!important}
-.layout{
-display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px
-}
-.side{align-self:start;position:sticky;top:15px}
-.nav{display:grid;gap:8px;margin-top:18px}
-.nav button{
-text-align:right;background:transparent;color:var(--muted);
-border:1px solid transparent
-}
-.nav button.active,.nav button:hover{
-background:#20334f;color:var(--text);border-color:var(--line)
-}
-.section{display:none}
-.section.active{display:block}
-.package{position:relative;display:flex;flex-direction:column;gap:12px}
-.package h3{margin:0}
-.price{font-size:26px;color:var(--green);font-weight:800}
-.package p{color:var(--muted);line-height:1.7;flex:1}
-.package button{width:100%;background:#263854;color:var(--text)}
-.package.featured{border-color:var(--green)}
-.badge{
-font-size:12px;color:var(--green);border:1px solid #236c5b;
-padding:5px 9px;border-radius:999px;width:max-content
-}
-.row{
-display:flex;align-items:center;justify-content:space-between;
-gap:12px;flex-wrap:wrap
-}
-.copy{background:#263854;color:white}
-.table-wrap{overflow:auto}
-table{border-collapse:collapse;width:100%;min-width:500px}
-th,td{text-align:right;padding:12px;border-bottom:1px solid var(--line)}
-th{color:var(--muted);font-size:13px}
-.notice{
-background:#2b2517;border:1px solid #6b5726;color:#f5dca0;
-border-radius:12px;padding:13px;line-height:1.7;font-size:13px
-}
-.empty{
-border:1px dashed var(--line);padding:22px;text-align:center;
-color:var(--muted);border-radius:12px
-}
-.foot{text-align:center;color:#8090a9;font-size:12px;padding:20px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.danger{background:#492630;color:#ffe5e8}
-.small{font-size:12px;color:var(--muted);line-height:1.7}
 
-@media(max-width:800px){
-.layout{grid-template-columns:1fr}
-.side{position:static}
-.nav{grid-template-columns:repeat(2,minmax(0,1fr))}
-.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.stats{grid-template-columns:1fr 1fr}
-.top{align-items:flex-start}
-.two{grid-template-columns:1fr}
+* {
+  box-sizing: border-box;
 }
-@media(max-width:480px){
-.wrap{padding:12px}
-.grid{grid-template-columns:1fr}
-.hero{padding:20px}
-.card{padding:16px}
-.top{flex-direction:column}
-.stats{grid-template-columns:1fr 1fr}
-.stat strong{font-size:19px}
-.nav{grid-template-columns:1fr 1fr}
-}
-</style>
-</head>
 
-<body>
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at top, #142544 0, #0b1020 60%);
+  color: var(--text);
+  font-family: Arial, Tahoma, sans-serif;
+}
+
+button, input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-weight: bold;
+  background: var(--green);
+  color: #07151b;
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+button.secondary {
+  background: var(--panel2);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+button.danger {
+  background: #5a2635;
+  color: white;
+}
+
+input {
+  width: 100%;
+  margin: 7px 0 15px;
+  padding: 13px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #0b1629;
+  color: white;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--green);
+}
+
+label {
+  display: block;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.wrap {
+  width: min(1150px, 100%);
+  margin: auto;
+  padding: 20px;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  color: #07151b;
+  font-size: 23px;
+  font-weight: 900;
+}
+
+.brand h1 {
+  font-size: 19px;
+  margin: 0;
+}
+
+.brand p {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 5px 0 0;
+}
+
+.pill, .badge {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  padding: 7px 11px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.card {
+  background: linear-gradient(150deg, var(--panel2), var(--panel));
+  border: 1px solid var(--line);
+  border-radius:
+    <body>
 <div class="wrap">
 
 <header class="top">
@@ -180,12 +155,16 @@ color:var(--muted);border-radius:12px
 <section id="authView" class="auth card">
   <div class="hero" style="padding:0 0 12px">
     <h2>أهلًا بك 👋</h2>
-    <p>أنشئ حسابك أو سجّل الدخول للوصول إلى لوحة التحكم الخاصة بك.</p>
+    <p>أنشئ حسابك أو سجّل الدخول للوصول إلى لوحة التحكم.</p>
   </div>
 
   <div class="switch">
-    <button id="showLogin" class="active" type="button">تسجيل الدخول</button>
-    <button id="showRegister" type="button">إنشاء حساب</button>
+    <button id="showLogin" class="active" type="button">
+      تسجيل الدخول
+    </button>
+    <button id="showRegister" type="button">
+      إنشاء حساب
+    </button>
   </div>
 
   <form id="lf">
@@ -193,20 +172,22 @@ color:var(--muted);border-radius:12px
     <input name="email" type="email" autocomplete="email" required>
 
     <label>كلمة المرور</label>
-    <input name="password" type="password" autocomplete="current-password" required>
+    <input name="password" type="password"
+           autocomplete="current-password" required>
 
     <button type="submit">دخول إلى حسابي</button>
   </form>
 
   <form id="rf" hidden>
     <label>الاسم الكامل</label>
-    <input name="name" required minlength="2" maxlength="80" autocomplete="name">
+    <input name="name" required minlength="2" maxlength="80">
 
     <label>البريد الإلكتروني</label>
     <input name="email" type="email" required autocomplete="email">
 
     <label>كلمة المرور (8 أحرف على الأقل)</label>
-    <input name="password" type="password" minlength="8" required autocomplete="new-password">
+    <input name="password" type="password"
+           minlength="8" required autocomplete="new-password">
 
     <label>كود الدعوة (اختياري)</label>
     <input name="referralCode" autocomplete="off">
@@ -218,62 +199,571 @@ color:var(--muted);border-radius:12px
 </section>
 
 <div id="appView" hidden>
-<div class="layout">
+  <div class="layout">
 
-<aside class="card side">
-  <div class="row">
-    <div>
-      <strong id="sideName">حسابي</strong>
-      <div id="sideEmail" class="small"></div>
-    </div>
-    <span class="badge">متصل</span>
+    <aside class="card side">
+      <div class="row">
+        <div>
+          <strong id="sideName">حسابي</strong>
+          <div id="sideEmail" class="small"></div>
+        </div>
+        <span class="badge">الحساب</span>
+      </div>
+
+      <nav class="nav" id="nav">
+        <button class="active" data-page="home" type="button">
+          🏠 الرئيسية
+        </button>
+        <button data-page="packages" type="button">
+          📦 الباقات
+        </button>
+        <button data-page="profile" type="button">
+          👤 الملف الشخصي
+        </button>
+        <button data-page="referrals" type="button">
+          🤝 الدعوات
+        </button>
+        <button data-page="admin" type="button">
+          🛡️ الإدارة
+        </button>
+      </nav>
+
+      <button id="logout" class="danger"
+              style="width:100%;margin-top:16px" type="button">
+        تسجيل الخروج
+      </button>
+    </aside>
+
+    <main>
+
+      <section class="section active" id="page-home">
+        <div class="card hero">
+          <span class="badge">لوحة التحكم</span>
+          <h2 id="welcome">مرحبًا بك</h2>
+          <p>تابع بيانات حسابك وإحالاتك من مكان واحد.</p>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <small>حالة الحساب</small>
+            <strong>مسجل</strong>
+          </div>
+          <div class="stat">
+            <small>عدد الدعوات</small>
+            <strong id="homeCount">0</strong>
+          </div>
+          <div class="stat">
+            <small>كود الدعوة</small>
+            <strong id="homeCode">—</strong>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>اختصارات</h3>
+          <div class="grid">
+            <button data-go="packages" type="button">عرض الباقات</button>
+            <button class="secondary" data-go="referrals" type="button">
+              إدارة الدعوات
+            </button>
+            <button class="secondary" data-go="profile" type="button">
+              بيانات حسابي
+            </button>
+          </div>
+        </div>
+
+        <div class="notice">
+          الباقات معلومات تعريفية فقط. لا يتم تنفيذ إيداعات أو سحوبات أو
+          استثمارات فعلية من هذه الواجهة.
+        </div>
+      </section>
+
+      <section class="section" id="page-packages">
+        <div class="card hero">
+          <h2>📦 الباقات</h2>
+          <p>الباقات المعروضة للتعريف فقط.</p>
+        </div>
+
+        <div class="grid">
+          <div class="card package">
+            <h3>الباقة الأولى</h3>
+            <h2>5,000 دج</h2>
+            <p class="muted">تفاصيل الباقة</p>
+          </div>
+
+          <div class="card package">
+            <h3>الباقة الثانية</h3>
+            <h2>7,000 دج</h2>
+            <p class="muted">تفاصيل الباقة</p>
+          </div>
+
+          <div class="card package">
+            <h3>الباقة الثالثة</h3>
+            <h2>10,000 دج</h2>
+            <p class="muted">تفاصيل الباقة</p>
+          </div>
+
+          <div class="card package">
+            <h3>الباقة الرابعة</h3>
+            <h2>20,000 دج</h2>
+            <p class="muted">تفاصيل الباقة</p>
+          </div>
+
+          <div class="card package">
+            <h3>الباقة الخامسة</h3>
+            <h2>50,000 دج</h2>
+            <p class="muted">تفاصيل الباقة</p>
+          </div>
+
+          <div class="card package">
+            <h3>الباقة السادسة</h3>
+            <h2>70,000 دج</h2>
+            <p class="muted">تفاصيل الباقة</p>
+          </div>
+
+          <div class="card package">
+            <h3>الباقة السابعة</h3>
+            <h2>100,000 دج</h2>
+            <p class="muted">تفاصيل الباقة</p>
+          </div>
+        </div>
+
+        <div class="notice">
+          لا يوجد دفع أو استثمار فعلي مفعّل في هذه الصفحة.
+        </div>
+      </section>
+
+      <section class="section" id="page-profile">
+        <div class="card hero">
+          <h2>👤 الملف الشخصي</h2>
+          <p>معلومات حسابك المسجل.</p>
+        </div>
+
+        <div class="card">
+          <p>الاسم: <strong id="profileName">—</strong></p>
+          <p>البريد الإلكتروني: <strong id="profileEmail">—</strong></p>
+          <p>كود الدعوة: <strong id="profileCode">—</strong></p>
+          <p id="profileMsg" class="msg"></p>
+          <button id="refreshProfile" type="button">
+            تحديث البيانات
+          </button>
+        </div>
+      </section>
+
+      <section class="section" id="page-referrals">
+        <div class="card hero">
+          <h2>🤝 الدعوات</h2>
+          <p>كود الدعوة وقائمة الإحالات المرتبطة بحسابك.</p>
+        </div>
+
+        <div class="card">
+          <label for="referralDisplay">كود الدعوة الخاص بك</label>
+          <input id="referralDisplay" readonly>
+          <button id="copyReferral" type="button">نسخ كود الدعوة</button>
+          <p id="referralMsg" class="msg"></p>
+        </div>
+
+        <div class="card">
+          <h3>قائمة الإحالات</h3>
+          <div id="referralList" class="muted">
+            اضغط على تحديث الإحالات.
+          </div>
+          <button id="refreshReferrals" type="button">
+            تحديث الإحالات
+          </button>
+        </div>
+      </section>
+
+      <section class="section" id="page-admin">
+        <div class="card hero">
+          <h2>🛡️ لوحة الإدارة</h2>
+          <p>للمسؤول المخوّل فقط.</p>
+        </div>
+
+        <div class="card">
+          <label for="adminKey">مفتاح الإدارة</label>
+          <input id="adminKey" type="password" autocomplete="off">
+
+          <button id="loadUsers" type="button">عرض المستخدمين</button>
+          <p id="adminMsg" class="msg" role="status"></p>
+          <div id="adminUsers"></div>
+        </div>
+      </section>
+
+    </main>
   </div>
+</div>
 
-  <nav class="nav" id="nav">
-    <button class="active" data-page="home">🏠 الرئيسية</button>
-    <button data-page="packages">📦 الباقات</button>
-    <button data-page="profile">👤 الملف الشخصي</button>
-    <button data-page="referrals">🤝 الدعوات</button>
-    <button data-page="admin">🛡️ الإدارة</button>
-  </nav>
+<footer>Future Investment AI</footer>
+</div>
+  <script>
+(() => {
+  "use strict";
 
-  <button id="logout" class="danger" style="width:100%;margin-top:16px">
-    تسجيل الخروج
-  </button>
-</aside>
+  const $ = id => document.getElementById(id);
+  const TOKEN_KEY = "futureAI_demo_token";
 
-<main>
+  let currentUser = null;
 
-<section class="section active" id="page-home">
-  <div class="card hero">
-    <span class="badge">لوحة التحكم</span>
-    <h2 id="welcome">مرحبًا بك</h2>
-    <p>تابع بيانات حسابك وإحالاتك من لوحة واحدة واضحة وسهلة الاستخدام.</p>
-  </div>
+  function token() {
+    return localStorage.getItem(TOKEN_KEY);
+  }
 
-  <div class="stats">
-    <div class="stat">
-      <small>حالة الحساب</small>
-      <strong>نشط</strong>
-    </div>
-    <div class="stat">
-      <small>عدد الدعوات</small>
-      <strong id="homeCount">0</strong>
-    </div>
-    <div class="stat">
-      <small>كود الدعوة</small>
-      <strong id="homeCode" style="font-size:17px">—</strong>
-    </div>
-  </div>
+  function message(id, text) {
+    const el = $(id);
+    if (el) el.textContent = text || "";
+  }
 
-  <div class="card">
-    <h3 class="section-title">اختصارات</h3>
-    <div class="grid">
-      <button data-go="packages">عرض الباقات</button>
-      <button class="copy" data-go="referrals">إدارة الدعوات</button>
-      <button class="copy" data-go="profile">بيانات حسابي</button>
-    </div>
-  </div>
+  async function api(path, options = {}) {
+    const headers = {
+      ...(options.headers || {})
+    };
 
-  <div class="notice">
-    الباقات المعروضة معلومات تعريفية فقط. لا يتم تنفيذ إيد
+    if (options.body) {
+      headers["Content-Type"] = "application/json";
+    }
+
+    if (token()) {
+      headers.Authorization = "Bearer " + token();
+    }
+
+    const response = await fetch(path, {
+      ...options,
+      headers
+    });
+
+    let data = {};
+
+    try {
+      data = await response.json();
+    } catch (_) {}
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || data.error || "حدث خطأ أثناء الاتصال بالخادم."
+      );
+    }
+
+    return data;
+  }
+
+  function showAuth(text = "") {
+    $("authView").hidden = false;
+    $("appView").hidden = true;
+    $("topStatus").textContent = "مرحبًا بك";
+    message("authMsg", text);
+  }
+
+  function showPage(name) {
+    document.querySelectorAll(".section").forEach(section => {
+      section.classList.toggle(
+        "active",
+        section.id === "page-" + name
+      );
+    });
+
+    document.querySelectorAll("[data-page]").forEach(button => {
+      button.classList.toggle("active", button.dataset.page === name);
+    });
+  }
+
+  function renderUser() {
+    if (!currentUser) return;
+
+    const name = currentUser.name || "مستخدم";
+    const email = currentUser.email || "—";
+    const code = currentUser.referralCode ||
+                 currentUser.referral_code || "—";
+
+    $("sideName").textContent = name;
+    $("sideEmail").textContent = email;
+    $("welcome").textContent = "مرحبًا بك، " + name;
+
+    $("profileName").textContent = name;
+    $("profileEmail").textContent = email;
+    $("profileCode").textContent = code;
+    $("homeCode").textContent = code;
+    $("referralDisplay").value = code === "—" ? "" : code;
+  }
+
+  async function enterApp(user) {
+    currentUser = user || null;
+
+    if (!currentUser) {
+      const data = await api("/api/me");
+      currentUser = data.user || data;
+    }
+
+    $("authView").hidden = true;
+    $("appView").hidden = false;
+    $("topStatus").textContent = "مسجل الدخول";
+
+    renderUser();
+    showPage("home");
+  }
+
+  $("showLogin").addEventListener("click", () => {
+    $("lf").hidden = false;
+    $("rf").hidden = true;
+
+    $("showLogin").classList.add("active");
+    $("showRegister").classList.remove("active");
+
+    message("authMsg", "");
+  });
+
+  $("showRegister").addEventListener("click", () => {
+    $("lf").hidden = true;
+    $("rf").hidden = false;
+
+    $("showRegister").classList.add("active");
+    $("showLogin").classList.remove("active");
+
+    message("authMsg", "");
+  });
+
+  $("lf").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const button = $("lf").querySelector('button[type="submit"]');
+    button.disabled = true;
+    message("authMsg", "جارٍ تسجيل الدخول...");
+
+    const form = new FormData(event.currentTarget);
+
+    try {
+      const data = await api("/api/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email: String(form.get("email")).trim(),
+          password: form.get("password")
+        })
+      });
+
+      if (!data.token) {
+        throw new Error("الخادم لم يُرجع رمز الدخول.");
+      }
+
+      localStorage.setItem(TOKEN_KEY, data.token);
+      await enterApp(data.user);
+
+      message("authMsg", "");
+
+    } catch (error) {
+      message("authMsg", error.message);
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  $("rf").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const button = $("rf").querySelector('button[type="submit"]');
+    button.disabled = true;
+    message("authMsg", "جارٍ إنشاء الحساب...");
+
+    const form = new FormData(event.currentTarget);
+
+    try {
+      const data = await api("/api/register", {
+        method: "POST",
+        body: JSON.stringify({
+          name: String(form.get("name")).trim(),
+          email: String(form.get("email")).trim(),
+          password: form.get("password"),
+          referralCode: String(form.get("referralCode") || "").trim()
+        })
+      });
+
+      if (!data.token) {
+        throw new Error(
+          data.message || "لم يُرجع الخادم رمز الدخول."
+        );
+      }
+
+      localStorage.setItem(TOKEN_KEY, data.token);
+      await enterApp(data.user);
+
+      message("authMsg", "");
+
+    } catch (error) {
+      message("authMsg", error.message);
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  async function refreshProfile() {
+    message("profileMsg", "جارٍ تحديث البيانات...");
+
+    try {
+      const data = await api("/api/me");
+      currentUser = data.user || data;
+      renderUser();
+      message("profileMsg", "تم تحديث بيانات الحساب.");
+    } catch (error) {
+      message("profileMsg", error.message);
+    }
+  }
+
+  async function refreshReferrals() {
+    message("referralMsg", "جارٍ تحميل الإحالات...");
+    $("referralList").textContent = "جارٍ التحميل...";
+
+    try {
+      const data = await api("/api/referrals");
+
+      const referrals = Array.isArray(data)
+        ? data
+        : (data.referrals || data.users || []);
+
+      $("homeCount").textContent = String(referrals.length);
+      $("referralList").replaceChildren();
+
+      if (referrals.length === 0) {
+        $("referralList").textContent =
+          "لا توجد إحالات لعرضها حاليًا.";
+      } else {
+        const list = document.createElement("ul");
+
+        referrals.forEach(user => {
+          const item = document.createElement("li");
+          item.textContent = user.name || user.email || "مستخدم";
+          list.appendChild(item);
+        });
+
+        $("referralList").appendChild(list);
+      }
+
+      message("referralMsg", "تم تحديث الإحالات.");
+
+    } catch (error) {
+      $("referralList").textContent = "تعذر تحميل الإحالات.";
+      message("referralMsg", error.message);
+    }
+  }
+
+  $("refreshProfile").addEventListener("click", refreshProfile);
+  $("refreshReferrals").addEventListener("click", refreshReferrals);
+
+  $("copyReferral").addEventListener("click", async () => {
+    const code = $("referralDisplay").value;
+
+    if (!code) {
+      message("referralMsg", "لا يوجد كود دعوة لنسخه.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(code);
+      message("referralMsg", "تم نسخ كود الدعوة.");
+    } catch (_) {
+      $("referralDisplay").select();
+      message("referralMsg", "حدد الكود وانسخه يدويًا.");
+    }
+  });
+
+  document.querySelectorAll("[data-page]").forEach(button => {
+    button.addEventListener("click", () => {
+      const page = button.dataset.page;
+      showPage(page);
+
+      if (page === "profile") refreshProfile();
+      if (page === "referrals") refreshReferrals();
+    });
+  });
+
+  document.querySelectorAll("[data-go]").forEach(button => {
+    button.addEventListener("click", () => {
+      showPage(button.dataset.go);
+    });
+  });
+
+  $("logout").addEventListener("click", () => {
+    localStorage.removeItem(TOKEN_KEY);
+    currentUser = null;
+
+    $("lf").reset();
+    $("rf").reset();
+
+    showAuth("تم تسجيل الخروج.");
+  });
+
+  $("loadUsers").addEventListener("click", async () => {
+    const key = $("adminKey").value.trim();
+
+    if (!key) {
+      message("adminMsg", "أدخل مفتاح الإدارة أولًا.");
+      return;
+    }
+
+    message("adminMsg", "جارٍ تحميل البيانات...");
+    $("adminUsers").replaceChildren();
+
+    try {
+      const data = await api("/api/admin/users", {
+        headers: {
+          "x-admin-key": key
+        }
+      });
+
+      const users = Array.isArray(data)
+        ? data
+        : (data.users || []);
+
+      if (!users.length) {
+        $("adminUsers").textContent = "لا توجد بيانات للعرض.";
+      } else {
+        const table = document.createElement("table");
+        const head = document.createElement("tr");
+
+        ["الاسم", "البريد الإلكتروني"].forEach(label => {
+          const th = document.createElement("th");
+          th.textContent = label;
+          head.appendChild(th);
+        });
+
+        table.appendChild(head);
+
+        users.forEach(user => {
+          const row = document.createElement("tr");
+
+          [user.name || "—", user.email || "—"].forEach(value => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.appendChild(cell);
+          });
+
+          table.appendChild(row);
+        });
+
+        $("adminUsers").appendChild(table);
+      }
+
+      message("adminMsg", "تم تحميل البيانات.");
+
+    } catch (error) {
+      message("adminMsg", error.message);
+    }
+  });
+
+  async function start() {
+    if (!token()) {
+      showAuth();
+      return;
+    }
+
+    try {
+      const data = await api("/api/me");
+      await enterApp(data.user || data);
+    } catch (_) {
+      localStorage.removeItem(TOKEN_KEY);
+      showAuth("تعذر التحقق من الجلسة. سجّل الدخول مجددًا.");
+    }
+  }
+
+  start();
+})();
+</script>
+</body>
+</html>
