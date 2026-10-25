@@ -2,98 +2,66 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b1020">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#081323">
 <title>Future Investment AI</title>
 
 <style>
 :root {
-  --bg: #0b1020;
-  --panel: #131f35;
-  --panel2: #192944;
-  --line: #2b3b58;
-  --text: #f3f6fc;
-  --muted: #aebbd0;
-  --green: #30e0ae;
-  --blue: #6da9ff;
-  --red: #ff7c8b;
+  --bg: #07111f;
+  --panel: #101e31;
+  --panel2: #14253b;
+  --line: #263952;
+  --green: #35e0a1;
+  --blue: #4c8dff;
+  --text: #f2f6ff;
+  --muted: #9bacc4;
+  --danger: #ff7272;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
-  min-height: 100vh;
-  background: radial-gradient(ellipse at top, #142544 0, #0b1020 60%);
+  background: var(--bg);
   color: var(--text);
   font-family: Arial, Tahoma, sans-serif;
+  line-height: 1.7;
 }
 
 button, input {
   font: inherit;
 }
 
-button {
-  cursor: pointer;
-  border: 0;
-  border-radius: 10px;
-  padding: 12px 16px;
-  font-weight: bold;
-  background: var(--green);
-  color: #07151b;
-}
+button { cursor: pointer; }
 
 button:disabled {
   opacity: .6;
-  cursor: wait;
+  cursor: not-allowed;
 }
 
-button.secondary {
-  background: var(--panel2);
-  color: var(--text);
-  border: 1px solid var(--line);
-}
-
-button.danger {
-  background: #5a2635;
-  color: white;
-}
-
-input {
-  width: 100%;
-  margin: 7px 0 15px;
-  padding: 13px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: #0b1629;
-  color: white;
-  outline: none;
-}
-
-input:focus {
-  border-color: var(--green);
-}
-
-label {
-  display: block;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.wrap {
-  width: min(1150px, 100%);
+.container {
+  width: min(1100px, 92%);
   margin: auto;
-  padding: 20px;
 }
 
-.top {
+header {
+  border-bottom: 1px solid var(--line);
+  background: #0a1728;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar {
+  min-height: 76px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .brand {
@@ -115,655 +83,877 @@ label {
 }
 
 .brand h1 {
-  font-size: 19px;
+  font-size: 17px;
   margin: 0;
 }
 
 .brand p {
   color: var(--muted);
+  margin: 0;
   font-size: 12px;
-  margin: 5px 0 0;
 }
 
-.pill, .badge {
-  display: inline-block;
+.pill {
+  background: #172a40;
   border: 1px solid var(--line);
   border-radius: 30px;
-  padding: 7px 11px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--green);
+}
+
+.hero {
+  padding: 52px 0 30px;
+}
+
+.hero-box {
+  background:
+    radial-gradient(circle at 10% 20%, #204c5b 0, transparent 40%),
+    linear-gradient(135deg, #14263c, #0d192b);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 34px;
+  overflow: hidden;
+}
+
+.hero h2 {
+  font-size: clamp(27px, 5vw, 42px);
+  line-height: 1.4;
+  margin: 0 0 12px;
+}
+
+.hero h2 span { color: var(--green); }
+
+.hero p {
+  color: var(--muted);
+  max-width: 650px;
+  margin: 0 0 22px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn {
+  border: 0;
+  border-radius: 11px;
+  padding: 11px 18px;
+  font-weight: 700;
+  transition: .2s;
+}
+
+.btn:hover { transform: translateY(-1px); }
+
+.btn-primary {
+  color: #061a16;
+  background: var(--green);
+}
+
+.btn-secondary {
+  color: white;
+  background: #20344e;
+  border: 1px solid var(--line);
+}
+
+.btn-blue {
+  color: white;
+  background: #2866d9;
+}
+
+.btn-danger {
+  color: white;
+  background: #762c39;
+}
+
+.nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 20px 0;
+}
+
+.nav button {
+  border: 1px solid var(--line);
+  color: var(--muted);
+  background: var(--panel);
+  border-radius: 10px;
+  padding: 9px 14px;
+}
+
+.nav button.active {
+  background: #173d3a;
+  border-color: #28785d;
+  color: var(--green);
+}
+
+.section {
+  padding: 10px 0 35px;
+}
+
+.section-title {
+  margin: 0 0 5px;
+  font-size: 24px;
+}
+
+.section-subtitle {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  padding: 20px;
+  min-width: 0;
+}
+
+.card h3 { margin: 0 0 8px; }
+
+.muted { color: var(--muted); }
+
+.stat-number {
+  font-size: 27px;
+  font-weight: 800;
+  color: var(--green);
+  overflow-wrap: anywhere;
+}
+
+.package-price {
+  font-size: 27px;
+  font-weight: 800;
+  color: var(--green);
+  margin: 12px 0;
+}
+
+.package-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.package-card .btn {
+  margin-top: auto;
+  width: 100%;
+}
+
+.package-label {
+  color: #a9c9ff;
+  font-size: 12px;
+}
+
+.feature-list {
+  color: var(--muted);
+  padding-right: 20px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.notice {
+  background: #132a38;
+  border: 1px solid #275269;
+  border-radius: 12px;
+  padding: 13px 15px;
+  color: #c7e7f4;
+  font-size: 13px;
+  margin: 15px 0;
+}
+
+.form-card {
+  max-width: 500px;
+  margin: 25px auto;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 14px 0;
+}
+
+.field label {
+  font-size: 14px;
+  color: #c7d4e7;
+}
+
+.field input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #0b1629;
+  color: white;
+  outline: none;
+}
+
+.field input:focus {
+  border-color: var(--green);
+}
+
+.full { width: 100%; }
+
+.message {
+  margin-top: 12px;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 14px;
+  display: none;
+  overflow-wrap: anywhere;
+}
+
+.message.error {
+  display: block;
+  background: #351c28;
+  color: #ffb5bd;
+}
+
+.message.success {
+  display: block;
+  background: #12352e;
+  color: #9cf5d1;
+}
+
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+
+.profile-row:last-child { border-bottom: 0; }
+
+.referral-code {
+  background: #091626;
+  border: 1px dashed #3d6d87;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--green);
+  overflow-wrap: anywhere;
+}
+
+footer {
+  border-top: 1px solid var(--line);
+  margin-top: 25px;
+  padding: 25px 0;
+  text-align: center;
   color: var(--muted);
   font-size: 12px;
 }
 
-.card {
-  background: linear-gradient(150deg, var(--panel2), var(--panel));
-  border: 1px solid var(--line);
-  border-radius:
-    <body>
-<div class="wrap">
+.hidden { display: none !important; }
 
-<header class="top">
-  <div class="brand">
-    <div class="logo">F</div>
-    <div>
-      <h1>Future Investment AI</h1>
-      <p>مساحتك الرقمية في مكان واحد</p>
+.empty {
+  text-align: center;
+  padding: 25px;
+  color: var(--muted);
+}
+
+@media (max-width: 760px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero-box { padding: 23px; }
+}
+
+@media (max-width: 480px) {
+  .grid { grid-template-columns: 1fr; }
+  .topbar { align-items: flex-start; }
+  .hero { padding-top: 25px; }
+  .nav button { flex: 1 1 auto; }
+  .brand h1 { font-size: 15px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="container topbar">
+    <div class="brand">
+      <div class="logo">F</div>
+      <div>
+        <h1>Future Investment AI</h1>
+        <p>مساحتك الرقمية في مكان واحد</p>
+      </div>
     </div>
+    <span class="pill" id="topStatus">مرحبًا بك</span>
   </div>
-  <span class="pill" id="topStatus">مرحبًا بك</span>
 </header>
 
-<section id="authView" class="auth card">
-  <div class="hero" style="padding:0 0 12px">
-    <h2>أهلًا بك 👋</h2>
-    <p>أنشئ حسابك أو سجّل الدخول للوصول إلى لوحة التحكم.</p>
-  </div>
+<main class="container">
 
-  <div class="switch">
-    <button id="showLogin" class="active" type="button">
-      تسجيل الدخول
-    </button>
-    <button id="showRegister" type="button">
-      إنشاء حساب
-    </button>
-  </div>
+  <section class="hero" id="home">
+    <div class="hero-box">
+      <span class="pill">Future Investment AI</span>
+      <h2>مرحبًا بك في <span>مستقبلك الرقمي</span></h2>
+      <p>
+        أنشئ حسابك، وتعرّف على الباقات، وتابع بيانات حسابك
+        وإحالاتك من واجهة واحدة سهلة الاستخدام.
+      </p>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="showSection('packages')">
+          استكشف الباقات
+        </button>
+        <button class="btn btn-secondary" onclick="showSection('account')">
+          حسابي
+        </button>
+      </div>
+    </div>
+  </section>
 
-  <form id="lf">
-    <label>البريد الإلكتروني</label>
-    <input name="email" type="email" autocomplete="email" required>
+  <nav class="nav" id="mainNav">
+    <button class="active" data-section="home" onclick="showSection('home')">الرئيسية</button>
+    <button data-section="packages" onclick="showSection('packages')">الباقات</button>
+    <button data-section="account" onclick="showSection('account')">حسابي</button>
+    <button data-section="referrals" onclick="showSection('referrals')">الدعوات</button>
+    <button data-section="auth" id="authNav" onclick="showSection('auth')">تسجيل الدخول</button>
+  </nav>
 
-    <label>كلمة المرور</label>
-    <input name="password" type="password"
-           autocomplete="current-password" required>
+  <section class="section" id="dashboard">
+    <h2 class="section-title">لوحة حسابك</h2>
+    <p class="section-subtitle">ملخص بيانات حسابك الحالية.</p>
+    <div class="grid">
+      <div class="card">
+        <p class="muted">اسم المستخدم</p>
+        <div class="stat-number" id="dashName">زائر</div>
+      </div>
+      <div class="card">
+        <p class="muted">عدد الدعوات</p>
+        <div class="stat-number" id="dashReferrals">0</div>
+      </div>
+      <div class="card">
+        <p class="muted">حالة الحساب</p>
+        <div class="stat-number" style="font-size:20px" id="dashStatus">غير مسجل</div>
+      </div>
+    </div>
+  </section>
 
-    <button type="submit">دخول إلى حسابي</button>
-  </form>
+  <section class="section hidden" id="packages">
+    <h2 class="section-title">الباقات</h2>
+    <p class="section-subtitle">
+      تعرّف على الخيارات المتاحة واختر الباقة التي تريد الاستفسار عنها.
+    </p>
 
-  <form id="rf" hidden>
-    <label>الاسم الكامل</label>
-    <input name="name" required minlength="2" maxlength="80">
+    <div class="grid" id="packageGrid"></div>
 
-    <label>البريد الإلكتروني</label>
-    <input name="email" type="email" required autocomplete="email">
+    <div class="notice">
+      اختيار الباقة هنا لا يعني تنفيذ دفع أو تفعيل خدمة تلقائيًا.
+      تأكد من شروط الخدمة وآلية الدفع قبل إجراء أي تحويل مالي.
+    </div>
+  </section>
 
-    <label>كلمة المرور (8 أحرف على الأقل)</label>
-    <input name="password" type="password"
-           minlength="8" required autocomplete="new-password">
+  <section class="section hidden" id="account">
+    <h2 class="section-title">الملف الشخصي</h2>
+    <p class="section-subtitle">معلومات حسابك.</p>
 
-    <label>كود الدعوة (اختياري)</label>
-    <input name="referralCode" autocomplete="off">
-
-    <button type="submit">إنشاء حساب</button>
-  </form>
-
-  <p id="authMsg" class="msg" role="status"></p>
-</section>
-
-<div id="appView" hidden>
-  <div class="layout">
-
-    <aside class="card side">
-      <div class="row">
-        <div>
-          <strong id="sideName">حسابي</strong>
-          <div id="sideEmail" class="small"></div>
-        </div>
-        <span class="badge">الحساب</span>
+    <div class="card">
+      <div class="profile-row">
+        <span class="muted">الاسم</span>
+        <strong id="profileName">—</strong>
+      </div>
+      <div class="profile-row">
+        <span class="muted">البريد الإلكتروني</span>
+        <strong id="profileEmail">—</strong>
+      </div>
+      <div class="profile-row">
+        <span class="muted">رمز الدعوة</span>
+        <strong id="profileCode">—</strong>
+      </div>
+      <div class="profile-row">
+        <span class="muted">تاريخ إنشاء الحساب</span>
+        <strong id="profileDate">—</strong>
       </div>
 
-      <nav class="nav" id="nav">
-        <button class="active" data-page="home" type="button">
-          🏠 الرئيسية
-        </button>
-        <button data-page="packages" type="button">
-          📦 الباقات
-        </button>
-        <button data-page="profile" type="button">
-          👤 الملف الشخصي
-        </button>
-        <button data-page="referrals" type="button">
-          🤝 الدعوات
-        </button>
-        <button data-page="admin" type="button">
-          🛡️ الإدارة
-        </button>
-      </nav>
+      <div class="actions" style="margin-top:20px">
+        <button class="btn btn-secondary" onclick="refreshAccount()">تحديث البيانات</button>
+        <button class="btn btn-danger hidden" id="logoutButton" onclick="logout()">تسجيل الخروج</button>
+      </div>
+      <div id="accountMessage" class="message"></div>
+    </div>
+  </section>
 
-      <button id="logout" class="danger"
-              style="width:100%;margin-top:16px" type="button">
-        تسجيل الخروج
+  <section class="section hidden" id="referrals">
+    <h2 class="section-title">نظام الدعوات</h2>
+    <p class="section-subtitle">شارك رمز الدعوة الخاص بك وتابع عدد المسجلين عن طريقك.</p>
+
+    <div class="card">
+      <h3>رمز الدعوة الخاص بك</h3>
+      <p class="muted">يمكنك نسخ الرمز ومشاركته مع الآخرين.</p>
+      <div class="referral-code" id="referralCode">سجّل الدخول لعرض رمزك</div>
+      <div class="actions" style="margin-top:15px">
+        <button class="btn btn-primary" onclick="copyReferral()">نسخ الرمز</button>
+      </div>
+
+      <div class="grid" style="margin-top:20px">
+        <div class="card">
+          <p class="muted">عدد الدعوات</p>
+          <div class="stat-number" id="referralCount">0</div>
+        </div>
+        <div class="card">
+          <p class="muted">الهدف</p>
+          <div class="stat-number" id="referralGoal">10</div>
+        </div>
+      </div>
+
+      <div id="referralMessage" class="message"></div>
+      <div id="referralList" class="empty">سجّل الدخول لعرض بيانات الدعوات.</div>
+    </div>
+  </section>
+
+  <section class="section hidden" id="auth">
+    <div class="card form-card">
+      <h2 class="section-title" id="authTitle">تسجيل الدخول</h2>
+      <p class="section-subtitle" id="authSubtitle">أدخل بيانات حسابك للمتابعة.</p>
+
+      <div id="registerNameField" class="field hidden">
+        <label for="registerName">الاسم الكامل</label>
+        <input id="registerName" type="text" autocomplete="name" maxlength="80" placeholder="أدخل اسمك">
+      </div>
+
+      <div class="field">
+        <label for="authEmail">البريد الإلكتروني</label>
+        <input id="authEmail" type="email" autocomplete="email" maxlength="150" placeholder="name@example.com">
+      </div>
+
+      <div class="field">
+        <label for="authPassword">كلمة المرور</label>
+        <input id="authPassword" type="password" autocomplete="current-password" minlength="8" maxlength="128" placeholder="أدخل كلمة المرور">
+      </div>
+
+      <div id="registerReferralField" class="field hidden">
+        <label for="registerReferral">رمز الدعوة (اختياري)</label>
+        <input id="registerReferral" type="text" maxlength="80" placeholder="رمز الدعوة">
+      </div>
+
+      <button class="btn btn-primary full" id="authSubmit" onclick="submitAuth()">
+        تسجيل الدخول
       </button>
-    </aside>
 
-    <main>
+      <div id="authMessage" class="message"></div>
 
-      <section class="section active" id="page-home">
-        <div class="card hero">
-          <span class="badge">لوحة التحكم</span>
-          <h2 id="welcome">مرحبًا بك</h2>
-          <p>تابع بيانات حسابك وإحالاتك من مكان واحد.</p>
-        </div>
+      <p style="text-align:center;margin-bottom:0">
+        <span class="muted" id="switchText">ليس لديك حساب؟</span>
+        <button class="btn btn-secondary" id="switchAuth" onclick="toggleAuth()" style="padding:6px 10px">
+          إنشاء حساب
+        </button>
+      </p>
+    </div>
+  </section>
 
-        <div class="stats">
-          <div class="stat">
-            <small>حالة الحساب</small>
-            <strong>مسجل</strong>
-          </div>
-          <div class="stat">
-            <small>عدد الدعوات</small>
-            <strong id="homeCount">0</strong>
-          </div>
-          <div class="stat">
-            <small>كود الدعوة</small>
-            <strong id="homeCode">—</strong>
-          </div>
-        </div>
+</main>
 
-        <div class="card">
-          <h3>اختصارات</h3>
-          <div class="grid">
-            <button data-go="packages" type="button">عرض الباقات</button>
-            <button class="secondary" data-go="referrals" type="button">
-              إدارة الدعوات
-            </button>
-            <button class="secondary" data-go="profile" type="button">
-              بيانات حسابي
-            </button>
-          </div>
-        </div>
-
-        <div class="notice">
-          الباقات معلومات تعريفية فقط. لا يتم تنفيذ إيداعات أو سحوبات أو
-          استثمارات فعلية من هذه الواجهة.
-        </div>
-      </section>
-
-      <section class="section" id="page-packages">
-        <div class="card hero">
-          <h2>📦 الباقات</h2>
-          <p>الباقات المعروضة للتعريف فقط.</p>
-        </div>
-
-        <div class="grid">
-          <div class="card package">
-            <h3>الباقة الأولى</h3>
-            <h2>5,000 دج</h2>
-            <p class="muted">تفاصيل الباقة</p>
-          </div>
-
-          <div class="card package">
-            <h3>الباقة الثانية</h3>
-            <h2>7,000 دج</h2>
-            <p class="muted">تفاصيل الباقة</p>
-          </div>
-
-          <div class="card package">
-            <h3>الباقة الثالثة</h3>
-            <h2>10,000 دج</h2>
-            <p class="muted">تفاصيل الباقة</p>
-          </div>
-
-          <div class="card package">
-            <h3>الباقة الرابعة</h3>
-            <h2>20,000 دج</h2>
-            <p class="muted">تفاصيل الباقة</p>
-          </div>
-
-          <div class="card package">
-            <h3>الباقة الخامسة</h3>
-            <h2>50,000 دج</h2>
-            <p class="muted">تفاصيل الباقة</p>
-          </div>
-
-          <div class="card package">
-            <h3>الباقة السادسة</h3>
-            <h2>70,000 دج</h2>
-            <p class="muted">تفاصيل الباقة</p>
-          </div>
-
-          <div class="card package">
-            <h3>الباقة السابعة</h3>
-            <h2>100,000 دج</h2>
-            <p class="muted">تفاصيل الباقة</p>
-          </div>
-        </div>
-
-        <div class="notice">
-          لا يوجد دفع أو استثمار فعلي مفعّل في هذه الصفحة.
-        </div>
-      </section>
-
-      <section class="section" id="page-profile">
-        <div class="card hero">
-          <h2>👤 الملف الشخصي</h2>
-          <p>معلومات حسابك المسجل.</p>
-        </div>
-
-        <div class="card">
-          <p>الاسم: <strong id="profileName">—</strong></p>
-          <p>البريد الإلكتروني: <strong id="profileEmail">—</strong></p>
-          <p>كود الدعوة: <strong id="profileCode">—</strong></p>
-          <p id="profileMsg" class="msg"></p>
-          <button id="refreshProfile" type="button">
-            تحديث البيانات
-          </button>
-        </div>
-      </section>
-
-      <section class="section" id="page-referrals">
-        <div class="card hero">
-          <h2>🤝 الدعوات</h2>
-          <p>كود الدعوة وقائمة الإحالات المرتبطة بحسابك.</p>
-        </div>
-
-        <div class="card">
-          <label for="referralDisplay">كود الدعوة الخاص بك</label>
-          <input id="referralDisplay" readonly>
-          <button id="copyReferral" type="button">نسخ كود الدعوة</button>
-          <p id="referralMsg" class="msg"></p>
-        </div>
-
-        <div class="card">
-          <h3>قائمة الإحالات</h3>
-          <div id="referralList" class="muted">
-            اضغط على تحديث الإحالات.
-          </div>
-          <button id="refreshReferrals" type="button">
-            تحديث الإحالات
-          </button>
-        </div>
-      </section>
-
-      <section class="section" id="page-admin">
-        <div class="card hero">
-          <h2>🛡️ لوحة الإدارة</h2>
-          <p>للمسؤول المخوّل فقط.</p>
-        </div>
-
-        <div class="card">
-          <label for="adminKey">مفتاح الإدارة</label>
-          <input id="adminKey" type="password" autocomplete="off">
-
-          <button id="loadUsers" type="button">عرض المستخدمين</button>
-          <p id="adminMsg" class="msg" role="status"></p>
-          <div id="adminUsers"></div>
-        </div>
-      </section>
-
-    </main>
+<footer>
+  <div class="container">
+    Future Investment AI © <span id="year"></span>
+    <br>
+    احرص على مراجعة تفاصيل أي خدمة قبل اتخاذ قرار مالي.
   </div>
-</div>
+</footer>
 
-<footer>Future Investment AI</footer>
-</div>
-  <script>
-(() => {
-  "use strict";
+<script>
+"use strict";
 
-  const $ = id => document.getElementById(id);
-  const TOKEN_KEY = "futureAI_demo_token";
+const API_BASE = "/api";
+const TOKEN_KEY = "futureInvestmentToken";
 
-  let currentUser = null;
+const packages = [
+  {name:"الباقة الأولى", price:5000, label:"الخيار الأول"},
+  {name:"الباقة الثانية", price:7000, label:"الخيار الثاني"},
+  {name:"الباقة الثالثة", price:10000, label:"الخيار الثالث"},
+  {name:"الباقة الرابعة", price:20000, label:"الخيار الرابع"},
+  {name:"الباقة الخامسة", price:50000, label:"الخيار الخامس"},
+  {name:"الباقة السادسة", price:70000, label:"الخيار السادس"},
+  {name:"الباقة السابعة", price:100000, label:"الخيار السابع"}
+];
 
-  function token() {
-    return localStorage.getItem(TOKEN_KEY);
+let currentUser = null;
+let isRegisterMode = false;
+let referralData = null;
+
+const $ = id => document.getElementById(id);
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[ch]);
+}
+
+function showMessage(id, text, type = "error") {
+  const el = $(id);
+  if (!el) return;
+  el.textContent = text;
+  el.className = "message " + type;
+}
+
+function clearMessage(id) {
+  const el = $(id);
+  if (el) {
+    el.textContent = "";
+    el.className = "message";
+  }
+}
+
+async function api(path, options = {}) {
+  const token = localStorage.getItem(TOKEN_KEY);
+
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {})
+  };
+
+  if (token) headers.Authorization = "Bearer " + token;
+
+  const response = await fetch(API_BASE + path, {
+    ...options,
+    headers
+  });
+
+  const text = await response.text();
+  let data = {};
+
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    data = {message: text || "استجابة غير مفهومة من الخادم."};
   }
 
-  function message(id, text) {
+  if (!response.ok) {
+    if (response.status === 401 && path === "/me") {
+      localStorage.removeItem(TOKEN_KEY);
+    }
+
+    throw new Error(
+      data.message ||
+      data.error ||
+      "تعذر إكمال الطلب. حاول مرة أخرى."
+    );
+  }
+
+  return data;
+}
+
+function showSection(sectionId) {
+  const sections = ["home", "dashboard", "packages", "account", "referrals", "auth"];
+
+  sections.forEach(id => {
     const el = $(id);
-    if (el) el.textContent = text || "";
+    if (el) el.classList.toggle("hidden", id !== sectionId);
+  });
+
+  document.querySelectorAll("#mainNav button[data-section]").forEach(button => {
+    button.classList.toggle("active", button.dataset.section === sectionId);
+  });
+
+  window.scrollTo({top: 0, behavior: "smooth"});
+
+  if (sectionId === "account" || sectionId === "referrals") {
+    if (currentUser) refreshAccount();
+  }
+}
+
+function renderPackages() {
+  $("packageGrid").innerHTML = packages.map((item, index) => `
+    <article class="card package-card">
+      <span class="package-label">${escapeHTML(item.label)}</span>
+      <h3>${escapeHTML(item.name)}</h3>
+      <div class="package-price">${item.price.toLocaleString("en-US")} دج</div>
+      <ul class="feature-list">
+        <li>تفاصيل الباقة</li>
+        <li>الاستفسار عن طريقة التفعيل</li>
+        <li>مراجعة الشروط قبل الاشتراك</li>
+      </ul>
+      <button class="btn btn-secondary" onclick="selectPackage(${index})">
+        الاستفسار عن الباقة
+      </button>
+    </article>
+  `).join("");
+}
+
+function selectPackage(index) {
+  const item = packages[index];
+  if (!item) return;
+
+  showSection("auth");
+
+  if (currentUser) {
+    alert("اخترت " + item.name + " بقيمة " +
+      item.price.toLocaleString("en-US") +
+      " دج. لا يتم تنفيذ أي دفع من هذه الصفحة.");
+    showSection("packages");
+    return;
   }
 
-  async function api(path, options = {}) {
-    const headers = {
-      ...(options.headers || {})
-    };
+  showMessage("authMessage", "سجّل الدخول أولًا للاستمرار. اختيار الباقة لا ينفّذ أي عملية دفع.", "success");
+}
 
-    if (options.body) {
-      headers["Content-Type"] = "application/json";
+function toggleAuth() {
+  isRegisterMode = !isRegisterMode;
+
+  $("authTitle").textContent = isRegisterMode ? "إنشاء حساب جديد" : "تسجيل الدخول";
+  $("authSubtitle").textContent = isRegisterMode
+    ? "أدخل بياناتك لإنشاء حسابك."
+    : "أدخل بيانات حسابك للمتابعة.";
+
+  $("registerNameField").classList.toggle("hidden", !isRegisterMode);
+  $("registerReferralField").classList.toggle("hidden", !isRegisterMode);
+  $("authPassword").autocomplete = isRegisterMode ? "new-password" : "current-password";
+
+  $("authSubmit").textContent = isRegisterMode ? "إنشاء الحساب" : "تسجيل الدخول";
+  $("switchText").textContent = isRegisterMode ? "لديك حساب بالفعل؟" : "ليس لديك حساب؟";
+  $("switchAuth").textContent = isRegisterMode ? "تسجيل الدخول" : "إنشاء حساب";
+
+  clearMessage("authMessage");
+}
+
+async function submitAuth() {
+  clearMessage("authMessage");
+
+  const email = $("authEmail").value.trim().toLowerCase();
+  const password = $("authPassword").value;
+  const name = $("registerName").value.trim();
+  const button = $("authSubmit");
+
+  if (!email || !email.includes("@")) {
+    showMessage("authMessage", "أدخل بريدًا إلكترونيًا صحيحًا.");
+    return;
+  }
+
+  if (password.length < 8) {
+    showMessage("authMessage", "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.");
+    return;
+  }
+
+  if (isRegisterMode && !name) {
+    showMessage("authMessage", "أدخل اسمك الكامل.");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "يرجى الانتظار...";
+
+  try {
+    let data;
+
+    if (isRegisterMode) {
+      const payload = {name, email, password};
+      const referralCode = $("registerReferral").value.trim();
+
+      if (referralCode) payload.referralCode = referralCode;
+
+      data = await api("/register", {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+    } else {
+      data = await api("/login", {
+        method: "POST",
+        body: JSON.stringify({email, password})
+      });
     }
 
-    if (token()) {
-      headers.Authorization = "Bearer " + token();
+    const token = data.token || data.accessToken || data.access_token;
+
+    if (token) {
+      localStorage.setItem(TOKEN_KEY, token);
     }
 
-    const response = await fetch(path, {
-      ...options,
-      headers
-    });
+    if (data.user) {
+      currentUser = data.user;
+    }
 
-    let data = {};
-
-    try {
-      data = await response.json();
-    } catch (_) {}
-
-    if (!response.ok) {
-      throw new Error(
-        data.message || data.error || "حدث خطأ أثناء الاتصال بالخادم."
+    if (!token) {
+      showMessage(
+        "authMessage",
+        "وصل رد من الخادم لكن لم يتم العثور على رمز الدخول. تحقق من إعدادات تسجيل الدخول في الخادم."
       );
+      return;
     }
 
-    return data;
+    const success = await refreshAccount(true);
+
+    if (success) {
+      showSection("dashboard");
+      showMessage("accountMessage", "تم تسجيل الدخول بنجاح.", "success");
+    } else {
+      showMessage("authMessage", "تم استلام رمز الدخول، لكن تعذر تحميل بيانات الحساب. حاول تسجيل الدخول مجددًا.");
+    }
+
+  } catch (error) {
+    showMessage("authMessage", error.message || "حدث خطأ أثناء الاتصال بالخادم.");
+  } finally {
+    button.disabled = false;
+    button.textContent = isRegisterMode ? "إنشاء الحساب" : "تسجيل الدخول";
+  }
+}
+
+async function refreshAccount(silent = false) {
+  if (!localStorage.getItem(TOKEN_KEY)) {
+    if (!silent) showMessage("accountMessage", "سجّل الدخول أولًا لعرض بيانات حسابك.");
+    updateLoggedOutUI();
+    return false;
   }
 
-  function showAuth(text = "") {
-    $("authView").hidden = false;
-    $("appView").hidden = true;
-    $("topStatus").textContent = "مرحبًا بك";
-    message("authMsg", text);
-  }
+  try {
+    const data = await api("/me");
 
-  function showPage(name) {
-    document.querySelectorAll(".section").forEach(section => {
-      section.classList.toggle(
-        "active",
-        section.id === "page-" + name
-      );
-    });
-
-    document.querySelectorAll("[data-page]").forEach(button => {
-      button.classList.toggle("active", button.dataset.page === name);
-    });
-  }
-
-  function renderUser() {
-    if (!currentUser) return;
+    currentUser = data.user || data;
 
     const name = currentUser.name || "مستخدم";
     const email = currentUser.email || "—";
-    const code = currentUser.referralCode ||
-                 currentUser.referral_code || "—";
+    const code = currentUser.referralCode || currentUser.referral_code || "—";
 
-    $("sideName").textContent = name;
-    $("sideEmail").textContent = email;
-    $("welcome").textContent = "مرحبًا بك، " + name;
+    $("dashName").textContent = name;
+    $("dashStatus").textContent = "مسجل الدخول";
+    $("dashReferrals").textContent = data.referralCount ?? 0;
 
     $("profileName").textContent = name;
     $("profileEmail").textContent = email;
     $("profileCode").textContent = code;
-    $("homeCode").textContent = code;
-    $("referralDisplay").value = code === "—" ? "" : code;
+
+    const createdAt = currentUser.createdAt || currentUser.created_at;
+    $("profileDate").textContent = createdAt
+      ? new Date(createdAt).toLocaleDateString("ar-DZ")
+      : "—";
+
+    $("referralCode").textContent = code;
+    $("topStatus").textContent = "أهلًا " + name;
+    $("authNav").textContent = "حسابي";
+    $("logoutButton").classList.remove("hidden");
+
+    await loadReferrals();
+
+    if (!silent) {
+      showMessage("accountMessage", "تم تحديث بيانات الحساب.", "success");
+    }
+
+    return true;
+
+  } catch (error) {
+    if (!silent) {
+      showMessage("accountMessage", error.message || "تعذر تحديث البيانات.");
+    }
+
+    if (!localStorage.getItem(TOKEN_KEY)) {
+      currentUser = null;
+      updateLoggedOutUI();
+    }
+
+    return false;
   }
+}
 
-  async function enterApp(user) {
-    currentUser = user || null;
+async function loadReferrals() {
+  if (!localStorage.getItem(TOKEN_KEY)) return;
 
-    if (!currentUser) {
-      const data = await api("/api/me");
-      currentUser = data.user || data;
-    }
+  try {
+    const data = await api("/referrals");
+    referralData = data;
 
-    $("authView").hidden = true;
-    $("appView").hidden = false;
-    $("topStatus").textContent = "مسجل الدخول";
+    $("referralCount").textContent = data.count ?? data.referralCount ?? 0;
+    $("referralGoal").textContent = data.goal ?? 10;
+    $("dashReferrals").textContent = data.count ?? data.referralCount ?? 0;
 
-    renderUser();
-    showPage("home");
-  }
+    const list = Array.isArray(data.referrals) ? data.referrals : [];
 
-  $("showLogin").addEventListener("click", () => {
-    $("lf").hidden = false;
-    $("rf").hidden = true;
-
-    $("showLogin").classList.add("active");
-    $("showRegister").classList.remove("active");
-
-    message("authMsg", "");
-  });
-
-  $("showRegister").addEventListener("click", () => {
-    $("lf").hidden = true;
-    $("rf").hidden = false;
-
-    $("showRegister").classList.add("active");
-    $("showLogin").classList.remove("active");
-
-    message("authMsg", "");
-  });
-
-  $("lf").addEventListener("submit", async event => {
-    event.preventDefault();
-
-    const button = $("lf").querySelector('button[type="submit"]');
-    button.disabled = true;
-    message("authMsg", "جارٍ تسجيل الدخول...");
-
-    const form = new FormData(event.currentTarget);
-
-    try {
-      const data = await api("/api/login", {
-        method: "POST",
-        body: JSON.stringify({
-          email: String(form.get("email")).trim(),
-          password: form.get("password")
-        })
-      });
-
-      if (!data.token) {
-        throw new Error("الخادم لم يُرجع رمز الدخول.");
-      }
-
-      localStorage.setItem(TOKEN_KEY, data.token);
-      await enterApp(data.user);
-
-      message("authMsg", "");
-
-    } catch (error) {
-      message("authMsg", error.message);
-    } finally {
-      button.disabled = false;
-    }
-  });
-
-  $("rf").addEventListener("submit", async event => {
-    event.preventDefault();
-
-    const button = $("rf").querySelector('button[type="submit"]');
-    button.disabled = true;
-    message("authMsg", "جارٍ إنشاء الحساب...");
-
-    const form = new FormData(event.currentTarget);
-
-    try {
-      const data = await api("/api/register", {
-        method: "POST",
-        body: JSON.stringify({
-          name: String(form.get("name")).trim(),
-          email: String(form.get("email")).trim(),
-          password: form.get("password"),
-          referralCode: String(form.get("referralCode") || "").trim()
-        })
-      });
-
-      if (!data.token) {
-        throw new Error(
-          data.message || "لم يُرجع الخادم رمز الدخول."
-        );
-      }
-
-      localStorage.setItem(TOKEN_KEY, data.token);
-      await enterApp(data.user);
-
-      message("authMsg", "");
-
-    } catch (error) {
-      message("authMsg", error.message);
-    } finally {
-      button.disabled = false;
-    }
-  });
-
-  async function refreshProfile() {
-    message("profileMsg", "جارٍ تحديث البيانات...");
-
-    try {
-      const data = await api("/api/me");
-      currentUser = data.user || data;
-      renderUser();
-      message("profileMsg", "تم تحديث بيانات الحساب.");
-    } catch (error) {
-      message("profileMsg", error.message);
-    }
-  }
-
-  async function refreshReferrals() {
-    message("referralMsg", "جارٍ تحميل الإحالات...");
-    $("referralList").textContent = "جارٍ التحميل...";
-
-    try {
-      const data = await api("/api/referrals");
-
-      const referrals = Array.isArray(data)
-        ? data
-        : (data.referrals || data.users || []);
-
-      $("homeCount").textContent = String(referrals.length);
-      $("referralList").replaceChildren();
-
-      if (referrals.length === 0) {
-        $("referralList").textContent =
-          "لا توجد إحالات لعرضها حاليًا.";
-      } else {
-        const list = document.createElement("ul");
-
-        referrals.forEach(user => {
-          const item = document.createElement("li");
-          item.textContent = user.name || user.email || "مستخدم";
-          list.appendChild(item);
-        });
-
-        $("referralList").appendChild(list);
-      }
-
-      message("referralMsg", "تم تحديث الإحالات.");
-
-    } catch (error) {
-      $("referralList").textContent = "تعذر تحميل الإحالات.";
-      message("referralMsg", error.message);
-    }
-  }
-
-  $("refreshProfile").addEventListener("click", refreshProfile);
-  $("refreshReferrals").addEventListener("click", refreshReferrals);
-
-  $("copyReferral").addEventListener("click", async () => {
-    const code = $("referralDisplay").value;
-
-    if (!code) {
-      message("referralMsg", "لا يوجد كود دعوة لنسخه.");
+    if (!list.length) {
+      $("referralList").className = "empty";
+      $("referralList").textContent = "لا توجد دعوات مسجلة حتى الآن.";
       return;
     }
 
-    try {
-      await navigator.clipboard.writeText(code);
-      message("referralMsg", "تم نسخ كود الدعوة.");
-    } catch (_) {
-      $("referralDisplay").select();
-      message("referralMsg", "حدد الكود وانسخه يدويًا.");
-    }
-  });
+    $("referralList").className = "";
+    $("referralList").innerHTML = `
+      <h3>الأشخاص الذين سجلوا عن طريقك</h3>
+      ${list.map((person, index) => `
+        <div class="profile-row">
+          <span>${index + 1}. ${escapeHTML(person.name || "مستخدم")}</span>
+          <span class="muted">${escapeHTML(person.createdAt || person.created_at || "")}</span>
+        </div>
+      `).join("")}
+    `;
 
-  document.querySelectorAll("[data-page]").forEach(button => {
-    button.addEventListener("click", () => {
-      const page = button.dataset.page;
-      showPage(page);
+  } catch (error) {
+    $("referralList").className = "empty";
+    $("referralList").textContent = "تعذر تحميل قائمة الدعوات حاليًا.";
+  }
+}
 
-      if (page === "profile") refreshProfile();
-      if (page === "referrals") refreshReferrals();
-    });
-  });
+async function copyReferral() {
+  const code = currentUser?.referralCode || currentUser?.referral_code;
 
-  document.querySelectorAll("[data-go]").forEach(button => {
-    button.addEventListener("click", () => {
-      showPage(button.dataset.go);
-    });
-  });
-
-  $("logout").addEventListener("click", () => {
-    localStorage.removeItem(TOKEN_KEY);
-    currentUser = null;
-
-    $("lf").reset();
-    $("rf").reset();
-
-    showAuth("تم تسجيل الخروج.");
-  });
-
-  $("loadUsers").addEventListener("click", async () => {
-    const key = $("adminKey").value.trim();
-
-    if (!key) {
-      message("adminMsg", "أدخل مفتاح الإدارة أولًا.");
-      return;
-    }
-
-    message("adminMsg", "جارٍ تحميل البيانات...");
-    $("adminUsers").replaceChildren();
-
-    try {
-      const data = await api("/api/admin/users", {
-        headers: {
-          "x-admin-key": key
-        }
-      });
-
-      const users = Array.isArray(data)
-        ? data
-        : (data.users || []);
-
-      if (!users.length) {
-        $("adminUsers").textContent = "لا توجد بيانات للعرض.";
-      } else {
-        const table = document.createElement("table");
-        const head = document.createElement("tr");
-
-        ["الاسم", "البريد الإلكتروني"].forEach(label => {
-          const th = document.createElement("th");
-          th.textContent = label;
-          head.appendChild(th);
-        });
-
-        table.appendChild(head);
-
-        users.forEach(user => {
-          const row = document.createElement("tr");
-
-          [user.name || "—", user.email || "—"].forEach(value => {
-            const cell = document.createElement("td");
-            cell.textContent = value;
-            row.appendChild(cell);
-          });
-
-          table.appendChild(row);
-        });
-
-        $("adminUsers").appendChild(table);
-      }
-
-      message("adminMsg", "تم تحميل البيانات.");
-
-    } catch (error) {
-      message("adminMsg", error.message);
-    }
-  });
-
-  async function start() {
-    if (!token()) {
-      showAuth();
-      return;
-    }
-
-    try {
-      const data = await api("/api/me");
-      await enterApp(data.user || data);
-    } catch (_) {
-      localStorage.removeItem(TOKEN_KEY);
-      showAuth("تعذر التحقق من الجلسة. سجّل الدخول مجددًا.");
-    }
+  if (!code) {
+    showMessage("referralMessage", "سجّل الدخول أولًا لعرض رمز الدعوة.");
+    return;
   }
 
-  start();
-})();
+  try {
+    await navigator.clipboard.writeText(code);
+    showMessage("referralMessage", "تم نسخ رمز الدعوة.", "success");
+  } catch {
+    showMessage("referralMessage", "تعذر النسخ تلقائيًا. انسخ الرمز يدويًا: " + code);
+  }
+}
+
+function logout() {
+  localStorage.removeItem(TOKEN_KEY);
+  currentUser = null;
+  referralData = null;
+
+  updateLoggedOutUI();
+  showSection("home");
+}
+
+function updateLoggedOutUI() {
+  $("dashName").textContent = "زائر";
+  $("dashStatus").textContent = "غير مسجل";
+  $("dashReferrals").textContent = "0";
+
+  $("profileName").textContent = "—";
+  $("profileEmail").textContent = "—";
+  $("profileCode").textContent = "—";
+  $("profileDate").textContent = "—";
+
+  $("referralCode").textContent = "سجّل الدخول لعرض رمزك";
+  $("referralCount").textContent = "0";
+  $("referralGoal").textContent = "10";
+
+  $("referralList").className = "empty";
+  $("referralList").textContent = "سجّل الدخول لعرض بيانات الدعوات.";
+
+  $("topStatus").textContent = "مرحبًا بك";
+  $("authNav").textContent = "تسجيل الدخول";
+  $("logoutButton").classList.add("hidden");
+}
+
+async function initialize() {
+  $("year").textContent = new Date().getFullYear();
+  renderPackages();
+  updateLoggedOutUI();
+
+  if (localStorage.getItem(TOKEN_KEY)) {
+    const success = await refreshAccount(true);
+    if (success) {
+      $("topStatus").textContent = "أهلًا " + (currentUser?.name || "");
+    }
+  }
+}
+
+initialize();
 </script>
+
 </body>
 </html>
