@@ -1,206 +1,279 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1020">
 <title>Future Investment AI</title>
+
 <style>
-body{background:#0b1020;color:white;font-family:Arial,sans-serif;margin:0;padding:18px}
-main{max-width:500px;margin:auto}
-.card{background:#17233b;padding:20px;margin-bottom:16px;border-radius:14px}
-h1{color:#30e0ae;text-align:center}
-label{display:block;margin:12px 0 6px}
-input{width:100%;padding:12px;box-sizing:border-box;background:#0b1020;color:white;border:1px solid #536582;border-radius:7px}
-button{width:100%;padding:13px;margin-top:14px;background:#30e0ae;border:0;border-radius:7px;font-weight:bold}
-#msg{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8}
-.small{line-height:1.8;color:#cbd5e1}
+:root{
+--bg:#0b1020;
+--panel:#131f35;
+--panel2:#192944;
+--line:#2b3b58;
+--text:#f3f6fc;
+--muted:#aebbd0;
+--green:#30e0ae;
+--blue:#6da9ff;
+--red:#ff7c8b
+}
+*{box-sizing:border-box}
+body{
+margin:0;
+background:radial-gradient(ellipse at top,#142544 0,#0b1020 55%);
+color:var(--text);
+font-family:Arial,Tahoma,sans-serif;
+min-height:100vh
+}
+button,input{font:inherit}
+button{
+cursor:pointer;
+border:0;
+border-radius:10px;
+padding:12px 16px;
+font-weight:700;
+background:var(--green);
+color:#07151b
+}
+button:disabled{opacity:.55;cursor:wait}
+.wrap{width:min(1150px,100%);margin:auto;padding:20px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+width:46px;height:46px;border-radius:14px;
+background:linear-gradient(135deg,var(--green),var(--blue));
+display:grid;place-items:center;color:#061321;
+font-weight:900;font-size:20px
+}
+.brand h1{font-size:20px;margin:0}
+.brand p{color:var(--muted);margin:5px 0 0;font-size:13px}
+.top{
+display:flex;justify-content:space-between;align-items:center;
+gap:15px;margin-bottom:22px
+}
+.pill{
+border:1px solid var(--line);padding:8px 12px;
+border-radius:999px;color:var(--muted);font-size:12px
+}
+.card{
+background:linear-gradient(150deg,rgba(25,41,68,.96),rgba(17,29,49,.96));
+border:1px solid var(--line);border-radius:18px;padding:20px;
+box-shadow:0 12px 35px #0002;margin-bottom:16px
+}
+.hero{padding:28px}
+.hero h2{font-size:clamp(24px,4vw,36px);margin:0 0 10px}
+.hero p,.muted{color:var(--muted);line-height:1.8}
+.grid{
+display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px
+}
+.stats{
+display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px
+}
+.stat{
+background:#0d182a;border:1px solid var(--line);
+border-radius:14px;padding:16px
+}
+.stat small{color:var(--muted)}
+.stat strong{
+display:block;font-size:23px;margin-top:10px;overflow-wrap:anywhere
+}
+.auth{max-width:500px;margin:7vh auto}
+.auth h2,.section-title{margin-top:0}
+label{
+display:block;color:var(--muted);font-size:14px;margin:13px 0 7px
+}
+input{
+width:100%;padding:13px;background:#0a1425;
+border:1px solid #344765;border-radius:10px;
+color:var(--text);outline:none
+}
+input:focus{border-color:var(--green)}
+form button{width:100%;margin-top:17px}
+.switch{display:flex;gap:8px;margin-bottom:15px}
+.switch button{flex:1;background:#263854;color:var(--text)}
+.switch button.active{background:var(--green);color:#07151b}
+.msg{white-space:pre-wrap;line-height:1.7;color:var(--green);overflow-wrap:anywhere}
+.error{color:var(--red)}
+[hidden]{display:none!important}
+.layout{
+display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px
+}
+.side{align-self:start;position:sticky;top:15px}
+.nav{display:grid;gap:8px;margin-top:18px}
+.nav button{
+text-align:right;background:transparent;color:var(--muted);
+border:1px solid transparent
+}
+.nav button.active,.nav button:hover{
+background:#20334f;color:var(--text);border-color:var(--line)
+}
+.section{display:none}
+.section.active{display:block}
+.package{position:relative;display:flex;flex-direction:column;gap:12px}
+.package h3{margin:0}
+.price{font-size:26px;color:var(--green);font-weight:800}
+.package p{color:var(--muted);line-height:1.7;flex:1}
+.package button{width:100%;background:#263854;color:var(--text)}
+.package.featured{border-color:var(--green)}
+.badge{
+font-size:12px;color:var(--green);border:1px solid #236c5b;
+padding:5px 9px;border-radius:999px;width:max-content
+}
+.row{
+display:flex;align-items:center;justify-content:space-between;
+gap:12px;flex-wrap:wrap
+}
+.copy{background:#263854;color:white}
+.table-wrap{overflow:auto}
+table{border-collapse:collapse;width:100%;min-width:500px}
+th,td{text-align:right;padding:12px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-size:13px}
+.notice{
+background:#2b2517;border:1px solid #6b5726;color:#f5dca0;
+border-radius:12px;padding:13px;line-height:1.7;font-size:13px
+}
+.empty{
+border:1px dashed var(--line);padding:22px;text-align:center;
+color:var(--muted);border-radius:12px
+}
+.foot{text-align:center;color:#8090a9;font-size:12px;padding:20px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.danger{background:#492630;color:#ffe5e8}
+.small{font-size:12px;color:var(--muted);line-height:1.7}
+
+@media(max-width:800px){
+.layout{grid-template-columns:1fr}
+.side{position:static}
+.nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.stats{grid-template-columns:1fr 1fr}
+.top{align-items:flex-start}
+.two{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+.wrap{padding:12px}
+.grid{grid-template-columns:1fr}
+.hero{padding:20px}
+.card{padding:16px}
+.top{flex-direction:column}
+.stats{grid-template-columns:1fr 1fr}
+.stat strong{font-size:19px}
+.nav{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
+
 <body>
+<div class="wrap">
+
+<header class="top">
+  <div class="brand">
+    <div class="logo">F</div>
+    <div>
+      <h1>Future Investment AI</h1>
+      <p>مساحتك الرقمية في مكان واحد</p>
+    </div>
+  </div>
+  <span class="pill" id="topStatus">مرحبًا بك</span>
+</header>
+
+<section id="authView" class="auth card">
+  <div class="hero" style="padding:0 0 12px">
+    <h2>أهلًا بك 👋</h2>
+    <p>أنشئ حسابك أو سجّل الدخول للوصول إلى لوحة التحكم الخاصة بك.</p>
+  </div>
+
+  <div class="switch">
+    <button id="showLogin" class="active" type="button">تسجيل الدخول</button>
+    <button id="showRegister" type="button">إنشاء حساب</button>
+  </div>
+
+  <form id="lf">
+    <label>البريد الإلكتروني</label>
+    <input name="email" type="email" autocomplete="email" required>
+
+    <label>كلمة المرور</label>
+    <input name="password" type="password" autocomplete="current-password" required>
+
+    <button type="submit">دخول إلى حسابي</button>
+  </form>
+
+  <form id="rf" hidden>
+    <label>الاسم الكامل</label>
+    <input name="name" required minlength="2" maxlength="80" autocomplete="name">
+
+    <label>البريد الإلكتروني</label>
+    <input name="email" type="email" required autocomplete="email">
+
+    <label>كلمة المرور (8 أحرف على الأقل)</label>
+    <input name="password" type="password" minlength="8" required autocomplete="new-password">
+
+    <label>كود الدعوة (اختياري)</label>
+    <input name="referralCode" autocomplete="off">
+
+    <button type="submit">إنشاء حساب</button>
+  </form>
+
+  <p id="authMsg" class="msg" role="status"></p>
+</section>
+
+<div id="appView" hidden>
+<div class="layout">
+
+<aside class="card side">
+  <div class="row">
+    <div>
+      <strong id="sideName">حسابي</strong>
+      <div id="sideEmail" class="small"></div>
+    </div>
+    <span class="badge">متصل</span>
+  </div>
+
+  <nav class="nav" id="nav">
+    <button class="active" data-page="home">🏠 الرئيسية</button>
+    <button data-page="packages">📦 الباقات</button>
+    <button data-page="profile">👤 الملف الشخصي</button>
+    <button data-page="referrals">🤝 الدعوات</button>
+    <button data-page="admin">🛡️ الإدارة</button>
+  </nav>
+
+  <button id="logout" class="danger" style="width:100%;margin-top:16px">
+    تسجيل الخروج
+  </button>
+</aside>
+
 <main>
-<section class="card">
-<h1>Future Investment AI</h1>
-<p class="small">مرحبًا بك في المنصة التجريبية. لا توجد معاملات مالية حقيقية.</p>
-<p id="msg"></p>
-</section>
 
-<section class="card" id="reg">
-<h2>إنشاء حساب</h2>
-<form id="rf">
-<label>الاسم</label><input name="name" required minlength="2">
-<label>البريد الإلكتروني</label><input name="email" type="email" required>
-<label>كلمة المرور (8 أحرف على الأقل)</label><input name="password" type="password" required minlength="8">
-<label>كود الدعوة (اختياري)</label><input name="referralCode">
-<button>إنشاء حساب</button>
-</form>
-</section>
+<section class="section active" id="page-home">
+  <div class="card hero">
+    <span class="badge">لوحة التحكم</span>
+    <h2 id="welcome">مرحبًا بك</h2>
+    <p>تابع بيانات حسابك وإحالاتك من لوحة واحدة واضحة وسهلة الاستخدام.</p>
+  </div>
 
-<section class="card" id="log">
-<h2>تسجيل الدخول</h2>
-<form id="lf">
-<label>البريد الإلكتروني</label><input name="email" type="email" required>
-<label>كلمة المرور</label><input name="password" type="password" required>
-<button>دخول</button>
-</form>
-</section>
+  <div class="stats">
+    <div class="stat">
+      <small>حالة الحساب</small>
+      <strong>نشط</strong>
+    </div>
+    <div class="stat">
+      <small>عدد الدعوات</small>
+      <strong id="homeCount">0</strong>
+    </div>
+    <div class="stat">
+      <small>كود الدعوة</small>
+      <strong id="homeCode" style="font-size:17px">—</strong>
+    </div>
+  </div>
 
-<section class="card" id="account" hidden>
-<h2>حسابك التجريبي</h2>
-<p id="name"></p>
-<p id="email"></p>
-<p>كود الدعوة: <b id="code"></b></p>
-<p>عدد الدعوات: <b id="count">0</b></p>
-<p class="small">لا توجد إيداعات أو سحوبات أو أرباح حقيقية.</p>
-<button type="button" id="logout">تسجيل الخروج</button>
-</section>
-</main>
+  <div class="card">
+    <h3 class="section-title">اختصارات</h3>
+    <div class="grid">
+      <button data-go="packages">عرض الباقات</button>
+      <button class="copy" data-go="referrals">إدارة الدعوات</button>
+      <button class="copy" data-go="profile">بيانات حسابي</button>
+    </div>
+  </div>
 
-<script>
-const $=id=>document.getElementById(id);
-function msg(t){$('msg').textContent=t}
-async function api(url,data,token){
- const opt={method:data?'POST':'GET',headers:{}};
- if(data){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(data)}
- if(token)opt.headers.Authorization='Bearer '+token;
- const r=await fetch(url,opt);
- const j=await r.json().catch(()=>({}));
- if(!r.ok)throw Error(j.error||'حدث خطأ في الخادم');
- return j;
-}
-async function showAccount(token){
- const d=await api('/api/me',null,token);
- $('name').textContent='مرحبًا '+d.user.name;
- $('email').textContent=d.user.email;
- $('code').textContent=d.user.referralCode||'غير متوفر';
- $('count').textContent=d.referralCount??0;
- $('reg').hidden=true;
- $('log').hidden=true;
- $('account').hidden=false;
- msg('تم الدخول بنجاح.');
-}
-
-async function submit(event) {
-  event.preventDefault();
-
-  const form = event.currentTarget;
-  const button = form.querySelector('button');
-  const isRegister = form.id === 'rf';
-
-  button.disabled = true;
-  msg('جارٍ إنشاء الحساب...');
-
-  const data = Object.fromEntries(new FormData(form).entries());
-
-  try {
-    const result = await api(
-      isRegister ? '/api/register' : '/api/login',
-      data
-    );
-
-    if (!result.token) {
-      throw new Error('لم يتم إنشاء جلسة الدخول.');
-    }
-
-    localStorage.setItem('futureAI_demo_token', result.token);
-    await showAccount(result.token);
-
-    if (result.message) {
-      msg(result.message);
-    }
-  } catch (error) {
-    msg(error.message || 'حدث خطأ. حاول مرة أخرى.');
-  } finally {
-    button.disabled = false;
-  }
-}
-
-$('rf').addEventListener('submit', submit);
-$('lf').addEventListener('submit', submit);
-
-$('logout').addEventListener('click', () => {
-  localStorage.removeItem('futureAI_demo_token');
-  $('account').hidden = true;
-  $('reg').hidden = false;
-  $('log').hidden = false;
-  msg('تم تسجيل الخروج.');
-});
-
-(async () => {
-  const token = localStorage.getItem('futureAI_demo_token');
-
-  if (token) {
-    try {
-      await showAccount(token);
-    } catch (error) {
-      localStorage.removeItem('futureAI_demo_token');
-      msg('سجّل الدخول مجددًا.');
-    }
-  }
-})();
-</script>
-async function submit(event) {
-    event.preventDefault();
-
-    const form = event.currentTarget;
-    const button = form.querySelector('button');
-    const isRegister = form.id === 'rf';
-
-    button.disabled = true;
-    msg('جارٍ إنشاء الحساب...');
-
-    const data = Object.fromEntries(
-        new FormData(form).entries()
-    );
-
-    try {
-        const result = await api(
-            isRegister ? '/api/register' : '/api/login',
-            data
-        );
-
-        if (!result.token) {
-            throw new Error('لم يتم إنشاء جلسة الدخول.');
-        }
-
-        localStorage.setItem(
-            'futureAI_demo_token',
-            result.token
-        );
-
-        await showAccount(result.token);
-
-        if (result.message) {
-            msg(result.message);
-        }
-    } catch (error) {
-        msg(error.message || 'حدث خطأ. حاول مرة أخرى.');
-    } finally {
-        button.disabled = false;
-    }
-}
-
-$('rf').addEventListener('submit', submit);
-$('lf').addEventListener('submit', submit);
-
-$('logout').addEventListener('click', () => {
-    localStorage.removeItem('futureAI_demo_token');
-    $('account').hidden = true;
-    $('reg').hidden = false;
-    $('log').hidden = false;
-    msg('تم تسجيل الخروج.');
-});
-
-(async () => {
-    const token = localStorage.getItem('futureAI_demo_token');
-
-    if (token) {
-        try {
-            await showAccount(token);
-        } catch (error) {
-            localStorage.removeItem('futureAI_demo_token');
-            msg('انتهت جلسة الدخول. يرجى تسجيل الدخول مجددًا.');
-        }
-    }
-})();
-</body>
-</html>
+  <div class="notice">
+    الباقات المعروضة معلومات تعريفية فقط. لا يتم تنفيذ إيد
