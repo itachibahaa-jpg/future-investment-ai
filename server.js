@@ -80,7 +80,7 @@ app.get('/api/referrals', auth, (req,res) => {
  res.json({ referrals: rows, count: countRefs.get(req.userId).n, goal: 10, rewardEnabled: false });
 });
 app.get('/api/admin/users', (req,res) => {
- if (!safeEqual(req.get('x-admin-key') || '', process.env.ADMIN_API_KEY)) return res.status(403).مصرح.' });
+  if (!safeEqual(req.get('x-admin-key') || '', process.env.ADMIN_API_KEY)) return res.status(403).json({ error: 'غير مصرح.' });
  const rows = db.prepare(`SELECT u.id,u.name,u.email,u.referral_code,u.created_at,u.status,
  (SELECT COUNT(*) FROM users r WHERE r.referred_by=u.id AND r.status='active') AS referral_count
  FROM users u ORDER BY u.id DESC LIMIT 500`).all();
