@@ -1055,7 +1055,30 @@ async function refreshAccount(silent = false) {
   }
 }
 
-async function loadReferrals() {
+async function loadSubscription() {
+  if (!localStorage.getItem(TOKEN_KEY)) {
+    $("subscriptionStatus").textContent = "لا يوجد اشتراك نشط";
+    $("subscriptionPackage").textContent = "—";
+    return;
+  }
+
+  try {
+    const data = await api("/me/subscription");
+    const subscription = data.subscription;
+
+    if (subscription && subscription.status === "active") {
+      $("subscriptionStatus").textContent = "نشط";
+      $("subscriptionPackage").textContent =
+        subscription.package_name || "—";
+    } else {
+      $("subscriptionStatus").textContent = "لا يوجد اشتراك نشط";
+      $("subscriptionPackage").textContent = "—";
+    }
+  } catch (error) {
+    console.error("Subscription loading error:", error);
+  }
+}
+  async function loadReferrals() {
   if (!localStorage.getItem(TOKEN_KEY)) return;
 
   try {
