@@ -131,7 +131,53 @@ app.post('/api/package-requests', auth, (req, res) => {
     res.status(500).json({ error: 'تعذر تسجيل الطلب حاليًا.' });
   }
 });
+app.post('/api/payment-submissions', auth, (req, res) => {
+  const { package_name, payment_method, receipt_data } = req.body || {};
 
+  const prices = {
+    'الباقة البرونزية': 5000,
+    'الباقة الفضية': 7000,
+    'الباقة الذهبية': 10000,
+    'الباقة الماسية': 20000,
+    'الباقة الماسية المميزة': 50000,
+    'باقة VIP': 70000,
+    'باقة VIP Premium': 100000
+  };
+
+  if (!prices[package_name]) {
+    return res.status(400).json({ error: 'الباقة غير صحيحة.' });
+  }
+
+  if (!['BaridiMob', 'CCP'].includes(payment_method)) {
+    return res.status(400).json({ error: 'طريقة الدفع غير صحيحة.' });
+  }
+
+  if (
+    typeof receipt_data !== 'string' ||
+    !/^data:image\/(png|jpeg|webp);base64,/.test(receipt_data) ||
+    receipt_data.length > 2800000
+  ) {
+    return res.status(400).json({ error: 'صورة الوصل غير صحيحة أو كبيرة.' });
+  }
+
+  const result = db.prepare(`
+    INSERT INTO payment_submissions
+    (user_id, package_name, package_price, payment_method, receipt_data)
+    VALUES (?, ?, ?, ?, ?)
+  `).run(
+    req.userId,
+    package_name,
+    prices[package_name],
+    payment_method,
+    receipt_data
+  );
+
+  res.status(201).json({
+    success: true,
+    status: 'pending',
+    message: 'تم استلام الوصل، والطلب قيد المراجعة.'
+  });
+});
 app.get('/api/admin/users', (req,res) => {
   if (!safeEqual(req.get('x-admin-key') || '', process.env.ADMIN_API_KEY)) return res.status(403).json({ error: 'غير مصرح.' });
  const rows = db.prepare(`SELECT u.id,u.name,u.email,u.referral_code,u.created_at,u.status,
