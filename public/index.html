@@ -1387,8 +1387,9 @@ const packageName = packageText === "—" ? "" : packageText;
   const file = $("paymentReceipt").files[0];
 
   if (!packageName) {
-    showMessage("paymentMessage", "اختر الباقة أولًا.");
-    return;
+  showMessage("paymentMessage", "اختر الباقة أولًا.");
+  return;
+  }
   }
 
   if (!file) {
