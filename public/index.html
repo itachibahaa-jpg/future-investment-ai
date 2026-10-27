@@ -544,7 +544,55 @@ footer {
       تأكد من شروط الخدمة وآلية الدفع قبل إجراء أي تحويل مالي.
     </div>
   </section>
+  <section class="section hidden" id="payment">
+    <h2 class="section-title">إرسال وصل الدفع</h2>
 
+    <div class="card form-card">
+      <h3>بيانات التحويل</h3>
+
+      <p>صاحب الحساب: سيف عزاز</p>
+
+      <div class="field">
+        <label>رقم CCP</label>
+        <input value="0018780617/29" readonly>
+      </div>
+
+      <div class="field">
+        <label>رقم BaridiMob</label>
+        <input value="00799999001878061729" readonly>
+      </div>
+
+      <div class="field">
+        <label>طريقة الدفع</label>
+        <select id="paymentMethod">
+          <option value="BaridiMob">BaridiMob</option>
+          <option value="CCP">CCP</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>اختر صورة وصل الدفع</label>
+        <input
+          type="file"
+          id="paymentReceipt"
+          accept="image/png,image/jpeg,image/webp">
+      </div>
+
+      <button
+        class="btn btn-primary full"
+        onclick="submitPayment()">
+        إرسال الوصل للمراجعة
+      </button>
+
+      <div id="paymentMessage" class="message"></div>
+
+      <button
+        class="btn btn-secondary full"
+        onclick="showSection('packages')">
+        العودة إلى الباقات
+      </button>
+    </div>
+  </section>
   <section class="section hidden" id="account">
     <h2 class="section-title">الملف الشخصي</h2>
     <p class="section-subtitle">معلومات حسابك.</p>
