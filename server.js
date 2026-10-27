@@ -223,6 +223,95 @@ app.get('/api/admin/payment-submissions', (req, res) => {
     res.status(500).json({ error: 'تعذر جلب طلبات الدفع.' });
   }
 });
+app.patch('/api/admin/payment-submissions/:id', (req, res) => {
+  const key = req.get('x-admin-key') || '';
+
+  if (
+    !process.env.ADMIN_API_KEY ||
+    !safeEqual(key, process.env.ADMIN_API_KEY)
+  ) {
+    return res.status(403).json({ error: 'غير مصرح.' });
+  }
+
+  const id = Number(req.params.id);
+  const status = req.body?.status;
+
+  if (!Number.isSafeInteger(id) || id < 1) {
+    return res.status(400).json({ error: 'رقم الطلب غير صحيح.' });
+  }
+
+  if (!['approved', 'rejected'].includes(status)) {
+    return res.status(400).json({
+      error: 'الحالة يجب أن تكون approved أو rejected.'
+    });
+  }
+
+  try {
+    const processRequest = db.transaction(() => {
+      const submission = db.prepare(
+        'SELECT * FROM payment_submissions WHERE id = ?'
+      ).get(id);
+
+      if (!submission) {
+        return { error: 'الطلب غير موجود.', code: 404 };
+      }
+
+      if (submission.status !== 'pending') {
+        return {
+          error: 'تمت معالجة هذا الطلب مسبقًا.',
+          code: 409
+        };
+      }
+
+      if (status === 'approved') {
+        db.prepare(`
+          INSERT INTO user_subscriptions
+            (user_id, package_name, package_price, status,
+             activated_at, payment_submission_id)
+          VALUES (?, ?, ?, 'active', datetime('now'), ?)
+          ON CONFLICT(user_id) DO UPDATE SET
+            package_name = excluded.package_name,
+            package_price = excluded.package_price,
+            status = 'active',
+            activated_at = datetime('now'),
+            payment_submission_id = excluded.payment_submission_id
+        `).run(
+          submission.user_id,
+          submission.package_name,
+          submission.package_price,
+          submission.id
+        );
+      }
+
+      db.prepare(
+        'UPDATE payment_submissions SET status = ? WHERE id = ?'
+      ).run(status, id);
+
+      return {
+        success: true,
+        status,
+        message: status === 'approved'
+          ? 'تم قبول الطلب وتفعيل الاشتراك.'
+          : 'تم رفض الطلب.'
+      };
+    });
+
+    const result = processRequest();
+
+    if (result.error) {
+      return res.status(result.code).json({
+        error: result.error
+      });
+    }
+
+    return res.json(result);
+  } catch (error) {
+    console.error('Payment review error:', error.message);
+    return res.status(500).json({
+      error: 'تعذرت معالجة الطلب.'
+    });
+  }
+});
 function safeEqual(a,b) { const aa=Buffer.from(a); const bb=Buffer.from(b); return aa.length===bb.length && crypto.timingSafeEqual(aa,bb); }
 // Update account name
 app.patch('/api/me/profile', auth, (req, res) => {
