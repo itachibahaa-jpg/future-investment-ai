@@ -1033,6 +1033,7 @@ async function refreshAccount(silent = false) {
     $("logoutButton").classList.remove("hidden");
 
     await loadReferrals();
+    await loadSubscription();
 
     if (!silent) {
       showMessage("accountMessage", "تم تحديث بيانات الحساب.", "success");
