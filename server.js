@@ -88,6 +88,37 @@ app.get('/api/referrals', auth, (req,res) => {
  const rows = db.prepare("SELECT name, created_at FROM users WHERE referred_by=? AND status='active' ORDER BY id DESC LIMIT 100").all(req.userId);
  res.json({ referrals: rows, count: countRefs.get(req.userId).n, goal: 10, rewardEnabled: false });
 });
+app.post('/api/package-requests', auth, (req, res) => {
+  const allowedPackages = {
+    'الباقة البرونزية': 5000,
+    'الباقة الفضية': 7000,
+    'الباقة الذهبية': 10000,
+    'الباقة الماسية': 20000,
+    'الباقة الماسية المميزة': 50000,
+    'باقة VIP': 70000,
+    'باقة VIP Premium': 100000
+  };
+
+  const { package_name } = req.body || {};
+  const package_price = allowedPackages[package_name];
+
+  if (!package_price) {
+    return res.status(400).json({ error: 'الباقة غير صحيحة.' });
+  }
+
+  try {
+    const result = db.prepare(
+      'INSERT INTO package_requests (user_id, package_name, package_price) VALUES (?, ?, ?)'
+    ).run(req.userId, package_name, package_price);
+
+    res.status(201).json({
+      success: true,
+      message: 'تم تسجيل طلب الاستفسار عن الباقة بنجاح. هذا الطلب ليس عملية دفع أو تفعيل.',
+      requestId: Number(result.lastInsertRowid)
+    });
+  } catch (error) {
+    console.error('Package request error:', error.message);
+    res.status(500).json({ error: 'تعذر تسجيل الطلب ح
 app.get('/api/admin/users', (req,res) => {
   if (!safeEqual(req.get('x-admin-key') || '', process.env.ADMIN_API_KEY)) return res.status(403).json({ error: 'غير مصرح.' });
  const rows = db.prepare(`SELECT u.id,u.name,u.email,u.referral_code,u.created_at,u.status,
