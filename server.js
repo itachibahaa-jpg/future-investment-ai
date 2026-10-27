@@ -107,6 +107,15 @@ app.get('/api/me', auth, (req,res) => {
  const referralCount = countRefs.get(user.id).n;
  res.json({ user: publicUser(user), referralCount, referralGoal: 10, proposedRewardDA: referralCount >= 10 ? 5000 : null, rewardStatus: 'not_enabled_no_payment', notice: 'الوصول إلى 10 دعوات لا ينشئ رصيدًا ماليًا أو حقًا بالدفع تلقائيًا؛ المكافأة غير مفعّلة في النسخة التجريبية.' });
 });
+app.get('/api/me/subscription', auth, (req, res) => {
+  const subscription = db.prepare(`
+    SELECT package_name, package_price, status, activated_at
+    FROM user_subscriptions
+    WHERE user_id = ?
+  `).get(req.userId);
+
+  res.json({ subscription: subscription || null });
+});
 app.get('/api/referrals', auth, (req,res) => {
  const rows = db.prepare("SELECT name, created_at FROM users WHERE referred_by=? AND status='active' ORDER BY id DESC LIMIT 100").all(req.userId);
  res.json({ referrals: rows, count: countRefs.get(req.userId).n, goal: 10, rewardEnabled: false });
