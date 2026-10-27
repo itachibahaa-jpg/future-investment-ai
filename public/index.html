@@ -522,6 +522,68 @@ header {
   color: #b5c4da;
   font-weight: 700;
 }
+  .nav button:hover {
+  color: #f4f7ff;
+  border-color: rgba(77,240,181,.45);
+  background: #1a3148;
+  transform: translateY(-2px);
+}
+
+.nav button.active {
+  background: rgba(77,240,181,.12);
+  border-color: rgba(77,240,181,.55);
+  color: #4df0b5;
+}
+
+.card {
+  border-color: rgba(139,171,211,.17);
+  border-radius: 20px;
+  background: linear-gradient(145deg, #111f34, #0b1627);
+  box-shadow: 0 12px 30px rgba(0,0,0,.12);
+}
+
+.package-card {
+  border-color: rgba(90,155,255,.30);
+  background:
+    radial-gradient(circle at 90% 0%, rgba(90,155,255,.12), transparent 36%),
+    linear-gradient(145deg, #14253b, #0a1424);
+}
+
+.package-card:hover {
+  border-color: rgba(77,240,181,.7);
+  box-shadow: 0 18px 38px rgba(0,0,0,.27);
+}
+
+.field input {
+  border-radius: 12px;
+  background: rgba(6,15,28,.92);
+  border-color: rgba(139,171,211,.22);
+}
+
+.field input:focus {
+  border-color: #4df0b5;
+  box-shadow: 0 0 0 3px rgba(77,240,181,.09);
+}
+
+.notice {
+  border-radius: 14px;
+}
+
+@media (max-width: 480px) {
+  .hero-box {
+    border-radius: 22px;
+    padding: 22px;
+  }
+
+  .nav {
+    gap: 7px;
+  }
+
+  .nav button {
+    padding: 9px 11px;
+    font-size: 13px;
+  }
+}
 </style>
 </head>
 
