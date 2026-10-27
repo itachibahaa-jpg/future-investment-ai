@@ -473,7 +473,41 @@ footer {
         <span class="muted">تاريخ إنشاء الحساب</span>
         <strong id="profileDate">—</strong>
       </div>
+      <hr style="border-color:var(--line);margin:25px 0">
 
+      <h3>تعديل الاسم</h3>
+
+      <div class="field">
+        <label for="editProfileName">الاسم الجديد</label>
+        <input id="editProfileName" type="text" maxlength="80" placeholder="أدخل اسمك الجديد">
+      </div>
+
+      <button class="btn btn-primary full" onclick="saveProfileName()">
+        حفظ الاسم الجديد
+      </button>
+
+      <hr style="border-color:var(--line);margin:25px 0">
+
+      <h3>تغيير كلمة المرور</h3>
+
+      <div class="field">
+        <label for="currentPassword">كلمة المرور الحالية</label>
+        <input id="currentPassword" type="password" autocomplete="current-password" placeholder="كلمة المرور الحالية">
+      </div>
+
+      <div class="field">
+        <label for="newPassword">كلمة المرور الجديدة</label>
+        <input id="newPassword" type="password" minlength="8" maxlength="128" autocomplete="new-password" placeholder="8 أحرف على الأقل">
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">تأكيد كلمة المرور الجديدة</label>
+        <input id="confirmPassword" type="password" minlength="8" maxlength="128" autocomplete="new-password" placeholder="أعد كتابة كلمة المرور الجديدة">
+      </div>
+
+      <button class="btn btn-blue full" onclick="changeAccountPassword()">
+        تغيير كلمة المرور
+      </button>
       <div class="actions" style="margin-top:20px">
         <button class="btn btn-secondary" onclick="refreshAccount()">تحديث البيانات</button>
         <button class="btn btn-danger hidden" id="logoutButton" onclick="logout()">تسجيل الخروج</button>
@@ -938,7 +972,7 @@ function updateLoggedOutUI() {
   $("authNav").textContent = "تسجيل الدخول";
   $("logoutButton").classList.add("hidden");
 }
-
+async function saveProfileName() {
 async function initialize() {
   $("year").textContent = new Date().getFullYear();
   renderPackages();
