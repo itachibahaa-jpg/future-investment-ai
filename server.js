@@ -32,6 +32,15 @@ CREATE TABLE IF NOT EXISTS users (
  status TEXT NOT NULL DEFAULT 'active'
 );
 CREATE INDEX IF NOT EXISTS idx_users_referred_by ON users(referred_by);
+CREATE TABLE IF NOT EXISTS package_requests (
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ user_id INTEGER NOT NULL REFERENCES users(id),
+ package_name TEXT NOT NULL,
+ package_price INTEGER NOT NULL,
+ status TEXT NOT NULL DEFAULT 'inquiry_received',
+ created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_package_requests_user_id ON package_requests(user_id);
 `);
 const findByEmail = db.prepare('SELECT * FROM users WHERE email = ?');
 const findByCode = db.prepare('SELECT * FROM users WHERE referral_code = ?');
