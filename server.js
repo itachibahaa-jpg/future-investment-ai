@@ -64,7 +64,6 @@ CREATE TABLE IF NOT EXISTS user_subscriptions (
  activated_at TEXT NOT NULL DEFAULT (datetime('now')),
  payment_submission_id INTEGER NOT NULL UNIQUE REFERENCES payment_submissions(id)
 );
-`);
 CREATE TABLE IF NOT EXISTS daily_wheel_spins (
  id INTEGER PRIMARY KEY AUTOINCREMENT,
  user_id INTEGER NOT NULL REFERENCES users(id),
@@ -75,7 +74,8 @@ CREATE TABLE IF NOT EXISTS daily_wheel_spins (
 );
 
 CREATE INDEX IF NOT EXISTS idx_wheel_spins_user
-ON daily_wheel_spins(user_id);
+ON daily_wheel_spins(user_id);`);
+
 const findByEmail = db.prepare('SELECT * FROM users WHERE email = ?');
 const findByCode = db.prepare('SELECT * FROM users WHERE referral_code = ?');
 const countRefs = db.prepare("SELECT COUNT(*) AS n FROM users WHERE referred_by = ? AND status = 'active'");
