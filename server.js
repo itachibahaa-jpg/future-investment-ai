@@ -118,7 +118,7 @@ app.post('/api/package-requests', auth, (req, res) => {
     });
   } catch (error) {
     console.error('Package request error:', error.message);
-    res.status(500).json({ error: 'تعذر تسجيل الطلب ح
+    res.status(500).json({ error: 'تعذر تسجيل الطلب حاليًا.' });
 app.get('/api/admin/users', (req,res) => {
   if (!safeEqual(req.get('x-admin-key') || '', process.env.ADMIN_API_KEY)) return res.status(403).json({ error: 'غير مصرح.' });
  const rows = db.prepare(`SELECT u.id,u.name,u.email,u.referral_code,u.created_at,u.status,
