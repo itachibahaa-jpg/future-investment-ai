@@ -1032,6 +1032,9 @@ function showSection(sectionId) {
   });
 
   window.scrollTo({top: 0, behavior: "smooth"});
+  if (sectionId === "reviews") {
+  renderReviews();
+  }
 
   if (sectionId === "account" || sectionId === "referrals") {
     if (currentUser) refreshAccount();
