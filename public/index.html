@@ -868,7 +868,22 @@ header {
       <div id="referralList" class="empty">سجّل الدخول لعرض بيانات الدعوات.</div>
     </div>
   </section>
+<section class="section hidden" id="reviews">
+  <h2 class="section-title">⭐ تقييمات المنصة</h2>
+  <p class="section-subtitle">آراء وتقييمات مقدمة من أصحابها.</p>
 
+  <div class="card">
+    <div class="stat-number">⭐ 5/5</div>
+    <p class="muted">التقييم المعروض</p>
+    <div id="reviewsList"></div>
+
+    <div class="actions" style="justify-content:center;margin-top:20px">
+      <button class="btn btn-secondary" onclick="changeReviewPage(-1)">السابق</button>
+      <span id="reviewPageInfo">الصفحة 1</span>
+      <button class="btn btn-primary" onclick="changeReviewPage(1)">التالي</button>
+    </div>
+  </div>
+</section>
   <section class="section hidden" id="auth">
     <div class="card form-card">
       <h2 class="section-title" id="authTitle">تسجيل الدخول</h2>
