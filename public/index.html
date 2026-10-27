@@ -1541,6 +1541,66 @@ const packageName = packageText === "—" ? "" : packageText;
 }
 
 initialize();
+ const platformReviews = [
+  { name: "جابر عيسى", text: "افضل منصة دخلت فيها شكرا لكم مصداقية" },
+  { name: "فرح ليلى", text: "مستثمرة بمبلغ 7 ملاين والحمد لله السحب يومي بلا تاخير" },
+  { name: "كاظم بن عبد الله", text: "منصة حقيقية فعلا ليست كالمنصات اللتي قبلها" },
+  { name: "جيهان قراد", text: "يعطيكم الصحة كيف فرحتونا" },
+  { name: "تيسير محفوظ", text: "ان شاء الله تبقو مستمرين ونحن معكم دائما" },
+  { name: "صمد نورسين", text: "منصة صدق ومصداقية ننصحكم كامل بيها وزيدو دخلكم بديت بمبلغ 2 ملاين وسحبت ارباحي ونشاله مع الوقت نزيد العرض" },
+  { name: "طاهة محمد الأمين", text: "الف شكر ليكم" },
+  { name: "فاروق الوليد", text: "اسحب ارباحي يوميا بدون تاخير" },
+  { name: "موزة دعاء", text: "شرف كبير لي اني انضممت ليكم" },
+  { name: "وصال بن ايت الحاج", text: "كل شيئ جيد وسلس نتمنى فقط منكم زيادة عروض الإستثمار !! 🫣✅" },
+  { name: "زينب ريان", text: "شكرا قامت صدقة لي بدعوتي معكم ومخابش ظني" },
+  { name: "ذكرى مروى", text: "صحيتو وراني ندعو في الأصدقاء تاعي" },
+  { name: "شيماء الإيمان", text: "مصداقية" },
+  { name: "كريم محمد", text: "بارك الله فيكم وفي مالكم وفي نيتكم الصادقة" },
+  { name: "جابر موسى", text: "الحمد لله استثمرت بمبلغ 10 ملاين وراني ساحب اضعافها" },
+  { name: "ياسين الفاروق", text: "عندي استفسارات من فضلكم ممكن ترجعولي ؟ في الخاص" },
+  { name: "شيماء جيهان", text: "تقييم 10000 بالمئة" },
+  { name: "حميد ساتر", text: "الحمد لله عوضت خسارتي في المنصات النصابة شكرا شكرا شكرا ♥️" },
+  { name: "اسامة جدي", text: "سحب يومي بدون تاخير" },
+  { name: "خمايسية غزلان", text: "الحمد لله داخلة بمبلغ 2 ملاين ونسحب في 3000 da شكرا" },
+  { name: "قطيبة قراد", text: "نتمنى تفتحو عروض اكثر من 10 ملاين بالنسبة لي يبغي يستثمر اكثر" },
+  { name: "صغير مسعود", text: "صحيتو ولادي على المنصة المليحة" }
+];
+
+let currentReviewPage = 1;
+const reviewsPerPage = 11;
+
+function renderReviews() {
+  const list = document.getElementById("reviewsList");
+  const pageInfo = document.getElementById("reviewPageInfo");
+
+  if (!list || !pageInfo) return;
+
+  const start = (currentReviewPage - 1) * reviewsPerPage;
+  const pageReviews = platformReviews.slice(
+    start,
+    start + reviewsPerPage
+  );
+
+  list.innerHTML = pageReviews.map(review => `
+    <article class="card" style="margin-top:12px">
+      <div style="color:#f5c542;font-size:20px">★★★★★</div>
+      <h3>${review.name}</h3>
+      <p>${review.text}</p>
+    </article>
+  `).join("");
+
+  pageInfo.textContent =
+    "الصفحة " + currentReviewPage + " من 2";
+}
+
+function changeReviewPage(direction) {
+  currentReviewPage = Math.max(
+    1,
+    Math.min(2, currentReviewPage + direction)
+  );
+
+  renderReviews();
+} 
 </script>
 
 </body>
