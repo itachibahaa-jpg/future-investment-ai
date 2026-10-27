@@ -1374,6 +1374,14 @@ async function changeAccountPassword() {
     showMessage("accountMessage", error.message || "تعذر تغيير كلمة المرور.");
   }
 }
+  async function openGeneralDeposit() {
+  $("paymentPackageName").textContent = "—";
+  $("paymentPackagePrice").textContent = "—";
+  $("paymentMessage").textContent = "";
+  $("paymentReceipt").value = "";
+  showSection("payment");
+  }
+  
 async function submitPayment() {
   if (!currentUser) {
     showSection("auth");
