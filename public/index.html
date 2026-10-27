@@ -1069,7 +1069,6 @@ async function loadSubscription() {
     if (subscription && subscription.status === "active") {
       $("subscriptionStatus").textContent = "نشط";
       $("subscriptionPackage").textContent =
-              $("subscriptionPackage").textContent =
         (subscription.package_name || "—") +
         (subscription.package_price != null
           ? " — " + Number(subscription.package_price).toLocaleString("en-US") + " دج"
