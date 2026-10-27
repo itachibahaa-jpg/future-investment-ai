@@ -1386,12 +1386,6 @@ const packageName = packageText === "—" ? "" : packageText;
   const paymentMethod = $("paymentMethod").value;
   const file = $("paymentReceipt").files[0];
 
-  if (!packageName) {
-  showMessage("paymentMessage", "اختر الباقة أولًا.");
-  return;
-  }
-  }
-
   if (!file) {
     showMessage("paymentMessage", "يرجى اختيار صورة وصل الدفع.");
     return;
