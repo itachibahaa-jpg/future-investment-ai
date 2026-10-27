@@ -703,20 +703,30 @@ function renderPackages() {
   $("packageGrid").innerHTML = packages.map((item, index) => `
     <article class="card package-card">
       <span class="package-label">${escapeHTML(item.label)}</span>
+
       <h3>${escapeHTML(item.name)}</h3>
-      <div class="package-price">${item.price.toLocaleString("en-US")} دج</div>
+
+      <div class="package-price">
+        ${item.price.toLocaleString("en-US")} دج
+      </div>
+
+      <div class="package-profit">
+        <span>الربح اليومي</span>
+        <strong>${item.dailyProfit.toLocaleString("en-US")} دج</strong>
+      </div>
+
       <ul class="feature-list">
         <li>تفاصيل الباقة</li>
         <li>الاستفسار عن طريقة التفعيل</li>
         <li>مراجعة الشروط قبل الاشتراك</li>
       </ul>
+
       <button class="btn btn-secondary" onclick="selectPackage(${index})">
         الاستفسار عن الباقة
       </button>
     </article>
   `).join("");
 }
-
 function selectPackage(index) {
   const item = packages[index];
   if (!item) return;
