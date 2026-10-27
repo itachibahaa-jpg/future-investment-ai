@@ -872,17 +872,24 @@ function selectPackage(index) {
   const item = packages[index];
   if (!item) return;
 
-  showSection("auth");
-
-  if (currentUser) {
-    alert("اخترت " + item.name + " بقيمة " +
-      item.price.toLocaleString("en-US") +
-      " دج. لا يتم تنفيذ أي دفع من هذه الصفحة.");
-    showSection("packages");
+  if (!currentUser) {
+    showSection("auth");
+    showMessage(
+      "authMessage",
+      "سجّل الدخول أولًا للمتابعة.",
+      "success"
+    );
     return;
   }
 
-  showMessage("authMessage", "سجّل الدخول أولًا للاستمرار. اختيار الباقة لا ينفّذ أي عملية دفع.", "success");
+  $("paymentPackageName").textContent = item.name;
+  $("paymentPackagePrice").textContent =
+    item.price.toLocaleString("en-US") + " دج";
+
+  $("paymentReceipt").value = "";
+  clearMessage("paymentMessage");
+
+  showSection("payment");
 }
 
 function toggleAuth() {
