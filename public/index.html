@@ -973,6 +973,91 @@ function updateLoggedOutUI() {
   $("logoutButton").classList.add("hidden");
 }
 async function saveProfileName() {
+  clearMessage("accountMessage");
+
+  if (!currentUser || !localStorage.getItem(TOKEN_KEY)) {
+    showMessage("accountMessage", "سجّل الدخول أولًا.");
+    return;
+  }
+
+  const name = $("editProfileName").value.trim();
+
+  if (name.length < 2 || name.length > 80) {
+    showMessage("accountMessage", "يجب أن يكون الاسم بين حرفين و80 حرفًا.");
+    return;
+  }
+
+  try {
+    const data = await api("/me/profile", {
+      method: "PATCH",
+      body: JSON.stringify({ name })
+    });
+
+    currentUser = data.user || currentUser;
+    await refreshAccount(true);
+
+    $("editProfileName").value = currentUser.name || name;
+
+    showMessage("accountMessage", "تم تحديث الاسم بنجاح.", "success");
+  } catch (error) {
+    showMessage("accountMessage", error.message || "تعذر تحديث الاسم.");
+  }
+}
+
+async function changeAccountPassword() {
+  clearMessage("accountMessage");
+
+  if (!localStorage.getItem(TOKEN_KEY)) {
+    showMessage("accountMessage", "سجّل الدخول أولًا.");
+    return;
+  }
+
+  const currentPassword = $("currentPassword").value;
+  const newPassword = $("newPassword").value;
+  const confirmPassword = $("confirmPassword").value;
+
+  if (!currentPassword) {
+    showMessage("accountMessage", "أدخل كلمة المرور الحالية.");
+    return;
+  }
+
+  if (newPassword.length < 8 || newPassword.length > 128) {
+    showMessage("accountMessage", "يجب أن تكون كلمة المرور بين 8 و128 حرفًا.");
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    showMessage("accountMessage", "كلمتا المرور الجديدتان غير متطابقتين.");
+    return;
+  }
+
+  if (currentPassword === newPassword) {
+    showMessage("accountMessage", "اختر كلمة مرور مختلفة عن الحالية.");
+    return;
+  }
+
+  try {
+    const data = await api("/me/change-password", {
+      method: "POST",
+      body: JSON.stringify({
+        currentPassword,
+        newPassword
+      })
+    });
+
+    $("currentPassword").value = "";
+    $("newPassword").value = "";
+    $("confirmPassword").value = "";
+
+    showMessage(
+      "accountMessage",
+      data.message || "تم تغيير كلمة المرور بنجاح.",
+      "success"
+    );
+  } catch (error) {
+    showMessage("accountMessage", error.message || "تعذر تغيير كلمة المرور.");
+  }
+}
 async function initialize() {
   $("year").textContent = new Date().getFullYear();
   renderPackages();
