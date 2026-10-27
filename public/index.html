@@ -660,27 +660,82 @@ header {
 <main class="container">
 
   <section class="hero" id="home">
-    <div class="hero-box">
-      <span class="pill">Future Investment AI</span>
-      <h2>مرحبًا بك في <span>مستقبلك الرقمي</span></h2>
-      <p>
-        أنشئ حسابك، وتعرّف على الباقات، وتابع بيانات حسابك
-        وإحالاتك من واجهة واحدة سهلة الاستخدام.
-      </p>
-      <div class="actions">
-        <button class="btn btn-primary" onclick="showSection('packages')">
-          استكشف الباقات
-        </button>
-        <button class="btn btn-secondary" onclick="showSection('account')">
-          حسابي
-        </button>
-        <button class="btn btn-primary" onclick="openGeneralDeposit()">
-  💰 إيداع
-        </button>
-      </div>
-    </div>
-  </section>
+  <div class="hero-box" style="position:relative;overflow:hidden;padding:35px 28px;background:radial-gradient(circle at 15% 20%,#164e63 0,transparent 40%),linear-gradient(135deg,#101c32,#07111f);border:1px solid #28506b;border-radius:24px">
 
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:30px">
+
+      <div style="flex:1 1 280px;min-width:0">
+        <span class="pill">🤖 FUTURE INVESTMENT AI</span>
+
+        <h2 style="font-size:clamp(30px,5vw,44px);line-height:1.5;margin:20px 0">
+          اكتشف آفاقًا جديدة مع
+          <span style="color:#35e0a1">الذكاء الاصطناعي</span>
+        </h2>
+
+        <p style="font-size:16px;line-height:2;color:#b5c6dc">
+          مرحبًا بك في Future Investment AI، منصتك الرقمية لاستكشاف الباقات ومتابعة حسابك وإدارة طلباتك من مكان واحد.
+        </p>
+
+        <div class="actions" style="margin-top:25px">
+          <button class="btn btn-primary" onclick="showSection('packages')">
+            📦 استكشف الباقات
+          </button>
+
+          <button class="btn btn-secondary" onclick="showSection('account')">
+            👤 حسابي
+          </button>
+
+          <button class="btn btn-primary" onclick="openGeneralDeposit()">
+            💰 إيداع
+          </button>
+        </div>
+      </div>
+
+      <div style="flex:1 1 240px;min-width:0;text-align:center;padding:15px">
+        <div style="width:min(260px,100%);aspect-ratio:1;margin:auto;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#1c5c73 0%,#102b46 45%,#0b1729 72%);border:1px solid #36728b;box-shadow:0 0 55px #087f8c44">
+          <div style="font-size:clamp(70px,12vw,110px);filter:drop-shadow(0 0 20px #35e0a1)">🤖</div>
+        </div>
+
+        <h3 style="margin:20px 0 5px;color:#dffaff">
+          مستقبل التكنولوجيا
+        </h3>
+
+        <p style="font-size:13px;color:#9bacc4;margin:0">
+          الابتكار • التقنية • الذكاء الاصطناعي
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top:20px">
+
+    <div class="card" style="border-color:#28506b">
+      <div style="font-size:30px">🧠</div>
+      <h3>الذكاء الاصطناعي</h3>
+      <p class="muted">استكشف عالم التقنيات الرقمية الحديثة.</p>
+    </div>
+
+    <div class="card" style="border-color:#28506b">
+      <div style="font-size:30px">📦</div>
+      <h3>الباقات</h3>
+      <p class="muted">تعرّف على الباقات المتاحة وتفاصيلها.</p>
+      <button class="btn btn-secondary" onclick="showSection('packages')">
+        عرض الباقات
+      </button>
+    </div>
+
+    <div class="card" style="border-color:#28506b">
+      <div style="font-size:30px">👤</div>
+      <h3>حسابك الشخصي</h3>
+      <p class="muted">انتقل إلى حسابك لمتابعة بياناتك.</p>
+      <button class="btn btn-secondary" onclick="showSection('account')">
+        فتح حسابي
+      </button>
+    </div>
+
+  </div>
+</section>
   <nav class="nav" id="mainNav">
     <button class="active" data-section="home" onclick="showSection('home')">🏠 الرئيسية</button>
 
