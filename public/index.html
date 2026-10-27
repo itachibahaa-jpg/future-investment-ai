@@ -1006,8 +1006,7 @@ async function api(path, options = {}) {
 }
 
 function showSection(sectionId) {
-  const sections = ["home", "dashboard", "packages", "account", "referrals", "auth", "payment"];
-
+  const sections = ["home", "dashboard", "packages", "account", "referrals", "auth", "payment", "reviews"];
   sections.forEach(id => {
     const el = $(id);
     if (el) el.classList.toggle("hidden", id !== sectionId);
