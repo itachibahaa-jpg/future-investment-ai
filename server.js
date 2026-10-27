@@ -187,8 +187,8 @@ if (!isGeneralDeposit && !prices[package_name]) {
   const result = db.prepare(`
     INSERT INTO payment_submissions
     (user_id, package_name, package_price, payment_method, receipt_data)
-    VALUES (?, ?, ?, ?, ?)
-  .run(
+        VALUES (?, ?, ?, ?, ?)
+  `).run(
     req.userId,
     package_name || 'إيداع عام',
     package_name ? prices[package_name] : 0,
