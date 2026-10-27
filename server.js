@@ -171,7 +171,6 @@ app.post('/api/payment-submissions', auth, (req, res) => {
 if (!isGeneralDeposit && !prices[package_name]) {
   return res.status(400).json({ error: 'الباقة غير صحيحة.' });
 }
-  }
 
   if (!['BaridiMob', 'CCP'].includes(payment_method)) {
     return res.status(400).json({ error: 'طريقة الدفع غير صحيحة.' });
