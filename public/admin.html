@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة الإدارة | Future Investment AI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #08111f;
+      color: #f1f5f9;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    h1 {
+      color: #38d9a9;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #94a3b8;
+      margin-bottom: 25px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 11px 16px;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .refresh {
+      background: #2563eb;
+      color: white;
+    }
+
+    .approve {
+      background: #059669;
+      color: white;
+    }
+
+    .reject {
+      background: #dc2626;
+      color: white;
+    }
+
+    .card {
+      background: #111e31;
+      border: 1px solid #263750;
+      border-radius: 12px;
+      padding: 18px;
+      margin: 14px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .card h3 {
+      color: #38d9a9;
+      margin-top: 0;
+    }
+
+    .muted {
+      color: #94a3b8;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 6px;
+      background: #263750;
+      margin: 8px 0;
+    }
+
+    .receipt {
+      display: block;
+      max-width: 100%;
+      max-height: 400px;
+      margin: 12px 0;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    #message {
+      padding: 12px;
+      border-radius: 8px;
+      background: #111e31;
+      margin: 15px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .section-title {
+      border-bottom: 1px solid #263750;
+      padding-bottom: 10px;
+      margin-top: 35px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h1>Future Investment AI</h1>
+    <p class="subtitle">لوحة الإدارة الخاصة</p>
+
+    <div class="toolbar">
+      <button class="refresh" id="refreshPayments">
+        تحديث طلبات الدفع
+      </button>
+
+      <button class="refresh" id="refreshUsers">
+        تحديث المستخدمين
+      </button>
+    </div>
+
+    <div id="message">جارٍ الاتصال بالخادم...</div>
+
+    <h2 class="section-title">طلبات الدفع</h2>
+    <div id="payments"></div>
+
+    <h2 class="section-title">المستخدمون المسجلون</h2>
+    <div id="users"></div>
+  </main>
+
+  <script>
+    let adminKey = prompt("أدخل مفتاح الإدارة ADMIN_API_KEY");
+
+    const message = document.getElementById("message");
+    const paymentsBox = document.getElementById("payments");
+    const usersBox = document.getElementById("users");
+
+    function showMessage(text) {
+      message.textContent = text;
+    }
+
+    async function api(path, options = {}) {
+      const response = await fetch(path, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-key": adminKey,
+          ...(options.headers || {})
+        }
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.error || "حدث خطأ في الاتصال بالخادم.");
+      }
+
+      return data;
+    }
+
+    function addText(parent, tag, text, className = "") {
+      const element = document.createElement(tag);
+      element.textContent = text;
+
+      if (className) {
+        element.className = className;
+      }
+
+      parent.appendChild(element);
+      return element;
+    }
+
+    async function loadPayments() {
+      paymentsBox.replaceChildren();
+      showMessage("جارٍ تحميل طلبات الدفع...");
+
+      try {
+        const data = await api("/api/admin/payment-submissions");
+
+        if (!data.submissions || data.submissions.length === 0) {
+          addText(paymentsBox, "p", "لا توجد طلبات دفع حاليًا.");
+          showMessage("تم الاتصال بالخادم بنجاح.");
+          return;
+        }
+
+        data.submissions.forEach(item => {
+          const card = document.createElement("article");
+          card.className = "card";
+
+          addText(card, "h3", "طلب دفع رقم #" + item.id);
+          addText(card, "p", "المستخدم: " + (item.user_name || "غير معروف"));
+          addText(card, "p", "البريد: " + (item.email || "غير متوفر"));
+          addText(card, "p", "الباقة: " + item.package_name);
+          addText(card, "p", "السعر: " + item.package_price);
+          addText(card, "p", "طريقة الدفع: " + item.payment_method);
+          addText(card, "p", "تاريخ الطلب: " + item.created_at);
+          addText(card, "p", "الحالة: " + item.status, "status");
+
+          if (item.receipt_data) {
+            const image = document.createElement("img");
+            image.src = item.receipt_data;
+            image.alt = "إيصال الدفع";
+            image.className = "receipt";
+            image.loading = "lazy";
+            card.appendChild(image);
+          }
+
+          if (item.status === "pending") {
+            const actions = document.createElement("div");
+            actions.className = "actions";
+
+            const approve = document.createElement("button");
+            approve.className = "approve";
+            approve.textContent = "قبول الدفع";
+
+            approve.addEventListener("click", () => {
+              reviewPayment(item.id, "approved");
+            });
+
+            const reject = document.createElement("button");
+            reject.className = "reject";
+            reject.textContent = "رفض الطلب";
+
+            reject.addEventListener("click", () => {
+              reviewPayment(item.id, "rejected");
+            });
+
+            actions.append(approve, reject);
+            card.appendChild(actions);
+          }
+
+          paymentsBox.appendChild(card);
+        });
+
+        showMessage("تم تحميل طلبات الدفع بنجاح.");
+      } catch (error) {
+        showMessage("خطأ: " + error.message);
+      }
+    }
+
+    async function reviewPayment(id, status) {
+      const action = status === "approved" ? "قبول" : "رفض";
+
+      if (!confirm("هل تريد " + action + " طلب الدفع رقم " + id + "؟")) {
+        return;
+      }
+
+      if (status === "approved") {
+        if (!confirm("هل تحققت بنفسك من وصول المبلغ إلى حسابك؟")) {
+          return;
+        }
+      }
+
+      try {
+        await api("/api/admin/payment-submissions/" + id, {
+          method: "PATCH",
+          body: JSON.stringify({ status })
+        });
+
+        showMessage("تمت معالجة الطلب بنجاح.");
+        await loadPayments();
+      } catch (error) {
+        showMessage("تعذر معالجة الطلب: " + error.message);
+      }
+    }
+
+    async function loadUsers() {
+      usersBox.replaceChildren();
+      showMessage("جارٍ تحميل المستخدمين...");
+
+      try {
+        const data = await api("/api/admin/users");
+
+        addText(
+          usersBox,
+          "h3",
+          "إجمالي الحسابات: " + data.total
+        );
+
+        (data.users || []).forEach(user => {
+          const card = document.createElement("article");
+          card.className = "card";
+
+          addText(card, "h3", user.name);
+          addText(card, "p", "رقم الحساب: " + user.id);
+          addText(card, "p", "البريد: " + user.email);
+          addText(card, "p", "الحالة: " + user.status);
+          addText(card, "p", "الإحالات: " + user.referral_count);
+          addText(card, "p", "تاريخ التسجيل: " + user.created_at);
+
+          usersBox.appendChild(card);
+        });
+
+        showMessage("تم تحميل بيانات المستخدمين.");
+      } catch (error) {
+        showMessage("خطأ: " + error.message);
+      }
+    }
+
+    document.getElementById("refreshPayments")
+      .addEventListener("click", loadPayments);
+
+    document.getElementById("refreshUsers")
+      .addEventListener("click", loadUsers);
+
+    if (!adminKey) {
+      showMessage("لم تدخل مفتاح الإدارة. أعد فتح الصفحة وحاول مجددًا.");
+    } else {
+      loadPayments();
+      loadUsers();
+    }
+  </script>
+</body>
+</html>
