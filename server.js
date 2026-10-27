@@ -80,13 +80,86 @@ app.get('/api/referrals', auth, (req,res) => {
  res.json({ referrals: rows, count: countRefs.get(req.userId).n, goal: 10, rewardEnabled: false });
 });
 app.get('/api/admin/users', (req,res) => {
- if (!safeEqual(req.get('x-admin-key') || '', process.env.ADMIN_API_KEY)) return res.status(403).json({ error: 'غير مصرح.' });
+ if (!safeEqual(req.get('x-admin-key') || '', process.env.ADMIN_API_KEY)) return res.status(403).مصرح.' });
  const rows = db.prepare(`SELECT u.id,u.name,u.email,u.referral_code,u.created_at,u.status,
  (SELECT COUNT(*) FROM users r WHERE r.referred_by=u.id AND r.status='active') AS referral_count
  FROM users u ORDER BY u.id DESC LIMIT 500`).all();
  res.json({ users: rows, total: db.prepare('SELECT COUNT(*) AS n FROM users').get().n });
 });
 function safeEqual(a,b) { const aa=Buffer.from(a); const bb=Buffer.from(b); return aa.length===bb.length && crypto.timingSafeEqual(aa,bb); }
+// Update account name
+app.patch('/api/me/profile', auth, (req, res) => {
+  const name = String(req.body.name || '').trim();
+
+  if (name.length < 2 || name.length > 80) {
+    return res.status(400).json({
+      error: 'الاسم يجب أن يكون بين حرفين و80 حرفًا.'
+    });
+  }
+
+  const result = db.prepare(
+    "UPDATE users SET name = ? WHERE id = ? AND status = 'active'"
+  ).run(name, req.userId);
+
+  if (!result.changes) {
+    return res.status(404).json({ error: 'الحساب غير موجود أو غير نشط.' });
+  }
+
+  const user = db.prepare(
+    'SELECT * FROM users WHERE id = ?'
+  ).get(req.userId);
+
+  res.json({
+    message: 'تم تحديث الاسم بنجاح.',
+    user: publicUser(user)
+  });
+});
+
+// Change password
+app.post('/api/me/change-password', auth, async (req, res) => {
+  try {
+    const currentPassword = String(req.body.currentPassword || '');
+    const newPassword = String(req.body.newPassword || '');
+
+    if (newPassword.length < 8 || newPassword.length > 128) {
+      return res.status(400).json({
+        error: 'كلمة المرور الجديدة يجب أن تكون بين 8 و128 حرفًا.'
+      });
+    }
+
+    const user = db.prepare(
+      "SELECT * FROM users WHERE id = ? AND status = 'active'"
+    ).get(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'الحساب غير موجود أو غير نشط.' });
+    }
+
+    const valid = await bcrypt.compare(
+      currentPassword,
+      user.password_hash
+    );
+
+    if (!valid) {
+      return res.status(401).json({
+        error: 'كلمة المرور الحالية غير صحيحة.'
+      });
+    }
+
+    const hash = await bcrypt.hash(newPassword, 12);
+
+    db.prepare(
+      'UPDATE users SET password_hash = ? WHERE id = ?'
+    ).run(hash, req.userId);
+
+    res.json({ message: 'تم تغيير كلمة المرور بنجاح.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: 'تعذر تغيير كلمة المرور حاليًا.'
+    });
+  }
+});
 app.use(express.static(path.join(__dirname,'public')));
 app.use((err,_req,res,_next) => { console.error(err); res.status(500).json({ error: 'خطأ داخلي.' }); });
 const port = Number(process.env.PORT || 3000);
