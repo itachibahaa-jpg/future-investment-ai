@@ -1217,7 +1217,86 @@ async function changeAccountPassword() {
     showMessage("accountMessage", error.message || "تعذر تغيير كلمة المرور.");
   }
 }
-async function initialize() {
+async function submitPayment() {
+  if (!currentUser) {
+    showSection("auth");
+    showMessage("authMessage", "سجّل الدخول أولًا للمتابعة.");
+    return;
+  }
+
+  const packageName = $("paymentPackageName").textContent.trim();
+  const paymentMethod = $("paymentMethod").value;
+  const file = $("paymentReceipt").files[0];
+
+  if (!packageName) {
+    showMessage("paymentMessage", "اختر الباقة أولًا.");
+    return;
+  }
+
+  if (!file) {
+    showMessage("paymentMessage", "يرجى اختيار صورة وصل الدفع.");
+    return;
+  }
+
+  if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+    showMessage("paymentMessage", "اختر صورة بصيغة PNG أو JPG أو WEBP.");
+    return;
+  }
+
+  if (file.size > 2000000) {
+    showMessage("paymentMessage", "حجم الصورة كبير. اختر صورة أصغر من 2 ميغابايت.");
+    return;
+  }
+
+  const button = document.querySelector(
+    '#payment button[onclick="submitPayment()"]'
+  );
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "جارٍ إرسال الوصل...";
+  }
+
+  try {
+    const receiptData = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("تعذرت قراءة صورة الوصل."));
+
+      reader.readAsDataURL(file);
+    });
+
+    const result = await api("/payment-submissions", {
+      method: "POST",
+      body: JSON.stringify({
+        package_name: packageName,
+        payment_method: paymentMethod,
+        receipt_data: receiptData
+      })
+    });
+
+    showMessage(
+      "paymentMessage",
+      result.message || "تم استلام الوصل، والطلب قيد المراجعة.",
+      "success"
+    );
+
+    $("paymentReceipt").value = "";
+
+  } catch (error) {
+    showMessage(
+      "paymentMessage",
+      error.message || "تعذر إرسال الوصل. حاول مرة أخرى."
+    );
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = "إرسال الوصل للمراجعة";
+    }
+  }
+}
+  async function initialize() {
   $("year").textContent = new Date().getFullYear();
   renderPackages();
   updateLoggedOutUI();
