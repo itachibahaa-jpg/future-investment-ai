@@ -1706,7 +1706,44 @@ const packageName = packageText === "—" ? "" : packageText;
     }
   }
 }
+async function spinDailyWheel() {
+  const button = document.getElementById("spinWheelBtn");
+  const result = document.getElementById("wheelResult");
+  const wheel = document.getElementById("wheelDisk");
 
+  if (!localStorage.getItem(TOKEN_KEY)) {
+    result.textContent = "يرجى تسجيل الدخول أولًا لتدوير العجلة.";
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "⏳ جارٍ تدوير العجلة...";
+  result.textContent = "";
+
+  try {
+    const data = await api("/wheel/spin", {
+      method: "POST"
+    });
+
+    if (wheel) {
+      wheel.style.transition = "transform 4s ease-out";
+      const current = Number(wheel.dataset.rotation || 0);
+      const rotation = current + 1800;
+      wheel.style.transform = `rotate(${rotation}deg)`;
+      wheel.dataset.rotation = rotation;
+    }
+
+    result.textContent =
+      "🎉 نتيجتك: " + data.prize.label +
+      " — " + data.message;
+
+  } catch (error) {
+    result.textContent = error.message;
+  } finally {
+    button.disabled = false;
+    button.textContent = "🎡 أدر العجلة واربح";
+  }
+}
 initialize();
  const platformReviews = [
   { name: "جابر عيسى", text: "افضل منصة دخلت فيها شكرا لكم مصداقية" },
