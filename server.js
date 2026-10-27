@@ -273,7 +273,15 @@ app.patch('/api/admin/payment-submissions/:id', (req, res) => {
           code: 409
         };
       }
-
+if (
+  status === 'approved' &&
+  submission.package_name === 'إيداع عام'
+) {
+  return {
+    error: 'لا يمكن تفعيل اشتراك من إيداع عام دون اختيار باقة.',
+    code: 400
+  };
+}
       if (status === 'approved') {
         db.prepare(`
           INSERT INTO user_subscriptions
