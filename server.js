@@ -185,6 +185,31 @@ app.get('/api/admin/users', (req,res) => {
  FROM users u ORDER BY u.id DESC LIMIT 500`).all();
  res.json({ users: rows, total: db.prepare('SELECT COUNT(*) AS n FROM users').get().n });
 });
+app.get('/api/admin/payment-submissions', (req, res) => {
+  const key = req.get('x-admin-key') || '';
+
+  if (!process.env.ADMIN_API_KEY ||
+      !safeEqual(key, process.env.ADMIN_API_KEY)) {
+    return res.status(403).json({ error: 'غير مصرح.' });
+  }
+
+  try {
+    const rows = db.prepare(`
+      SELECT p.id, p.user_id, u.name AS user_name,
+             u.email, p.package_name, p.package_price,
+             p.payment_method, p.receipt_data,
+             p.status, p.created_at
+      FROM payment_submissions p
+      LEFT JOIN users u ON u.id = p.user_id
+      ORDER BY p.id DESC
+      LIMIT 100
+    `).all();
+
+    res.json({ submissions: rows });
+  } catch (error) {
+    res.status(500).json({ error: 'تعذر جلب طلبات الدفع.' });
+  }
+});
 function safeEqual(a,b) { const aa=Buffer.from(a); const bb=Buffer.from(b); return aa.length===bb.length && crypto.timingSafeEqual(aa,bb); }
 // Update account name
 app.patch('/api/me/profile', auth, (req, res) => {
