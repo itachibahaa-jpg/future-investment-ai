@@ -41,6 +41,16 @@ CREATE TABLE IF NOT EXISTS package_requests (
  created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS idx_package_requests_user_id ON package_requests(user_id);
+CREATE TABLE IF NOT EXISTS payment_submissions (
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ user_id INTEGER NOT NULL REFERENCES users(id),
+ package_name TEXT NOT NULL,
+ package_price INTEGER NOT NULL,
+ payment_method TEXT NOT NULL,
+ receipt_data TEXT NOT NULL,
+ status TEXT NOT NULL DEFAULT 'pending',
+ created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 `);
 const findByEmail = db.prepare('SELECT * FROM users WHERE email = ?');
 const findByCode = db.prepare('SELECT * FROM users WHERE referral_code = ?');
