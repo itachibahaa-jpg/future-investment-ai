@@ -188,10 +188,10 @@ if (!isGeneralDeposit && !prices[package_name]) {
     INSERT INTO payment_submissions
     (user_id, package_name, package_price, payment_method, receipt_data)
     VALUES (?, ?, ?, ?, ?)
-  `).run(
+  .run(
     req.userId,
-    package_name,
-    prices[package_name],
+    package_name || 'إيداع عام',
+    package_name ? prices[package_name] : 0,
     payment_method,
     receipt_data
   );
