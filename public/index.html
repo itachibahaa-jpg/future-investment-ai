@@ -1381,7 +1381,8 @@ async function submitPayment() {
     return;
   }
 
-  const packageName = $("paymentPackageName").textContent.trim();
+  const packageText = $("paymentPackageName").textContent.trim();
+const packageName = packageText === "—" ? "" : packageText;
   const paymentMethod = $("paymentMethod").value;
   const file = $("paymentReceipt").files[0];
 
