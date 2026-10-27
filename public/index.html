@@ -588,7 +588,62 @@ header {
 </head>
 
 <body>
+<!-- شريط آخر العمليات -->
+<style>
+#activityTicker {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  background: #101b30;
+  color: #ffffff;
+  border-bottom: 2px solid #d4af37;
+  padding: 13px 0;
+  direction: ltr;
+  box-sizing: border-box;
+}
 
+#activityTicker .tickerTrack {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  animation: activityScroll 40s linear infinite;
+}
+
+#activityTicker .tickerItem {
+  display: inline-block;
+  margin: 0 35px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#activityTicker .tickerTrack:hover {
+  animation-play-state: paused;
+}
+
+@keyframes activityScroll {
+  from { transform: translateX(100vw); }
+  to { transform: translateX(-100%); }
+}
+
+@media (max-width: 600px) {
+  #activityTicker .tickerItem {
+    font-size: 12px;
+    margin: 0 22px;
+  }
+}
+</style>
+
+<div id="activityTicker">
+  <div class="tickerTrack">
+    <span class="tickerItem">💸 يوسف براهمية سحب 150 ألف سنتيم</span>
+    <span class="tickerItem">🎁 سعاد خمايسية دعت 10 أشخاص وفازت بمليون سنتيم</span>
+    <span class="tickerItem">💰 عبد الله جبار اشترك في عرض 10 ملايين سنتيم</span>
+    <span class="tickerItem">💸 رميسا خديجي سحبت مبلغ مليوني سنتيم</span>
+    <span class="tickerItem">💰 ربعي جبار سحب مبلغ 5 ملايين سنتيم</span>
+    <span class="tickerItem">🎯 هديل بن جدة اشتركت في عرض 10 ملايين سنتيم</span>
+    <span class="tickerItem">🏆 كريم حفظ الله دعا 10 أشخاص وفاز بمبلغ مليون سنتيم</span>
+  </div>
+</div>
 <header>
   <div class="container topbar">
     <div class="brand">
