@@ -372,6 +372,99 @@ footer {
   .nav button { flex: 1 1 auto; }
   .brand h1 { font-size: 15px; }
 }
+  /* تصميم احترافي للباقات */
+.package-card {
+  position: relative;
+  overflow: hidden;
+  padding: 26px 22px;
+  border: 1px solid rgba(76, 141, 255, 0.35);
+  border-radius: 20px;
+  background: linear-gradient(145deg, #14253b, #0b1728);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+  transition: transform 0.25s ease, border-color 0.25s ease,
+              box-shadow 0.25s ease;
+}
+
+.package-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--green);
+  box-shadow: 0 14px 32px rgba(53, 224, 161, 0.12);
+}
+
+.package-label {
+  display: inline-block;
+  padding: 5px 13px;
+  margin-bottom: 12px;
+  border-radius: 30px;
+  background: rgba(53, 224, 161, 0.12);
+  color: var(--green);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.package-card h3 {
+  margin: 8px 0 16px;
+  font-size: 23px;
+  color: var(--text);
+}
+
+.package-price {
+  margin: 12px 0;
+  color: var(--green);
+  font-size: clamp(25px, 5vw, 34px);
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.package-profit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+  padding: 14px;
+  border: 1px solid rgba(53, 224, 161, 0.2);
+  border-radius: 12px;
+  background: rgba(53, 224, 161, 0.07);
+}
+
+.package-profit span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.package-profit strong {
+  color: var(--green);
+  font-size: 19px;
+}
+
+.package-card .feature-list {
+  padding-right: 20px;
+  margin: 18px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.package-card .feature-list li {
+  margin-bottom: 8px;
+}
+
+.package-card .btn {
+  width: 100%;
+  min-height: 46px;
+  border-radius: 12px;
+  font-weight: bold;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.package-card .btn:hover {
+  filter: brightness(1.12);
+}
+
+.package-card .btn:active {
+  transform: scale(0.98);
+}
 </style>
 </head>
 
