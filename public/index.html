@@ -1736,9 +1736,7 @@ async function spinDailyWheel() {
       wheel.dataset.rotation = rotation;
     }
 
-    result.textContent =
-      "🎉 نتيجتك: " + data.prize.label +
-      " — " + data.message;
+    result.textContent = "🎉 نتيجتك: " + data.prize.label;
 
   } catch (error) {
     result.textContent = error.message;
