@@ -166,8 +166,11 @@ app.post('/api/payment-submissions', auth, (req, res) => {
     'باقة VIP Premium': 100000
   };
 
-  if (!prices[package_name]) {
-    return res.status(400).json({ error: 'الباقة غير صحيحة.' });
+ const isGeneralDeposit = !package_name;
+
+if (!isGeneralDeposit && !prices[package_name]) {
+  return res.status(400).json({ error: 'الباقة غير صحيحة.' });
+}
   }
 
   if (!['BaridiMob', 'CCP'].includes(payment_method)) {
