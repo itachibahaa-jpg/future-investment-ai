@@ -1885,8 +1885,7 @@ const reviewsPerPage = 11;
   
 ];
 
-let currentReviewPage = 1;
-const reviewsPerPage = 11;
+
 
 function renderReviews() {
   const list = document.getElementById("reviewsList");
@@ -1908,17 +1907,24 @@ function renderReviews() {
     </article>
   `).join("");
 
-  pageInfo.textContent =
-    "الصفحة " + currentReviewPage + " من 2";
+  const totalPages = Math.max(1, Math.ceil(platformReviews.length / reviewsPerPage));
+pageInfo.textContent =
+    "الصفحة " + currentReviewPage + " من " + totalPages;
 }
 
 function changeReviewPage(direction) {
+  const totalPages = Math.max(
+    1,
+    Math.ceil(platformReviews.length / reviewsPerPage)
+  );
+
   currentReviewPage = Math.max(
     1,
-    Math.min(2, currentReviewPage + direction)
+    Math.min(totalPages, currentReviewPage + direction)
   );
 
   renderReviews();
+}
 } 
 </script>
 
