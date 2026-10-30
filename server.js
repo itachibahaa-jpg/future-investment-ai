@@ -177,7 +177,6 @@ app.post('/api/wheel/spin', auth, (req, res) => {
   }
 });
   
-});
 app.post('/api/register', async (req,res) => {
  try {
   const name = String(req.body.name || '').trim(); const email = cleanEmail(req.body.email); const password = String(req.body.password || ''); const code = String(req.body.referralCode || '').trim().toUpperCase();
