@@ -1716,6 +1716,7 @@ const packageName = packageText === "—" ? "" : packageText;
         receipt_data: receiptData
       })
     });
+    localStorage.setItem("pendingWheelSubmissionId", String(result.submissionId));
 
     showMessage(
       "paymentMessage",
