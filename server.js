@@ -72,6 +72,13 @@ CREATE TABLE IF NOT EXISTS daily_wheel_spins (
  created_at TEXT NOT NULL DEFAULT (datetime('now')),
  UNIQUE(user_id, spin_date)
 );
+CREATE TABLE IF NOT EXISTS deposit_wheel_spins (
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ user_id INTEGER NOT NULL REFERENCES users(id),
+ payment_submission_id INTEGER NOT NULL UNIQUE REFERENCES payment_submissions(id),
+ prize_key TEXT NOT NULL,
+ created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 
 CREATE INDEX IF NOT EXISTS idx_wheel_spins_user
 ON daily_wheel_spins(user_id);`);
