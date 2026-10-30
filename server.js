@@ -97,6 +97,85 @@ function auth(req, res, next) {
 }
 app.get('/api/health', (_req,res) => res.json({ status: 'ok', mode: 'demo-no-financial-transactions' }));
 app.post('/api/wheel/spin', auth, (req, res) => {
+  const submissionId = Number(req.body?.paymentSubmissionId);
+
+  if (!Number.isSafeInteger(submissionId) || submissionId < 1) {
+    return res.status(400).json({
+      error: 'رقم طلب الإيداع غير صحيح.'
+    });
+  }
+
+  const prizes = [
+    { key: 'grand20m', label: 'الجائزة الكبرى: 20 مليون سنتيم' },
+    { key: 'vip', label: 'ترقية مستوى VIP' },
+    { key: 'invite2_5000', label: 'ادعُ شخصين واربح 5000 DA' }
+  ];
+
+  try {
+    const processSpin = db.transaction(() => {
+      const submission = db.prepare(`
+        SELECT id FROM payment_submissions
+        WHERE id = ? AND user_id = ? AND status = 'approved'
+      `).get(submissionId, req.userId);
+
+      if (!submission) {
+        return {
+          error: 'لا يمكنك التدوير قبل اعتماد الإيداع من الإدارة.',
+          code: 403
+        };
+      }
+
+      const existing = db.prepare(`
+        SELECT id FROM deposit_wheel_spins
+        WHERE payment_submission_id = ?
+      `).get(submissionId);
+
+      if (existing) {
+        return {
+          error: 'لقد استخدمت لفة هذا الإيداع مسبقًا.',
+          code: 409
+        };
+      }
+
+      const prize = prizes[crypto.randomInt(prizes.length)];
+
+      db.prepare(`
+        INSERT INTO deposit_wheel_spins
+        (user_id, payment_submission_id, prize_key)
+        VALUES (?, ?, ?)
+      `).run(req.userId, submissionId, prize.key);
+
+      return { prize };
+    });
+
+    const result = processSpin();
+
+    if (result.error) {
+      return res.status(result.code).json({
+        error: result.error
+      });
+    }
+
+    res.json({
+      success: true,
+      prize: result.prize,
+      financialRewardsEnabled: false,
+      message: 'هذه نتيجة تجريبية. الجوائز المالية والترقيات غير مفعلة فعليًا.'
+    });
+
+  } catch (err) {
+    if (err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      return res.status(409).json({
+        error: 'لقد استُخدمت لفة هذا الإيداع مسبقًا.'
+      });
+    }
+
+    console.error(err);
+    res.status(500).json({
+      error: 'تعذر تدوير العجلة حاليًا.'
+    });
+  }
+});
   const prizes = [
     { key: 'bonus50', label: '50 ألف سنتيم مجانًا' },
     { key: 'referrals', label: 'دعوة 5 أشخاص للفوز بـ7 ملايين سنتيم' },
