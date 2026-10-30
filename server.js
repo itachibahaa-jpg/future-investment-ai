@@ -250,11 +250,12 @@ if (!isGeneralDeposit && !prices[package_name]) {
     receipt_data
   );
 
-  res.status(201).json({
-    success: true,
-    status: 'pending',
-    message: 'تم استلام الوصل، والطلب قيد المراجعة.'
-  });
+res.status(201).json({
+  success: true,
+  status: 'pending',
+  submissionId: Number(result.lastInsertRowid),
+  message: 'تم استلام الوصل، والطلب قيد المراجعة.'
+});
 });
 app.get('/api/admin/users', (req,res) => {
   if (!safeEqual(req.get('x-admin-key') || '', process.env.ADMIN_API_KEY)) return res.status(403).json({ error: 'غير مصرح.' });
