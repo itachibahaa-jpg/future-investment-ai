@@ -1765,9 +1765,22 @@ async function spinDailyWheel() {
   result.textContent = "";
 
   try {
-    const data = await api("/wheel/spin", {
-      method: "POST"
-    });
+    const submissionId = Number(
+  localStorage.getItem("pendingWheelSubmissionId")
+);
+
+if (!Number.isSafeInteger(submissionId) || submissionId < 1) {
+  throw new Error("أرسل وصل الإيداع وانتظر موافقة الإدارة أولاً.");
+}
+
+const data = await api("/wheel/spin", {
+  method: "POST",
+  body: JSON.stringify({
+    paymentSubmissionId: submissionId
+  })
+});
+
+localStorage.removeItem("pendingWheelSubmissionId");
 
     if (wheel) {
       wheel.style.transition = "transform 4s ease-out";
