@@ -176,40 +176,7 @@ app.post('/api/wheel/spin', auth, (req, res) => {
     });
   }
 });
-  const prizes = [
-    { key: 'bonus50', label: '50 ألف سنتيم مجانًا' },
-    { key: 'referrals', label: 'دعوة 5 أشخاص للفوز بـ7 ملايين سنتيم' },
-    { key: 'upgrade', label: 'فرصة ترقية الباقة' },
-    { key: 'grand20m', label: 'الجائزة الكبرى: 20 مليون سنتيم' },
-    { key: 'vip', label: 'ترقية مستوى VIP' }
-  ];
-
-  const prize = prizes[crypto.randomInt(prizes.length)];
-
-  try {
-    db.prepare(`
-      INSERT INTO daily_wheel_spins (user_id, prize_key)
-      VALUES (?, ?)
-    `).run(req.userId, prize.key);
-
-    res.json({
-      success: true,
-      prize: prize,
-      financialRewardsEnabled: false,
-      message: 'هذه نتيجة تجريبية. الجوائز المالية والترقيات غير مفعلة فعليًا.'
-    });
-  } catch (err) {
-    if (err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-      return res.status(409).json({
-        error: 'لقد استخدمت عجلة الحظ اليوم. حاول غدًا.'
-      });
-    }
-
-    console.error(err);
-    res.status(500).json({
-      error: 'تعذر تدوير العجلة حاليًا.'
-    });
-  }
+  
 });
 app.post('/api/register', async (req,res) => {
  try {
