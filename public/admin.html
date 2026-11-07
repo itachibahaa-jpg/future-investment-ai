@@ -320,7 +320,80 @@
         showMessage("خطأ: " + error.message);
       }
     }
+    const supportBox = document.getElementById("supportMessages");
 
+    async function loadSupportMessages() {
+      supportBox.replaceChildren();
+      showMessage("جارٍ تحميل محادثات الدعم...");
+
+      try {
+        const data = await api("/api/admin/support-messages");
+
+        if (!data.users || data.users.length === 0) {
+          addText(supportBox, "p", "لا توجد محادثات دعم حتى الآن.");
+          showMessage("تم تحميل محادثات الدعم.");
+          return;
+        }
+
+        data.users.forEach(user => {
+          const card = document.createElement("article");
+          card.className = "card";
+
+          addText(card, "h3", user.name || "مستخدم");
+          addText(card, "p", "البريد: " + (user.email || ""));
+          addText(card, "p", "رقم الحساب: " + user.id);
+
+          (user.messages || []).forEach(item => {
+            const row = document.createElement("p");
+            row.textContent =
+              (item.sender === "admin" ? "الإدارة: " : "المستخدم: ") +
+              item.message;
+            card.appendChild(row);
+          });
+
+          const input = document.createElement("textarea");
+          input.placeholder = "اكتب رد الإدارة...";
+          input.rows = 3;
+          card.appendChild(input);
+
+          const replyButton = document.createElement("button");
+          replyButton.className = "refresh";
+          replyButton.textContent = "إرسال الرد";
+          replyButton.addEventListener("click", () => {
+            sendAdminSupportReply(user.id, input);
+          });
+
+          card.appendChild(replyButton);
+          supportBox.appendChild(card);
+        });
+
+        showMessage("تم تحميل محادثات الدعم.");
+      } catch (error) {
+        showMessage("تعذر تحميل المحادثات: " + error.message);
+      }
+    }
+
+    async function sendAdminSupportReply(userId, input) {
+      const messageText = input.value.trim();
+
+      if (!messageText) {
+        showMessage("اكتب الرد أولًا.");
+        return;
+      }
+
+      try {
+        await api("/api/admin/support-messages/" + encodeURIComponent(userId), {
+          method: "POST",
+          body: JSON.stringify({ message: messageText })
+        });
+
+        input.value = "";
+        await loadSupportMessages();
+        showMessage("تم إرسال الرد.");
+      } catch (error) {
+        showMessage("تعذر إرسال الرد: " + error.message);
+      }
+    }
     document.getElementById("refreshPayments")
       .addEventListener("click", loadPayments);
 
