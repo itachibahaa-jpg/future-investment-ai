@@ -322,32 +322,50 @@
     }
     const supportBox = document.getElementById("supportMessages");
 
-    async function loadSupportMessages() {
+        async function loadSupportMessages() {
       supportBox.replaceChildren();
       showMessage("جارٍ تحميل محادثات الدعم...");
 
       try {
         const data = await api("/api/admin/support-messages");
+        const messages = Array.isArray(data.messages) ? data.messages : [];
 
-        if (!data.users || data.users.length === 0) {
+        if (messages.length === 0) {
           addText(supportBox, "p", "لا توجد محادثات دعم حتى الآن.");
           showMessage("تم تحميل محادثات الدعم.");
           return;
         }
 
-        data.users.forEach(user => {
+        const conversations = new Map();
+
+        messages.forEach(item => {
+          const userId = Number(item.user_id);
+
+          if (!conversations.has(userId)) {
+            conversations.set(userId, {
+              id: userId,
+              name: item.name || "مستخدم",
+              email: item.email || "",
+              messages: []
+            });
+          }
+
+          conversations.get(userId).messages.push(item);
+        });
+
+        conversations.forEach(user => {
           const card = document.createElement("article");
           card.className = "card";
 
-          addText(card, "h3", user.name || "مستخدم");
-          addText(card, "p", "البريد: " + (user.email || ""));
+          addText(card, "h3", user.name);
+          addText(card, "p", "البريد: " + user.email);
           addText(card, "p", "رقم الحساب: " + user.id);
 
-          (user.messages || []).forEach(item => {
+          user.messages.forEach(item => {
             const row = document.createElement("p");
             row.textContent =
               (item.sender === "admin" ? "الإدارة: " : "المستخدم: ") +
-              item.message;
+              item.message + " — " + item.created_at;
             card.appendChild(row);
           });
 
@@ -372,7 +390,6 @@
         showMessage("تعذر تحميل المحادثات: " + error.message);
       }
     }
-
     async function sendAdminSupportReply(userId, input) {
       const messageText = input.value.trim();
 
