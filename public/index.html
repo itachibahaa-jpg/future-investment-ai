@@ -1330,7 +1330,69 @@ function showSection(sectionId) {
     if (currentUser) refreshAccount();
   }
 }
+async function loadSupportMessages() {
+  const box = $("supportConversation");
+  if (!box) return;
 
+  if (!localStorage.getItem(TOKEN_KEY)) {
+    box.className = "empty";
+    box.textContent = "يرجى تسجيل الدخول أولاً لعرض المحادثة.";
+    return;
+  }
+
+  box.textContent = "جارٍ تحميل المحادثة...";
+
+  try {
+    const data = await api("/support/messages");
+    const messages = Array.isArray(data.messages) ? data.messages : [];
+
+    if (!messages.length) {
+      box.className = "empty";
+      box.textContent = "لا توجد رسائل بعد. يمكنك إرسال أول رسالة.";
+      return;
+    }
+
+    box.className = "";
+    box.innerHTML = messages.map(item => `
+      <div class="card" style="margin:10px 0">
+        <strong>${item.sender === "admin" ? "الإدارة" : "أنت"}</strong>
+        <p style="white-space:pre-wrap">${escapeHTML(item.message)}</p>
+        <small>${escapeHTML(item.created_at || "")}</small>
+      </div>
+    `).join("");
+  } catch (error) {
+    box.className = "empty";
+    box.textContent = error.message || "تعذر تحميل المحادثة.";
+  }
+}
+
+async function sendSupportMessage() {
+  const input = $("supportMessageInput");
+  const message = input ? input.value.trim() : "";
+
+  if (!localStorage.getItem(TOKEN_KEY)) {
+    showMessage("supportMessageStatus", "يرجى تسجيل الدخول أولاً.");
+    return;
+  }
+
+  if (!message) {
+    showMessage("supportMessageStatus", "اكتب رسالتك أولاً.");
+    return;
+  }
+
+  try {
+    await api("/support/messages", {
+      method: "POST",
+      body: JSON.stringify({ message })
+    });
+
+    input.value = "";
+    showMessage("supportMessageStatus", "تم إرسال رسالتك بنجاح.", "success");
+    await loadSupportMessages();
+  } catch (error) {
+    showMessage("supportMessageStatus", error.message || "تعذر إرسال الرسالة.");
+  }
+}
 function renderPackages() {
   $("packageGrid").innerHTML = packages.map((item, index) => `
     <article class="card package-card">
