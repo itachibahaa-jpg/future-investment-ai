@@ -399,6 +399,8 @@
 
     document.getElementById("refreshUsers")
       .addEventListener("click", loadUsers);
+    document.getElementById("refreshSupport")
+  .addEventListener("click", loadSupportMessages);
 
     if (!adminKey) {
       showMessage("لم تدخل مفتاح الإدارة. أعد فتح الصفحة وحاول مجددًا.");
