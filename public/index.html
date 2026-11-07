@@ -1137,6 +1137,43 @@ header {
     </div>
   </div>
 </section>
+  <section class="section hidden" id="help">
+  <h2 class="section-title">💬 مركز المساعدة</h2>
+  <p class="section-subtitle">تواصل مع فريق الدعم.</p>
+
+  <div class="card">
+    <h3>📩 البريد الإلكتروني</h3>
+    <a href="mailto:hibam4856@gmail.com">hibam4856@gmail.com</a>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>💬 محادثة الدعم</h3>
+
+    <div id="supportConversation" class="empty">
+      سجّل الدخول لبدء المحادثة.
+    </div>
+
+    <div class="field">
+      <label>اكتب رسالتك</label>
+      <textarea id="supportMessageInput" rows="4"
+        maxlength="2000"
+        placeholder="اكتب استفسارك هنا..."></textarea>
+    </div>
+
+    <button class="btn btn-primary full"
+      onclick="sendSupportMessage()">
+      إرسال الرسالة
+    </button>
+
+    <div id="supportMessageStatus" class="message"></div>
+
+    <button class="btn btn-secondary full"
+      style="margin-top:12px"
+      onclick="loadSupportMessages()">
+      تحديث المحادثة
+    </button>
+  </div>
+</section>
   <section class="section hidden" id="auth">
     <div class="card form-card">
       <h2 class="section-title" id="authTitle">تسجيل الدخول</h2>
