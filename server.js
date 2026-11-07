@@ -79,7 +79,16 @@ CREATE TABLE IF NOT EXISTS deposit_wheel_spins (
  prize_key TEXT NOT NULL,
  created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+CREATE TABLE IF NOT EXISTS support_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  sender TEXT NOT NULL CHECK(sender IN ('user', 'admin')),
+  message TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 
+CREATE INDEX IF NOT EXISTS idx_support_messages_user
+ON support_messages(user_id, id);
 CREATE INDEX IF NOT EXISTS idx_wheel_spins_user
 ON daily_wheel_spins(user_id);`);
 
