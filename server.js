@@ -228,6 +228,86 @@ app.get('/api/referrals', auth, (req,res) => {
  const rows = db.prepare("SELECT name, created_at FROM users WHERE referred_by=? AND status='active' ORDER BY id DESC LIMIT 100").all(req.userId);
  res.json({ referrals: rows, count: countRefs.get(req.userId).n, goal: 10, rewardEnabled: false });
 });
+// Support messages - User
+app.get('/api/support/messages', auth, (req, res) => {
+  const messages = db.prepare(`
+    SELECT id, sender, message, created_at
+    FROM support_messages
+    WHERE user_id = ?
+    ORDER BY id ASC
+    LIMIT 200
+  `).all(req.userId);
+
+  res.json({ messages });
+});
+
+app.post('/api/support/messages', auth, (req, res) => {
+  const message = String(req.body?.message || '').trim();
+
+  if (!message || message.length > 2000) {
+    return res.status(400).json({
+      error: 'الرسالة مطلوبة وبحد أقصى 2000 حرف.'
+    });
+  }
+
+  const result = db.prepare(`
+    INSERT INTO support_messages (user_id, sender, message)
+    VALUES (?, 'user', ?)
+  `).run(req.userId, message);
+
+  res.json({ success: true, id: result.lastInsertRowid });
+});
+
+// Support messages - Admin
+app.get('/api/admin/support-messages', (req, res) => {
+  const key = req.get('x-admin-key') || '';
+
+  if (!process.env.ADMIN_API_KEY ||
+      !safeEqual(key, process.env.ADMIN_API_KEY)) {
+    return res.status(403).json({ error: 'غير مصرح.' });
+  }
+
+  const messages = db.prepare(`
+    SELECT m.id, m.user_id, m.sender, m.message, m.created_at,
+           u.name, u.email
+    FROM support_messages m
+    JOIN users u ON u.id = m.user_id
+    ORDER BY m.id ASC
+    LIMIT 1000
+  `).all();
+
+  res.json({ messages });
+});
+
+app.post('/api/admin/support-messages/:userId', (req, res) => {
+  const key = req.get('x-admin-key') || '';
+
+  if (!process.env.ADMIN_API_KEY ||
+      !safeEqual(key, process.env.ADMIN_API_KEY)) {
+    return res.status(403).json({ error: 'غير مصرح.' });
+  }
+
+  const userId = Number(req.params.userId);
+  const message = String(req.body?.message || '').trim();
+
+  if (!Number.isSafeInteger(userId) || userId < 1 ||
+      !message || message.length > 2000) {
+    return res.status(400).json({ error: 'بيانات الرسالة غير صحيحة.' });
+  }
+
+  const user = db.prepare('SELECT id FROM users WHERE id = ?').get(userId);
+
+  if (!user) {
+    return res.status(404).json({ error: 'المستخدم غير موجود.' });
+  }
+
+  const result = db.prepare(`
+    INSERT INTO support_messages (user_id, sender, message)
+    VALUES (?, 'admin', ?)
+  `).run(userId, message);
+
+  res.json({ success: true, id: result.lastInsertRowid });
+});
 app.post('/api/package-requests', auth, (req, res) => {
   const allowedPackages = {
     'الباقة البرونزية': 5000,
