@@ -90,7 +90,20 @@ CREATE TABLE IF NOT EXISTS support_messages (
 CREATE INDEX IF NOT EXISTS idx_support_messages_user
 ON support_messages(user_id, id);
 CREATE INDEX IF NOT EXISTS idx_wheel_spins_user
-ON daily_wheel_spins(user_id);`);
+ON daily_wheel_spins(user_id);CREATE TABLE IF NOT EXISTS withdrawal_requests (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  amount REAL NOT NULL,
+  method TEXT NOT NULL,
+  payout_details TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending'
+    CHECK(status IN ('pending', 'rejected', 'completed')),
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  reviewed_at TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_withdrawal_requests_user
+ON withdrawal_requests(user_id);`);
 
 const findByEmail = db.prepare('SELECT * FROM users WHERE email = ?');
 const findByCode = db.prepare('SELECT * FROM users WHERE referral_code = ?');
