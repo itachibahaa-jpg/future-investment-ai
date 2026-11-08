@@ -2178,7 +2178,7 @@ async function submitWithdrawal(event) {
     container.innerHTML = requests.map(item => `
       <div class="card" style="margin-top:10px">
         <p>رقم الطلب: ${escapeHTML(String(item.id))}</p>
-        <p>المبلغ التجريبي: ${escapeHTML(String(item.amount))} DA</p>
+        <p>المبلغ المراد سحبه: ${escapeHTML(String(item.amount))} DA</p>
         <p>الطريقة: ${escapeHTML(String(item.method))}</p>
         <p>الحالة: ${escapeHTML(statuses[item.status] || "غير معروفة")}</p>
         <p>تاريخ الطلب: ${escapeHTML(String(item.created_at || ""))}</p>
