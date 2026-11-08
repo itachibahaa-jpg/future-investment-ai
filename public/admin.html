@@ -294,7 +294,70 @@
         showMessage("تعذر معالجة الطلب: " + error.message);
       }
     }
+const withdrawalsBox = document.getElementById("withdrawals");
 
+async function loadWithdrawals() {
+  withdrawalsBox.replaceChildren();
+  showMessage("جارٍ تحميل طلبات السحب...");
+
+  try {
+    const data = await api("/api/admin/withdrawals");
+    const requests = data.requests || [];
+
+    if (requests.length === 0) {
+      addText(withdrawalsBox, "p", "لا توجد طلبات سحب حاليًا.");
+      showMessage("تم تحميل طلبات السحب.");
+      return;
+    }
+
+    requests.forEach(item => {
+      const card = document.createElement("article");
+      card.className = "card";
+
+      addText(card, "h3", "طلب سحب رقم #" + item.id);
+      addText(card, "p", "المستخدم: " + (item.user_name || "غير معروف"));
+      addText(card, "p", "البريد: " + (item.email || "غير متوفر"));
+      addText(card, "p", "المبلغ: " + item.amount + " DA");
+      addText(card, "p", "طريقة الاستلام: " + item.method);
+      addText(card, "p", "معلومات الاستلام: " + item.payout_details);
+      addText(card, "p", "التاريخ: " + item.created_at);
+      addText(card, "p", "الحالة: " + item.status, "status");
+
+      const actions = document.createElement("div");
+      actions.className = "actions";
+
+      [
+        ["قيد المراجعة", "pending"],
+        ["رفض", "rejected"],
+        ["مكتمل", "completed"]
+      ].forEach(([label, status]) => {
+        const button = document.createElement("button");
+        button.textContent = label;
+        button.addEventListener("click", async () => {
+          if (!confirm("هل تريد تغيير حالة الطلب؟")) return;
+
+          try {
+            await api("/api/admin/withdrawals/" + item.id, {
+              method: "PATCH",
+              body: JSON.stringify({ status })
+            });
+            await loadWithdrawals();
+          } catch (error) {
+            showMessage("تعذر تحديث الحالة: " + error.message);
+          }
+        });
+        actions.appendChild(button);
+      });
+
+      card.appendChild(actions);
+      withdrawalsBox.appendChild(card);
+    });
+
+    showMessage("تم تحميل طلبات السحب.");
+  } catch (error) {
+    showMessage("تعذر تحميل طلبات السحب: " + error.message);
+  }
+                     }
     async function loadUsers() {
       usersBox.replaceChildren();
       showMessage("جارٍ تحميل المستخدمين...");
