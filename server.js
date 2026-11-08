@@ -136,6 +136,154 @@ function auth(req, res, next) {
  catch { return res.status(401).json({ error: 'يرجى تسجيل الدخول من جديد.' }); }
 }
 app.get('/api/health', (_req,res) => res.json({ status: 'ok', mode: 'demo-no-financial-transactions' }));
+// لعبة الذاكرة اليومية
+
+function memoryGameDate() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+// عرض حالة اللعبة
+app.get('/api/memory-game/status', auth, (req, res) => {
+  try {
+    const gameDate = memoryGameDate();
+
+    const daily = db.prepare(`
+      SELECT attempts_used
+      FROM memory_game_daily
+      WHERE user_id = ? AND game_date = ?
+    `).get(req.userId, gameDate);
+
+    const wins = db.prepare(`
+      SELECT COUNT(*) AS total
+      FROM memory_game_attempts
+      WHERE user_id = ? AND game_date = ? AND status = 'won'
+    `).get(req.userId, gameDate);
+
+    const used = daily ? daily.attempts_used : 0;
+
+    res.json({
+      attemptsUsed: used,
+      attemptsRemaining: Math.max(0, 2 - used),
+      winsToday: wins.total
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: 'تعذر تحميل حالة اللعبة.'
+    });
+  }
+});
+
+// بدء محاولة جديدة
+app.post('/api/memory-game/start', auth, (req, res) => {
+  try {
+    const gameDate = memoryGameDate();
+
+    const symbols = ['🍎', '🚀', '🌟', '🎈'];
+    const cards = [...symbols, ...symbols];
+
+    for (let i = cards.length - 1; i > 0; i--) {
+      const j = crypto.randomInt(i + 1);
+      [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+
+    const attemptId = crypto.randomBytes(16).toString('hex');
+
+    const startGame = db.transaction(() => {
+      db.prepare(`
+        INSERT OR IGNORE INTO memory_game_daily
+        (user_id, game_date, attempts_used)
+        VALUES (?, ?, 0)
+      `).run(req.userId, gameDate);
+
+      const daily = db.prepare(`
+        SELECT attempts_used
+        FROM memory_game_daily
+        WHERE user_id = ? AND game_date = ?
+      `).get(req.userId, gameDate);
+
+      if (daily.attempts_used >= 2) {
+        return { error: 'انتهت محاولاتك اليوم. عد غداً.' };
+      }
+
+      db.prepare(`
+        UPDATE memory_game_daily
+        SET attempts_used = attempts_used + 1
+        WHERE user_id = ? AND game_date = ?
+      `).run(req.userId, gameDate);
+
+      db.prepare(`
+        INSERT INTO memory_game_attempts
+        (id, user_id, game_date, status, points_awarded)
+        VALUES (?, ?, ?, 'started', 0)
+      `).run(attemptId, req.userId, gameDate);
+
+      return {
+        attemptsUsed: daily.attempts_used + 1,
+        attemptsRemaining: 1 - daily.attempts_used
+      };
+    });
+
+    const result = startGame();
+
+    if (result.error) {
+      return res.status(429).json({ error: result.error });
+    }
+
+    res.json({
+      success: true,
+      attemptId,
+      cards,
+      ...result
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: 'تعذر بدء اللعبة.'
+    });
+  }
+});
+
+// حفظ نتيجة الفوز
+app.post('/api/memory-game/finish', auth, (req, res) => {
+  const attemptId = String(req.body?.attemptId || '');
+
+  if (!/^[a-f0-9]{32}$/.test(attemptId)) {
+    return res.status(400).json({
+      error: 'رقم المحاولة غير صحيح.'
+    });
+  }
+
+  try {
+    const result = db.prepare(`
+      UPDATE memory_game_attempts
+      SET status = 'won'
+      WHERE id = ?
+        AND user_id = ?
+        AND status = 'started'
+    `).run(attemptId, req.userId);
+
+    if (!result.changes) {
+      return res.status(404).json({
+        error: 'المحاولة غير موجودة أو انتهت.'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'تم تسجيل الفوز بنجاح.',
+      note: 'اللعبة ترفيهية ولا تمنح أموالاً أو مكافآت مالية.'
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: 'تعذر حفظ نتيجة اللعبة.'
+    });
+  }
+});
 app.post('/api/wheel/spin', auth, (req, res) => {
   const submissionId = Number(req.body?.paymentSubmissionId);
 
