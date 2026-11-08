@@ -2193,6 +2193,16 @@ async function submitWithdrawal(event) {
       لا تضع كلمات المرور أو رموز التحقق هنا.
     </p>
   </div>
+  <div class="card" style="margin-top:15px">
+  <h3>سجل طلبات السحب</h3>
+  <div id="withdrawalHistory">
+    لا توجد طلبات معروضة.
+  </div>
+  <button class="btn btn-secondary" type="button"
+    onclick="loadWithdrawalHistory()">
+    تحديث السجل
+  </button>
+  </div>
 </section>
 </body>
 </html>
