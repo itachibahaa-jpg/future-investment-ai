@@ -2113,6 +2113,48 @@ function changeReviewPage(direction) {
   renderReviews();
 }
 </script>
+<section class="section hidden" id="withdrawal">
+  <h2 class="section-title">طلب سحب</h2>
+  <p class="section-subtitle">قدّم طلبك لمراجعته من الإدارة.</p>
 
+  <div class="card">
+    <form onsubmit="event.preventDefault(); alert('سيتم تفعيل إرسال الطلب بعد ربط الخادم.');">
+
+      <label>مبلغ السحب (DA)</label>
+      <input
+        type="number"
+        id="withdrawalAmount"
+        min="1"
+        placeholder="أدخل المبلغ"
+        required
+      >
+
+      <label>طريقة استلام المبلغ</label>
+      <select id="withdrawalMethod" required>
+        <option value="">اختر الطريقة</option>
+        <option value="BaridiMob">BaridiMob</option>
+        <option value="CCP">CCP</option>
+        <option value="RedotPay TRC20">RedotPay TRC20</option>
+      </select>
+
+      <label>معلومات الاستلام</label>
+      <textarea
+        id="withdrawalDetails"
+        placeholder="أدخل معلومات الاستلام المطلوبة"
+        required
+      ></textarea>
+
+      <button class="btn btn-primary" type="submit">
+        إرسال طلب السحب
+      </button>
+
+    </form>
+
+    <p class="muted" style="margin-top:15px">
+      الطلب يخضع للمراجعة، وإرساله لا يعني تنفيذ التحويل.
+      لا تضع كلمات المرور أو رموز التحقق هنا.
+    </p>
+  </div>
+</section>
 </body>
 </html>
