@@ -2380,6 +2380,169 @@ function checkDailyTask(taskIndex, optionIndex) {
 
   renderDailyTasks();
 }
+  // ===== لعبة الذاكرة =====
+
+let memoryGameCards = [];
+let memoryGameOpened = [];
+let memoryGameMatched = [];
+let memoryGameAttemptId = null;
+let memoryGameLocked = false;
+let memoryGameFinished = false;
+let memoryGameAttemptsRemaining = 0;
+
+async function loadMemoryGameStatus() {
+  const statusBox = $("memoryGameStatus");
+  if (!statusBox) return;
+
+  try {
+    const data = await api("/memory-game/status");
+
+    memoryGameAttemptsRemaining = data.attemptsRemaining;
+
+    statusBox.textContent =
+      `المحاولات المستخدمة اليوم: ${data.attemptsUsed} من 2 — المتبقية: ${data.attemptsRemaining} — مرات الفوز: ${data.winsToday}`;
+
+  } catch (error) {
+    statusBox.textContent = error.message || "تعذر تحميل حالة اللعبة.";
+  }
+}
+
+async function startMemoryGame() {
+  const statusBox = $("memoryGameStatus");
+  const board = $("memoryGameBoard");
+
+  if (!statusBox || !board) return;
+
+  if (memoryGameAttemptsRemaining <= 0) {
+    statusBox.textContent = "انتهت محاولاتك اليوم. يمكنك اللعب مجدداً غداً.";
+    return;
+  }
+
+  try {
+    statusBox.textContent = "جارٍ تجهيز اللعبة...";
+    board.innerHTML = "";
+
+    const data = await api("/memory-game/start", {
+      method: "POST",
+      body: JSON.stringify({})
+    });
+
+    memoryGameCards = data.cards;
+    memoryGameAttemptId = data.attemptId;
+    memoryGameOpened = [];
+    memoryGameMatched = [];
+    memoryGameLocked = false;
+    memoryGameFinished = false;
+    memoryGameAttemptsRemaining = data.attemptsRemaining;
+
+    renderMemoryGameBoard();
+
+    statusBox.textContent =
+      `اعثر على الأزواج المتطابقة. المحاولات المتبقية اليوم: ${data.attemptsRemaining}`;
+
+  } catch (error) {
+    statusBox.textContent = error.message || "تعذر بدء اللعبة.";
+    await loadMemoryGameStatus();
+  }
+}
+
+function renderMemoryGameBoard() {
+  const board = $("memoryGameBoard");
+  if (!board) return;
+
+  board.innerHTML = memoryGameCards.map((symbol, index) => {
+    const isMatched = memoryGameMatched.includes(index);
+    const isOpened = memoryGameOpened.includes(index);
+
+    return `
+      <button
+        type="button"
+        class="btn btn-secondary"
+        onclick="flipMemoryCard(${index})"
+        ${isMatched || isOpened || memoryGameLocked ? "disabled" : ""}
+        style="
+          min-height:75px;
+          font-size:28px;
+          border-radius:12px;
+          opacity:${isMatched ? "0.65" : "1"};
+        "
+      >
+        ${isMatched || isOpened ? symbol : "❔"}
+      </button>
+    `;
+  }).join("");
+}
+
+function flipMemoryCard(index) {
+  if (
+    memoryGameLocked ||
+    memoryGameFinished ||
+    memoryGameOpened.includes(index) ||
+    memoryGameMatched.includes(index)
+  ) return;
+
+  memoryGameOpened.push(index);
+  renderMemoryGameBoard();
+
+  if (memoryGameOpened.length === 2) {
+    memoryGameLocked = true;
+
+    const first = memoryGameOpened[0];
+    const second = memoryGameOpened[1];
+
+    if (memoryGameCards[first] === memoryGameCards[second]) {
+      memoryGameMatched.push(first, second);
+      memoryGameOpened = [];
+      memoryGameLocked = false;
+
+      renderMemoryGameBoard();
+
+      if (memoryGameMatched.length === memoryGameCards.length) {
+        finishMemoryGame();
+      }
+    } else {
+      window.setTimeout(() => {
+        memoryGameOpened = [];
+        memoryGameLocked = false;
+        renderMemoryGameBoard();
+      }, 900);
+    }
+  }
+}
+
+async function finishMemoryGame() {
+  if (memoryGameFinished || !memoryGameAttemptId) return;
+
+  memoryGameFinished = true;
+
+  const statusBox = $("memoryGameStatus");
+
+  try {
+    await api("/memory-game/finish", {
+      method: "POST",
+      body: JSON.stringify({
+        attemptId: memoryGameAttemptId
+      })
+    });
+
+    if (statusBox) {
+      statusBox.textContent =
+        "🎉 أحسنت! وجدت جميع الأزواج. هذه لعبة ترفيهية فقط ولا تمنح أموالاً أو مكافآت مالية.";
+    }
+
+    await loadMemoryGameStatus();
+
+  } catch (error) {
+    memoryGameFinished = false;
+
+    if (statusBox) {
+      statusBox.textContent =
+        error.message || "تعذر حفظ نتيجة اللعبة.";
+    }
+  }
+}
+
+// ===== نهاية لعبة الذاكرة =====
 </script>
 <section class="section hidden" id="withdrawal">
   <h2 class="section-title">طلب سحب</h2>
