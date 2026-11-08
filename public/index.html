@@ -2129,11 +2129,7 @@ async function submitWithdrawal(event) {
     return;
   }
 
-  if (details !== "TEST") {
-    alert("للاختبار فقط، اكتب TEST في خانة معلومات الاستلام. لا تدخل بيانات مالية حقيقية.");
-    return;
-  }
-
+  
   try {
     const result = await api("/withdrawals", {
       method: "POST",
