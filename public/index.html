@@ -1408,6 +1408,8 @@ function showSection(sectionId) {
   window.scrollTo({top: 0, behavior: "smooth"});
   if (sectionId === "dailyTasks") {
   renderDailyTasks();
+  loadMemoryGameStatus();
+  }
   }
   if (sectionId === "reviews") {
   renderReviews();
