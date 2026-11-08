@@ -104,7 +104,6 @@ ON daily_wheel_spins(user_id);CREATE TABLE IF NOT EXISTS withdrawal_requests (
 
 CREATE INDEX IF NOT EXISTS idx_withdrawal_requests_user
 ON withdrawal_requests(user_id);`);
-ON memory_game_attempts(user_id, game_date);
 const findByEmail = db.prepare('SELECT * FROM users WHERE email = ?');
 const findByCode = db.prepare('SELECT * FROM users WHERE referral_code = ?');
 const countRefs = db.prepare("SELECT COUNT(*) AS n FROM users WHERE referred_by = ? AND status = 'active'");
