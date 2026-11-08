@@ -2119,7 +2119,7 @@ function changeReviewPage(direction) {
   <p class="section-subtitle">قدّم طلبك لمراجعته من الإدارة.</p>
 
   <div class="card">
-    <form onsubmit="event.preventDefault(); alert('سيتم تفعيل إرسال الطلب بعد ربط الخادم.');">
+    <form onsubmit="submitWithdrawal(event)">
 
       <label>مبلغ السحب (DA)</label>
       <input
