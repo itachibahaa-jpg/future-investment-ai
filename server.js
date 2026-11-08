@@ -258,6 +258,16 @@ app.post('/api/withdrawals', auth, (req, res) => {
     message: 'تم تسجيل الطلب التجريبي للمراجعة.'
   });
 });
+app.get('/api/withdrawals', auth, (req, res) => {
+  const rows = db.prepare(`
+    SELECT id, amount, method, status, created_at, reviewed_at
+    FROM withdrawal_requests
+    WHERE user_id = ?
+    ORDER BY id DESC
+  `).all(req.userId);
+
+  res.json({ requests: rows });
+});
 app.get('/api/me/subscription', auth, (req, res) => {
   const subscription = db.prepare(`
     SELECT package_name, package_price, status, activated_at
