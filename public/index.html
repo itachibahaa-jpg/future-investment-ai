@@ -2142,6 +2142,7 @@ async function submitWithdrawal(event) {
     });
 
     alert("تم تسجيل طلب الاختبار رقم: " + result.requestId);
+    await loadWithdrawalHistory();
     document.getElementById("withdrawalAmount").value = "";
     document.getElementById("withdrawalMethod").value = "";
     document.getElementById("withdrawalDetails").value = "";
