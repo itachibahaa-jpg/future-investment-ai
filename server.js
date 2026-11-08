@@ -103,7 +103,26 @@ ON daily_wheel_spins(user_id);CREATE TABLE IF NOT EXISTS withdrawal_requests (
 );
 
 CREATE INDEX IF NOT EXISTS idx_withdrawal_requests_user
-ON withdrawal_requests(user_id);`);
+ON withdrawal_requests(user_id);
+
+CREATE TABLE IF NOT EXISTS memory_game_daily (
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  game_date TEXT NOT NULL,
+  attempts_used INTEGER NOT NULL DEFAULT 0 CHECK(attempts_used BETWEEN 0 AND 2),
+  PRIMARY KEY(user_id, game_date)
+);
+
+CREATE TABLE IF NOT EXISTS memory_game_attempts (
+  id TEXT PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  game_date TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'started' CHECK(status IN ('started','won')),
+  points_awarded INTEGER NOT NULL DEFAULT 0 CHECK(points_awarded IN (0,2)),
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_memory_game_attempts_user
+ON memory_game_attempts(user_id, game_date);`);
 const findByEmail = db.prepare('SELECT * FROM users WHERE email = ?');
 const findByCode = db.prepare('SELECT * FROM users WHERE referral_code = ?');
 const countRefs = db.prepare("SELECT COUNT(*) AS n FROM users WHERE referred_by = ? AND status = 'active'");
