@@ -2149,7 +2149,45 @@ async function submitWithdrawal(event) {
     alert(error.message);
   }
 }
-  
+  async function loadWithdrawalHistory() {
+  const container = document.getElementById("withdrawalHistory");
+  if (!container) return;
+
+  if (!localStorage.getItem("futureInvestmentToken")) {
+    container.textContent = "يرجى تسجيل الدخول أولًا.";
+    return;
+  }
+
+  container.textContent = "جارٍ تحميل السجل...";
+
+  try {
+    const result = await api("/withdrawals");
+    const requests = result.requests || [];
+
+    if (!requests.length) {
+      container.textContent = "لا توجد طلبات اختبار حتى الآن.";
+      return;
+    }
+
+    const statuses = {
+      pending: "قيد المراجعة",
+      rejected: "مرفوض",
+      completed: "مكتمل (تحديث إداري فقط)"
+    };
+
+    container.innerHTML = requests.map(item => `
+      <div class="card" style="margin-top:10px">
+        <p>رقم الطلب: ${escapeHTML(String(item.id))}</p>
+        <p>المبلغ التجريبي: ${escapeHTML(String(item.amount))} DA</p>
+        <p>الطريقة: ${escapeHTML(String(item.method))}</p>
+        <p>الحالة: ${escapeHTML(statuses[item.status] || "غير معروفة")}</p>
+        <p>تاريخ الطلب: ${escapeHTML(String(item.created_at || ""))}</p>
+      </div>
+    `).join("");
+  } catch (error) {
+    container.textContent = "تعذر تحميل السجل: " + escapeHTML(error.message);
+  }
+  }
 </script>
 <section class="section hidden" id="withdrawal">
   <h2 class="section-title">طلب سحب</h2>
