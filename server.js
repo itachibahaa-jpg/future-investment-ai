@@ -647,6 +647,81 @@ app.post('/api/me/change-password', auth, async (req, res) => {
     });
   }
 });
+
+// عرض طلبات السحب في لوحة الإدارة
+app.get('/api/admin/withdrawals', (req, res) => {
+  const key = req.get('x-admin-key') || '';
+
+  if (
+    !process.env.ADMIN_API_KEY ||
+    !safeEqual(key, process.env.ADMIN_API_KEY)
+  ) {
+    return res.status(403).json({ error: 'غير مصرح.' });
+  }
+
+  try {
+    const rows = db.prepare(`
+      SELECT w.id, w.user_id, u.name AS user_name,
+             u.email, w.amount, w.method,
+             w.payout_details, w.status,
+             w.created_at, w.reviewed_at
+      FROM withdrawal_requests w
+      LEFT JOIN users u ON u.id = w.user_id
+      ORDER BY w.id DESC
+      LIMIT 200
+    `).all();
+
+    res.json({ requests: rows });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'تعذر جلب طلبات السحب.' });
+  }
+});
+
+// تحديث حالة طلب السحب
+app.patch('/api/admin/withdrawals/:id', (req, res) => {
+  const key = req.get('x-admin-key') || '';
+
+  if (
+    !process.env.ADMIN_API_KEY ||
+    !safeEqual(key, process.env.ADMIN_API_KEY)
+  ) {
+    return res.status(403).json({ error: 'غير مصرح.' });
+  }
+
+  const id = Number(req.params.id);
+  const status = req.body?.status;
+
+  if (!Number.isSafeInteger(id) || id < 1) {
+    return res.status(400).json({ error: 'رقم الطلب غير صحيح.' });
+  }
+
+  if (!['pending', 'rejected', 'completed'].includes(status)) {
+    return res.status(400).json({ error: 'الحالة غير صالحة.' });
+  }
+
+  try {
+    const result = db.prepare(`
+      UPDATE withdrawal_requests
+      SET status = ?, reviewed_at = datetime('now')
+      WHERE id = ?
+    `).run(status, id);
+
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'الطلب غير موجود.' });
+    }
+
+    res.json({
+      success: true,
+      message: 'تم تحديث حالة الطلب.',
+      status
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'تعذر تحديث حالة الطلب.' });
+  }
+});
+
 app.use(express.static(path.join(__dirname,'public')));
 app.use((err,_req,res,_next) => { console.error(err); res.status(500).json({ error: 'خطأ داخلي.' }); });
 const port = Number(process.env.PORT || 3000);
