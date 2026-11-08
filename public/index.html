@@ -2204,6 +2204,149 @@ async function submitWithdrawal(event) {
     container.textContent = "تعذر تحميل السجل: " + escapeHTML(error.message);
   }
   }
+  const dailyTaskItems = [
+  {
+    category: "🧩 تفكير منطقي",
+    question: "ما العدد التالي؟ 2، 4، 8، 16، ...",
+    options: ["18", "24", "32", "30"],
+    answer: 2,
+    explanation: "كل عدد يساوي ضعف العدد السابق، لذلك 16 × 2 = 32."
+  },
+  {
+    category: "🔬 علوم",
+    question: "ما العملية التي تستخدم فيها النباتات ضوء الشمس لصنع غذائها؟",
+    options: ["التبخر", "البناء الضوئي", "التكاثف", "التجمد"],
+    answer: 1,
+    explanation: "تستخدم النباتات ضوء الشمس والماء وثاني أكسيد الكربون لصنع غذائها، وتسمى العملية البناء الضوئي."
+  },
+  {
+    category: "🌍 جغرافيا",
+    question: "ما أكبر محيط على الأرض؟",
+    options: ["الهندي", "الأطلسي", "المتجمد الشمالي", "الهادئ"],
+    answer: 3,
+    explanation: "المحيط الهادئ هو أكبر محيطات الأرض من حيث المساحة."
+  },
+  {
+    category: "📝 لغة",
+    question: "ما الكلمة الأقرب إلى معنى غامض؟",
+    options: ["واضح", "مبهم", "سريع", "هادئ"],
+    answer: 1,
+    explanation: "كلمة مبهم تعني غير واضح، وهي الأقرب إلى غامض."
+  },
+  {
+    category: "➗ رياضيات",
+    question: "إذا قسمت 36 نقطة بالتساوي على 4 مجموعات، كم نقطة في كل مجموعة؟",
+    options: ["6", "8", "9", "12"],
+    answer: 2,
+    explanation: "36 ÷ 4 = 9 نقاط في كل مجموعة."
+  }
+];
+
+function dailyTasksStorageKey() {
+  const d = new Date();
+  const date = d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2, "0") + "-" +
+    String(d.getDate()).padStart(2, "0");
+  return "futureInvestmentDailyTasks:" + date;
+}
+
+function readDailyTaskProgress() {
+  try {
+    return JSON.parse(localStorage.getItem(dailyTasksStorageKey()) || "{}");
+  } catch (error) {
+    return {};
+  }
+}
+
+function renderDailyTasks() {
+  const container = $("dailyTasksContent");
+  if (!container) return;
+
+  const progress = readDailyTaskProgress();
+  const completed = dailyTaskItems.filter((task, index) =>
+    Object.prototype.hasOwnProperty.call(progress, index)
+  ).length;
+
+  let html = `
+    <div class="card">
+      <h3>🏆 إنجاز اليوم: ${completed} من ${dailyTaskItems.length}</h3>
+      <div style="height:9px;background:#263952;border-radius:20px;overflow:hidden">
+        <div style="height:100%;width:${completed / dailyTaskItems.length * 100}%;background:#35e0a1"></div>
+      </div>
+    </div>
+  `;
+
+  dailyTaskItems.forEach((task, index) => {
+    const done = Object.prototype.hasOwnProperty.call(progress, index);
+    const selected = done ? Number(progress[index]) : -1;
+    const correct = done && selected === task.answer;
+
+    html += `
+      <div class="card" style="margin-top:14px">
+        <p class="muted">${escapeHTML(task.category)}</p>
+        <h3>المهمة ${index + 1}</h3>
+        <p>${escapeHTML(task.question)}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+    `;
+
+    task.options.forEach((option, optionIndex) => {
+      html += `
+        <button class="btn btn-secondary"
+          type="button"
+          ${done ? "disabled" : ""}
+          onclick="checkDailyTask(${index},${optionIndex})">
+          ${escapeHTML(option)}
+        </button>
+      `;
+    });
+
+    html += "</div>";
+
+    if (done) {
+      html += `
+        <p class="message ${correct ? "success" : "error"}" style="margin-top:12px">
+          ${correct ? "إجابة صحيحة! أحسنت." : "إجابة غير صحيحة. الإجابة الصحيحة: " + escapeHTML(task.options[task.answer])}
+        </p>
+        <p class="muted">💡 الشرح: ${escapeHTML(task.explanation)}</p>
+      `;
+    } else {
+      html += `<p class="muted">اختر إجابة لمعرفة الشرح.</p>`;
+    }
+
+    html += "</div>";
+  });
+
+  if (completed === dailyTaskItems.length) {
+    html += `
+      <div class="card" style="margin-top:14px;text-align:center">
+        <h3>🎉 أكملت تحديات اليوم!</h3>
+        <p>أحسنت! عد غدًا لتحديات جديدة.</p>
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+}
+
+function checkDailyTask(taskIndex, optionIndex) {
+  const task = dailyTaskItems[taskIndex];
+
+  if (!task || optionIndex < 0 || optionIndex >= task.options.length) return;
+
+  const progress = readDailyTaskProgress();
+
+  if (Object.prototype.hasOwnProperty.call(progress, taskIndex)) return;
+
+  progress[taskIndex] = optionIndex;
+
+  try {
+    localStorage.setItem(dailyTasksStorageKey(), JSON.stringify(progress));
+  } catch (error) {
+    alert("تعذر حفظ تقدمك على هذا الجهاز.");
+  }
+
+  renderDailyTasks();
+}
 </script>
 <section class="section hidden" id="withdrawal">
   <h2 class="section-title">طلب سحب</h2>
