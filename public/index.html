@@ -1268,35 +1268,7 @@ header {
   </div>
 
   <div id="dailyTasksContent"></div>
-  <!-- لعبة الذاكرة -->
-<div class="card" id="memoryGame" style="margin-top:20px;text-align:center">
-  <h3>🧠 لعبة الذاكرة</h3>
 
-  <p class="muted">
-    اختبر ذاكرتك من خلال العثور على الأزواج المتطابقة من الرموز.
-  </p>
-
-  <p class="muted">
-    🎮 لعبة تعليمية وترفيهية فقط، ولا تمنح أموالاً أو مكافآت مالية.
-  </p>
-
-  <div id="memoryGameStatus" class="notice">
-    اضغط على زر البداية للعب.
-  </div>
-
-  <div id="memoryGameBoard" style="
-    display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
-    gap:10px;
-    max-width:420px;
-    margin:20px auto;
-  "></div>
-
-  <button class="btn btn-primary" type="button"
-    onclick="startMemoryGame()">
-    🎮 ابدأ اللعبة
-  </button>
-</div>
 </section>
 </main>
 
@@ -1408,7 +1380,6 @@ function showSection(sectionId) {
   window.scrollTo({top: 0, behavior: "smooth"});
   if (sectionId === "dailyTasks") {
   renderDailyTasks();
-  loadMemoryGameStatus();
   }
   if (sectionId === "reviews") {
   renderReviews();
