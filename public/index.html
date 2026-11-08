@@ -1376,6 +1376,9 @@ function showSection(sectionId) {
   });
 
   window.scrollTo({top: 0, behavior: "smooth"});
+  if (sectionId === "dailyTasks") {
+  renderDailyTasks();
+  }
   if (sectionId === "reviews") {
   renderReviews();
   }
