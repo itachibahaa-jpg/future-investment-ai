@@ -2113,6 +2113,43 @@ function changeReviewPage(direction) {
 
   renderReviews();
 }
+  
+async function submitWithdrawal(event) {
+  event.preventDefault();
+
+  const amount = Number(document.getElementById("withdrawalAmount").value);
+  const method = document.getElementById("withdrawalMethod").value;
+  const details = document.getElementById("withdrawalDetails").value.trim();
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    alert("أدخل مبلغًا تجريبيًا صحيحًا.");
+    return;
+  }
+
+  if (details !== "TEST") {
+    alert("للاختبار فقط، اكتب TEST في خانة معلومات الاستلام. لا تدخل بيانات مالية حقيقية.");
+    return;
+  }
+
+  try {
+    const result = await api("/withdrawals", {
+      method: "POST",
+      body: JSON.stringify({
+        amount,
+        method,
+        details: "TEST"
+      })
+    });
+
+    alert("تم تسجيل طلب الاختبار رقم: " + result.requestId);
+    document.getElementById("withdrawalAmount").value = "";
+    document.getElementById("withdrawalMethod").value = "";
+    document.getElementById("withdrawalDetails").value = "";
+  } catch (error) {
+    alert(error.message);
+  }
+}
+  
 </script>
 <section class="section hidden" id="withdrawal">
   <h2 class="section-title">طلب سحب</h2>
