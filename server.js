@@ -228,6 +228,36 @@ app.get('/api/me', auth, (req,res) => {
  const referralCount = countRefs.get(user.id).n;
  res.json({ user: publicUser(user), referralCount, referralGoal: 10, proposedRewardDA: referralCount >= 10 ? 5000 : null, rewardStatus: 'not_enabled_no_payment', notice: 'الوصول إلى 10 دعوات لا ينشئ رصيدًا ماليًا أو حقًا بالدفع تلقائيًا؛ المكافأة غير مفعّلة في النسخة التجريبية.' });
 });
+app.post('/api/withdrawals', auth, (req, res) => {
+  const amount = Number(req.body?.amount);
+  const method = String(req.body?.method || '');
+  const details = String(req.body?.details || '').trim();
+
+  if (!Number.isFinite(amount) || amount <= 0 || amount > 1000000) {
+    return res.status(400).json({ error: 'المبلغ غير صالح.' });
+  }
+
+  if (!['BaridiMob', 'CCP', 'RedotPay TRC20'].includes(method)) {
+    return res.status(400).json({ error: 'طريقة الاستلام غير صالحة.' });
+  }
+
+  if (details.length < 3 || details.length > 200) {
+    return res.status(400).json({ error: 'المعلومات غير صالحة.' });
+  }
+
+  const result = db.prepare(`
+    INSERT INTO withdrawal_requests
+    (user_id, amount, method, payout_details)
+    VALUES (?, ?, ?, ?)
+  `).run(req.userId, amount, method, details);
+
+  res.status(201).json({
+    success: true,
+    requestId: Number(result.lastInsertRowid),
+    status: 'pending',
+    message: 'تم تسجيل الطلب التجريبي للمراجعة.'
+  });
+});
 app.get('/api/me/subscription', auth, (req, res) => {
   const subscription = db.prepare(`
     SELECT package_name, package_price, status, activated_at
