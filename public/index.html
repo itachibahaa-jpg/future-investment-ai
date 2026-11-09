@@ -1217,6 +1217,34 @@ header {
   </form>
   </div>
 </section>
+  <section class="section hidden" id="adminReviews">
+  <h2 class="section-title">🛡️ إدارة تقييمات المنصة</h2>
+  <p class="section-subtitle">
+    راجع التقييمات الجديدة قبل نشرها للزوار.
+  </p>
+
+  <div class="card">
+    <label for="adminReviewKey">مفتاح الإدارة</label>
+    <input
+      type="password"
+      id="adminReviewKey"
+      placeholder="أدخل مفتاح الإدارة"
+      autocomplete="off"
+    >
+
+    <button
+      class="btn btn-primary"
+      type="button"
+      onclick="loadAdminReviews()"
+    >
+      عرض التقييمات المعلقة
+    </button>
+
+    <p id="adminReviewsMessage" class="muted"></p>
+  </div>
+
+  <div id="adminReviewsList"></div>
+  </section>
   <section class="section hidden" id="help">
   <h2 class="section-title">💬 مركز المساعدة</h2>
   <p class="section-subtitle">تواصل مع فريق الدعم.</p>
