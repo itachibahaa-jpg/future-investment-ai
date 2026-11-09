@@ -2243,7 +2243,102 @@ function changeReviewPage(direction) {
     message.textContent = "❌ " + error.message;
   }
   }
-  
+  async function loadAdminReviews() {
+  const key = document.getElementById("adminReviewKey").value.trim();
+  const message = document.getElementById("adminReviewsMessage");
+  const list = document.getElementById("adminReviewsList");
+
+  if (!key) {
+    message.textContent = "أدخل مفتاح الإدارة أولاً.";
+    return;
+  }
+
+  message.textContent = "جارٍ تحميل التقييمات...";
+  list.replaceChildren();
+
+  try {
+    const response = await fetch(API_BASE + "/admin/reviews", {
+      headers: {
+        "x-admin-key": key
+      }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "تعذر تحميل التقييمات.");
+    }
+
+    if (!data.reviews.length) {
+      message.textContent = "لا توجد تقييمات معلقة حالياً.";
+      return;
+    }
+
+    message.textContent = "عدد التقييمات المعلقة: " + data.reviews.length;
+
+    data.reviews.forEach(review => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.style.marginTop = "14px";
+
+      const name = document.createElement("h3");
+      name.textContent = review.name;
+
+      const stars = document.createElement("p");
+      stars.textContent = "⭐".repeat(review.rating);
+
+      const comment = document.createElement("p");
+      comment.textContent = review.text;
+
+      const approve = document.createElement("button");
+      approve.className = "btn btn-primary";
+      approve.textContent = "✅ قبول ونشر";
+      approve.onclick = () => updatePlatformReview(review.id, "approved");
+
+      const reject = document.createElement("button");
+      reject.className = "btn btn-secondary";
+      reject.textContent = "❌ رفض";
+      reject.style.marginRight = "8px";
+      reject.onclick = () => updatePlatformReview(review.id, "rejected");
+
+      card.append(name, stars, comment, approve, reject);
+      list.appendChild(card);
+    });
+
+  } catch (error) {
+    message.textContent = "❌ " + error.message;
+  }
+}
+
+async function updatePlatformReview(id, status) {
+  const key = document.getElementById("adminReviewKey").value.trim();
+  const message = document.getElementById("adminReviewsMessage");
+
+  try {
+    const response = await fetch(API_BASE + "/admin/reviews/" + id, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": key
+      },
+      body: JSON.stringify({ status })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "تعذر تحديث التقييم.");
+    }
+
+    message.textContent =
+      status === "approved" ? "✅ تم قبول التقييم ونشره." : "تم رفض التقييم.";
+
+    await loadAdminReviews();
+
+  } catch (error) {
+    message.textContent = "❌ " + error.message;
+  }
+  }
 async function submitWithdrawal(event) {
   event.preventDefault();
 
