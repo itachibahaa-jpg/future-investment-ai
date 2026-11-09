@@ -2178,6 +2178,42 @@ function changeReviewPage(direction) {
 
   renderReviews();
 }
+  async function submitPlatformReview(event) {
+  event.preventDefault();
+
+  const name = document.getElementById("newReviewName").value.trim();
+  const rating = Number(document.getElementById("newReviewRating").value);
+  const reviewText = document.getElementById("newReviewText").value.trim();
+  const message = document.getElementById("reviewSubmitMessage");
+
+  message.textContent = "جارٍ إرسال تقييمك...";
+
+  try {
+    const response = await fetch(API_BASE + "/reviews", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name,
+        rating,
+        text: reviewText
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "تعذر إرسال التقييم.");
+    }
+
+    message.textContent = "✅ تم استلام تقييمك، وسيظهر بعد موافقة الإدارة.";
+    event.target.reset();
+
+  } catch (error) {
+    message.textContent = "❌ " + error.message;
+  }
+  }
   
 async function submitWithdrawal(event) {
   event.preventDefault();
