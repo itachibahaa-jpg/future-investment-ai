@@ -2213,6 +2213,56 @@ function changeReviewPage(direction) {
 
   renderReviews();
 }
+  async function loadApprovedReviews() {
+  const list = document.getElementById("approvedReviewsList");
+
+  if (!list) return;
+
+  list.replaceChildren();
+
+  try {
+    const response = await fetch(API_BASE + "/reviews");
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "تعذر تحميل التقييمات.");
+    }
+
+    if (!data.reviews || data.reviews.length === 0) {
+      const empty = document.createElement("p");
+      empty.className = "muted";
+      empty.textContent = "لا توجد تقييمات معتمدة جديدة حالياً.";
+      list.appendChild(empty);
+      return;
+    }
+
+    data.reviews.forEach(review => {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.style.marginTop = "12px";
+
+      const stars = document.createElement("div");
+      stars.style.color = "#f5c542";
+      stars.style.fontSize = "20px";
+      stars.textContent = "⭐".repeat(Number(review.rating));
+
+      const name = document.createElement("h3");
+      name.textContent = review.name;
+
+      const comment = document.createElement("p");
+      comment.textContent = review.text;
+
+      card.append(stars, name, comment);
+      list.appendChild(card);
+    });
+
+  } catch (error) {
+    const message = document.createElement("p");
+    message.className = "muted";
+    message.textContent = "تعذر تحميل التقييمات المعتمدة.";
+    list.appendChild(message);
+  }
+  }
   async function submitPlatformReview(event) {
   event.preventDefault();
 
