@@ -122,7 +122,21 @@ CREATE TABLE IF NOT EXISTS memory_game_attempts (
 );
 
 CREATE INDEX IF NOT EXISTS idx_memory_game_attempts_user
-ON memory_game_attempts(user_id, game_date);`);
+ON memory_game_attempts(user_id, game_date);
+
+CREATE TABLE IF NOT EXISTS platform_reviews (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  review_text TEXT NOT NULL,
+  rating INTEGER NOT NULL CHECK(rating BETWEEN 1 AND 5),
+  status TEXT NOT NULL DEFAULT 'pending'
+    CHECK(status IN ('pending', 'approved', 'rejected')),
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_platform_reviews_status
+ON platform_reviews(status, id);
+`);
 const findByEmail = db.prepare('SELECT * FROM users WHERE email = ?');
 const findByCode = db.prepare('SELECT * FROM users WHERE referral_code = ?');
 const countRefs = db.prepare("SELECT COUNT(*) AS n FROM users WHERE referred_by = ? AND status = 'active'");
