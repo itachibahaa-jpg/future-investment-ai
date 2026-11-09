@@ -901,7 +901,96 @@ app.patch('/api/admin/withdrawals/:id', (req, res) => {
     res.status(500).json({ error: 'تعذر تحديث حالة الطلب.' });
   }
 });
+// التقييمات العامة: لا يظهر للزوار إلا التقييم المقبول
+app.get('/api/reviews', (req, res) => {
+  const reviews = db.prepare(`
+    SELECT id, name, review_text AS text, rating, created_at
+    FROM platform_reviews
+    WHERE status = 'approved'
+    ORDER BY id DESC
+    LIMIT 100
+  `).all();
 
+  res.json({ reviews });
+});
+
+// استقبال تقييم جديد ووضعه قيد المراجعة
+app.post('/api/reviews', (req, res) => {
+  const name = String(req.body?.name || '').trim();
+  const reviewText = String(req.body?.text || '').trim();
+  const rating = Number(req.body?.rating);
+
+  if (
+    name.length < 2 || name.length > 60 ||
+    reviewText.length < 5 || reviewText.length > 1000 ||
+    !Number.isInteger(rating) || rating < 1 || rating > 5
+  ) {
+    return res.status(400).json({
+      error: 'يرجى إدخال اسم وتعليق صحيحين واختيار تقييم من 1 إلى 5.'
+    });
+  }
+
+  const result = db.prepare(`
+    INSERT INTO platform_reviews (name, review_text, rating)
+    VALUES (?, ?, ?)
+  `).run(name, reviewText, rating);
+
+  res.status(201).json({
+    success: true,
+    id: result.lastInsertRowid,
+    message: 'تم استلام تقييمك وسيظهر بعد مراجعته.'
+  });
+});
+
+// عرض التقييمات المعلقة للإدارة
+app.get('/api/admin/reviews', (req, res) => {
+  const key = req.get('x-admin-key') || '';
+
+  if (!safeEqual(key, process.env.ADMIN_API_KEY)) {
+    return res.status(403).json({ error: 'غير مصرح.' });
+  }
+
+  const reviews = db.prepare(`
+    SELECT id, name, review_text AS text, rating, created_at
+    FROM platform_reviews
+    WHERE status = 'pending'
+    ORDER BY id ASC
+    LIMIT 500
+  `).all();
+
+  res.json({ reviews });
+});
+
+// قبول التقييم أو رفضه
+app.patch('/api/admin/reviews/:id', (req, res) => {
+  const key = req.get('x-admin-key') || '';
+
+  if (!safeEqual(key, process.env.ADMIN_API_KEY)) {
+    return res.status(403).json({ error: 'غير مصرح.' });
+  }
+
+  const id = Number(req.params.id);
+  const status = String(req.body?.status || '');
+
+  if (!Number.isSafeInteger(id) || id < 1 ||
+      !['approved', 'rejected'].includes(status)) {
+    return res.status(400).json({ error: 'البيانات غير صحيحة.' });
+  }
+
+  const result = db.prepare(`
+    UPDATE platform_reviews
+    SET status = ?
+    WHERE id = ? AND status = 'pending'
+  `).run(status, id);
+
+  if (!result.changes) {
+    return res.status(404).json({
+      error: 'التقييم غير موجود أو تمت مراجعته سابقًا.'
+    });
+  }
+
+  res.json({ success: true, message: 'تم تحديث حالة التقييم.' });
+});
 app.use(express.static(path.join(__dirname,'public')));
 app.use((err,_req,res,_next) => { console.error(err); res.status(500).json({ error: 'خطأ داخلي.' }); });
 const port = Number(process.env.PORT || 3000);
