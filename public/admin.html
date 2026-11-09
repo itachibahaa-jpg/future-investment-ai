@@ -195,7 +195,56 @@
 
       return data;
     }
+async function loadReviews() {
+  const box = document.getElementById("reviews");
+  box.replaceChildren();
 
+  try {
+    const data = await api("/api/admin/reviews");
+
+    if (!data.reviews || data.reviews.length === 0) {
+      addText(box, "p", "لا توجد تعليقات معلقة حاليًا.");
+      return;
+    }
+
+    data.reviews.forEach(review => {
+      const card = document.createElement("article");
+      card.style.cssText = "padding:15px;margin:12px 0;border:1px solid #35e0a1;border-radius:12px";
+
+      addText(card, "h3", review.name);
+      addText(card, "p", "التقييم: " + review.rating + " / 5");
+      addText(card, "p", review.text);
+
+      const approve = addText(card, "button", "قبول التعليق");
+      approve.style.margin = "5px";
+      approve.onclick = () => updateReview(review.id, "approved");
+
+      const reject = addText(card, "button", "رفض التعليق");
+      reject.style.margin = "5px";
+      reject.onclick = () => updateReview(review.id, "rejected");
+
+      box.appendChild(card);
+    });
+
+  } catch (error) {
+    showMessage(error.message);
+  }
+}
+
+async function updateReview(id, status) {
+  try {
+    await api("/api/admin/reviews/" + id, {
+      method: "PATCH",
+      body: JSON.stringify({ status })
+    });
+
+    showMessage("تم تحديث حالة التعليق.");
+    await loadReviews();
+
+  } catch (error) {
+    showMessage(error.message);
+  }
+    }
     function addText(parent, tag, text, className = "") {
       const element = document.createElement(tag);
       element.textContent = text;
