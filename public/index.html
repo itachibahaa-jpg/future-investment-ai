@@ -1459,6 +1459,8 @@ function showSection(sectionId) {
   }
   if (sectionId === "reviews") {
   renderReviews();
+  loadApprovedReviews();
+  }
   }
 
   if (sectionId === "account" || sectionId === "referrals") {
