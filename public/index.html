@@ -1175,6 +1175,47 @@ header {
       <button class="btn btn-primary" onclick="changeReviewPage(1)">التالي</button>
     </div>
   </div>
+  <div class="card" style="margin-top:20px">
+  <h3>⭐ أضف تقييمك للمنصة</h3>
+  <p class="muted">شاركنا رأيك وتجربتك مع المنصة.</p>
+
+  <form onsubmit="submitPlatformReview(event)">
+    <label for="newReviewName">الاسم</label>
+    <input
+      id="newReviewName"
+      type="text"
+      minlength="2"
+      maxlength="60"
+      placeholder="أدخل اسمك"
+      required
+    >
+
+    <label for="newReviewRating">تقييمك</label>
+    <select id="newReviewRating" required>
+      <option value="5">⭐⭐⭐⭐⭐ ممتاز</option>
+      <option value="4">⭐⭐⭐⭐ جيد جدًا</option>
+      <option value="3">⭐⭐⭐ جيد</option>
+      <option value="2">⭐⭐ ضعيف</option>
+      <option value="1">⭐ سيئ</option>
+    </select>
+
+    <label for="newReviewText">تعليقك</label>
+    <textarea
+      id="newReviewText"
+      minlength="5"
+      maxlength="1000"
+      rows="4"
+      placeholder="اكتب تجربتك هنا..."
+      required
+    ></textarea>
+
+    <button class="btn btn-primary" type="submit">
+      إرسال التقييم
+    </button>
+
+    <p id="reviewSubmitMessage" class="muted"></p>
+  </form>
+  </div>
 </section>
   <section class="section hidden" id="help">
   <h2 class="section-title">💬 مركز المساعدة</h2>
