@@ -1299,18 +1299,22 @@ app.patch('/api/admin/withdrawals/:id', (req, res) => {
   }
 });
 // التقييمات العامة: لا يظهر للزوار إلا التقييم المقبول
-app.get('/api/reviews', (req, res) => {
-  const reviews = db.prepare(`
-    SELECT id, name, review_text AS text, rating, created_at
-    FROM platform_reviews
-    WHERE status = 'approved'
-    ORDER BY id DESC
-    LIMIT 100
-  `).all();
+app.get('/api/reviews', async (req, res) => {
+  try {
+    const result = await pgPool.query(`
+      SELECT id, name, review_text AS text, rating, created_at
+      FROM platform_reviews
+      WHERE status = 'approved'
+      ORDER BY id DESC
+      LIMIT 100
+    `);
 
-  res.json({ reviews });
+    res.json({ reviews: result.rows });
+  } catch (error) {
+    console.error('Reviews fetch error:', error);
+    res.status(500).json({ error: 'تعذر تحميل التعليقات.' });
+  }
 });
-
 // استقبال تقييم جديد ووضعه قيد المراجعة
 app.post('/api/reviews', (req, res) => {
   const name = String(req.body?.name || '').trim();
