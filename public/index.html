@@ -1925,6 +1925,7 @@ async function refreshAccount(silent = false) {
     const code = currentUser.referralCode || currentUser.referral_code || "—";
 
     $("dashName").textContent = name;
+    $("memberCardName").textContent = name;
     $("dashStatus").textContent = "مسجل الدخول";
     $("dashReferrals").textContent = data.referralCount ?? 0;
 
