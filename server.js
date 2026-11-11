@@ -1248,4 +1248,11 @@ app.patch('/api/admin/reviews/:id', (req, res) => {
 app.use(express.static(path.join(__dirname,'public')));
 app.use((err,_req,res,_next) => { console.error(err); res.status(500).json({ error: 'خطأ داخلي.' }); });
 const port = Number(process.env.PORT || 3000);
-app.listen(port, () => console.log(`Future AI demo server listening on http://localhost:${port}`));
+initializePersistentUsers()
+  .then(() => {
+    app.listen(port, () => console.log(`Future AI demo server listening on http://localhost:${port}`));
+  })
+  .catch(err => {
+    console.error('Database initialization failed:', err);
+    process.exit(1);
+  });
