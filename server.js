@@ -18,6 +18,7 @@ app.use(express.json({ limit: '3mb' }));
 app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, limit: 100, standardHeaders: true, legacyHeaders: false }));
 const dbPath = process.env.DB_PATH || path.join(__dirname, 'data.sqlite');
 const db = new Database(dbPath);
+const { Pool } = require('pg');
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 db.exec(`
