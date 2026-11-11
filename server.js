@@ -1133,32 +1133,41 @@ if (
   }
 });
 function safeEqual(a,b) { const aa=Buffer.from(a); const bb=Buffer.from(b); return aa.length===bb.length && crypto.timingSafeEqual(aa,bb); }
-// Update account name
-app.patch('/api/me/profile', auth, (req, res) => {
-  const name = String(req.body.name || '').trim();
 
-  if (name.length < 2 || name.length > 80) {
-    return res.status(400).json({
-      error: 'الاسم يجب أن يكون بين حرفين و80 حرفًا.'
+// Update account name
+app.patch('/api/me/profile', auth, async (req, res) => {
+  try {
+    const name = String(req.body.name || '').trim();
+
+    if (name.length < 2 || name.length > 80) {
+      return res.status(400).json({
+        error: 'الاسم يجب أن يكون بين حرفين و80 حرفًا.'
+      });
+    }
+
+    const result = await pgPool.query(
+      "UPDATE users SET name = $1 WHERE id = $2 AND status = 'active' RETURNING *",
+      [name, req.userId]
+    );
+
+    const user = result.rows[0];
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'الحساب غير موجود أو غير نشط.'
+      });
+    }
+
+    res.json({
+      message: 'تم تحديث الاسم بنجاح.',
+      user: publicUser(user)
+    });
+  } catch (error) {
+    console.error('Profile update error:', error);
+    res.status(500).json({
+      error: 'تعذر تحديث الاسم حاليًا.'
     });
   }
-
-  const result = db.prepare(
-    "UPDATE users SET name = ? WHERE id = ? AND status = 'active'"
-  ).run(name, req.userId);
-
-  if (!result.changes) {
-    return res.status(404).json({ error: 'الحساب غير موجود أو غير نشط.' });
-  }
-
-  const user = db.prepare(
-    'SELECT * FROM users WHERE id = ?'
-  ).get(req.userId);
-
-  res.json({
-    message: 'تم تحديث الاسم بنجاح.',
-    user: publicUser(user)
-  });
 });
 
 // Change password
@@ -1173,12 +1182,17 @@ app.post('/api/me/change-password', auth, async (req, res) => {
       });
     }
 
-    const user = db.prepare(
-      "SELECT * FROM users WHERE id = ? AND status = 'active'"
-    ).get(req.userId);
+    const result = await pgPool.query(
+      "SELECT * FROM users WHERE id = $1 AND status = 'active'",
+      [req.userId]
+    );
+
+    const user = result.rows[0];
 
     if (!user) {
-      return res.status(404).json({ error: 'الحساب غير موجود أو غير نشط.' });
+      return res.status(404).json({
+        error: 'الحساب غير موجود أو غير نشط.'
+      });
     }
 
     const valid = await bcrypt.compare(
@@ -1194,18 +1208,22 @@ app.post('/api/me/change-password', auth, async (req, res) => {
 
     const hash = await bcrypt.hash(newPassword, 12);
 
-    db.prepare(
-      'UPDATE users SET password_hash = ? WHERE id = ?'
-    ).run(hash, req.userId);
+    await pgPool.query(
+      'UPDATE users SET password_hash = $1 WHERE id = $2',
+      [hash, req.userId]
+    );
 
-    res.json({ message: 'تم تغيير كلمة المرور بنجاح.' });
+    res.json({
+      message: 'تم تغيير كلمة المرور بنجاح.'
+    });
   } catch (error) {
-    console.error(error);
+    console.error('Password change error:', error);
     res.status(500).json({
       error: 'تعذر تغيير كلمة المرور حاليًا.'
     });
   }
 });
+
 
 // عرض طلبات السحب في لوحة الإدارة
 app.get('/api/admin/withdrawals', (req, res) => {
