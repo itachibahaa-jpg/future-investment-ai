@@ -16,6 +16,16 @@ app.disable('x-powered-by');
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: '3mb' }));
 app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, limit: 100, standardHeaders: true, legacyHeaders: false }));
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,
+  message: {
+    error: 'محاولات كثيرة. يرجى الانتظار 15 دقيقة.'
+  }
+});
 const dbPath = process.env.DB_PATH || path.join(__dirname, 'data.sqlite');
 const db = new Database(dbPath);
 const { Pool } = require('pg');
