@@ -645,6 +645,70 @@ res.status(201).json({
   message: 'تم استلام الوصل، والطلب قيد المراجعة.'
 });
 });
+
+// إرسال طلب شراء رصيد إلكتروني
+app.post('/api/balance-requests', auth, (req, res) => {
+  const {
+    balance_type,
+    amount,
+    payment_method,
+    receipt_data
+  } = req.body || {};
+
+  if (
+    typeof balance_type !== 'string' ||
+    !balance_type.trim() ||
+    balance_type.length > 50
+  ) {
+    return res.status(400).json({ error: 'نوع الرصيد غير صحيح.' });
+  }
+
+  if (
+    typeof amount !== 'number' ||
+    !Number.isFinite(amount) ||
+    amount <= 0 ||
+    amount > 1000000
+  ) {
+    return res.status(400).json({ error: 'المبلغ غير صحيح.' });
+  }
+
+  if (!['BaridiMob', 'CCP'].includes(payment_method)) {
+    return res.status(400).json({ error: 'طريقة الدفع غير صحيحة.' });
+  }
+
+  if (
+    typeof receipt_data !== 'string' ||
+    !/^data:image\/(png|jpeg|webp);base64,/.test(receipt_data) ||
+    receipt_data.length > 2800000
+  ) {
+    return res.status(400).json({ error: 'صورة الوصل غير صحيحة.' });
+  }
+
+  try {
+    const result = db.prepare(`
+      INSERT INTO balance_requests
+      (user_id, balance_type, amount, payment_method, receipt_data)
+      VALUES (?, ?, ?, ?, ?)
+    `).run(
+      req.userId,
+      balance_type.trim(),
+      amount,
+      payment_method,
+      receipt_data
+    );
+
+    res.status(201).json({
+      success: true,
+      status: 'pending',
+      requestId: Number(result.lastInsertRowid),
+      message: 'تم إرسال طلب شراء الرصيد بنجاح، وهو قيد المراجعة.'
+    });
+  } catch (error) {
+    console.error('Balance request error:', error);
+    res.status(500).json({ error: 'تعذر إرسال الطلب.' });
+  }
+});
+
 app.get('/api/admin/users', (req,res) => {
   if (!safeEqual(req.get('x-admin-key') || '', process.env.ADMIN_API_KEY)) return res.status(403).json({ error: 'غير مصرح.' });
  const rows = db.prepare(`SELECT u.id,u.name,u.email,u.referral_code,u.created_at,u.status,
