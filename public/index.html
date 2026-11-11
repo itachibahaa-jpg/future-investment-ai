@@ -2666,6 +2666,74 @@ function checkDailyTask(taskIndex, optionIndex) {
   renderDailyTasks();
   }
 
+async function submitBalanceRequest() {
+  const service = document.getElementById("balanceService").value;
+  const amount = Number(document.getElementById("balanceAmount").value);
+  const method = document.getElementById("balancePaymentMethod").value;
+  const file = document.getElementById("balanceReceipt").files[0];
+
+  const message = document.getElementById("balanceRequestMessage");
+
+  if (!localStorage.getItem(TOKEN_KEY)) {
+    showMessage("balanceRequestMessage", "سجّل الدخول أولاً.");
+    return;
+  }
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    showMessage("balanceRequestMessage", "أدخل مبلغاً صحيحاً.");
+    return;
+  }
+
+  if (!file) {
+    showMessage("balanceRequestMessage", "أرفق صورة وصل التحويل.");
+    return;
+  }
+
+  if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+    showMessage("balanceRequestMessage", "اختر صورة PNG أو JPG أو WEBP.");
+    return;
+  }
+
+  if (file.size > 2000000) {
+    showMessage("balanceRequestMessage", "حجم الصورة يجب ألا يتجاوز 2 ميغابايت.");
+    return;
+  }
+
+  try {
+    const receiptData = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("تعذرت قراءة صورة الوصل."));
+      reader.readAsDataURL(file);
+    });
+
+    const result = await api("/balance-requests", {
+      method: "POST",
+      body: JSON.stringify({
+        balance_type: service,
+        amount: amount,
+        payment_method: method,
+        receipt_data: receiptData
+      })
+    });
+
+    showMessage(
+      "balanceRequestMessage",
+      result.message || "تم إرسال طلبك بنجاح، وهو قيد المراجعة.",
+      "success"
+    );
+
+    document.getElementById("balanceAmount").value = "";
+    document.getElementById("balanceReceipt").value = "";
+
+  } catch (error) {
+    showMessage(
+      "balanceRequestMessage",
+      error.message || "تعذر إرسال الطلب."
+    );
+  }
+}
+
 </script>
 <section class="section hidden" id="withdrawal">
   <h2 class="section-title">طلب سحب</h2>
