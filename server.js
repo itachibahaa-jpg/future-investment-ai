@@ -460,22 +460,88 @@ app.post('/api/wheel/spin', auth, (req, res) => {
   }
 });
   
-app.post('/api/register', async (req,res) => {
- try {
-  const name = String(req.body.name || '').trim(); const email = cleanEmail(req.body.email); const password = String(req.body.password || ''); const code = String(req.body.referralCode || '').trim().toUpperCase();
-  if (name.length < 2 || name.length > 80) return res.status(400).json({ error: 'أدخل اسمًا صحيحًا (2 إلى 80 حرفًا).' });
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 190) return res.status(400).json({ error: 'البريد الإلكتروني غير صحيح.' });
-  if (password.length < 8 || password.length > 128) return res.status(400).json({ error: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل.' });
-  if (findByEmail.get(email)) return res.status(409).json({ error: 'هذا البريد مسجل مسبقًا.' });
-  let referrer = null;
-  if (code) { referrer = findByCode.get(code); if (!referrer) return res.status(400).json({ error: 'كود الدعوة غير صحيح.' }); }
-  let rc; do { rc = referralCode(); } while (findByCode.get(rc));
-  const hash = await bcrypt.hash(password, 12);
-  const insert = db.prepare('INSERT INTO users (name,email,password_hash,referral_code,referred_by) VALUES (?,?,?,?,?)');
-  const result = insert.run(name,email,hash,rc,referrer ? referrer.id : null);
-  const user = db.prepare('SELECT * FROM users WHERE id=?').get(result.lastInsertRowid);
-  res.status(201).json({ token: issueToken(user), user: publicUser(user), message: 'تم إنشاء الحساب. مكافآت الدعوات ليست مفعلة للدفع في هذه النسخة.' });
- } catch (e) { console.error(e); res.status(500).json({ error: 'تعذر إنشاء الحساب حاليًا.' }); }
+app.post('/api/register', async (req, res) => {
+  try {
+    const name = String(req.body.name || '').trim();
+    const email = cleanEmail(req.body.email);
+    const password = String(req.body.password || '');
+    const code = String(req.body.referralCode || '').trim().toUpperCase();
+
+    if (name.length < 2 || name.length > 80)
+      return res.status(400).json({ error: 'أدخل اسمًا صحيحًا (2 إلى 80 حرفًا).' });
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 190)
+      return res.status(400).json({ error: 'البريد الإلكتروني غير صحيح.' });
+
+    if (password.length < 8 || password.length > 128)
+      return res.status(400).json({ error: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل.' });
+
+    const existing = await pgPool.query(
+      'SELECT id FROM users WHERE email = $1',
+      [email]
+    );
+
+    if (existing.rows.length)
+      return res.status(409).json({ error: 'هذا البريد مسجل مسبقًا.' });
+
+    let referrer = null;
+
+    if (code) {
+      const ref = await pgPool.query(
+        'SELECT id FROM users WHERE referral_code = $1',
+        [code]
+      );
+
+      if (!ref.rows.length)
+        return res.status(400).json({ error: 'كود الدعوة غير صحيح.' });
+
+      referrer = ref.rows[0];
+    }
+
+    let rc;
+
+    do {
+      rc = referralCode();
+
+      const check = await pgPool.query(
+        'SELECT id FROM users WHERE referral_code = $1',
+        [rc]
+      );
+
+      if (!check.rows.length) break;
+    } while (true);
+
+    const hash = await bcrypt.hash(password, 12);
+
+    const result = await pgPool.query(
+      `INSERT INTO users
+       (name, email, password_hash, referral_code, referred_by)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING *`,
+      [name, email, hash, rc, referrer ? referrer.id : null]
+    );
+
+    const user = result.rows[0];
+
+    db.prepare(`
+      INSERT OR IGNORE INTO users
+      (id, name, email, password_hash, referral_code, referred_by, created_at, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      Number(user.id), user.name, user.email, user.password_hash,
+      user.referral_code, user.referred_by, user.created_at, user.status
+    );
+
+    res.status(201).json({
+      token: issueToken(user),
+      user: publicUser(user),
+      message: 'تم إنشاء الحساب بنجاح.'
+    });
+
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'تعذر إنشاء الحساب حاليًا.' });
+  }
 });
 app.post('/api/login', async (req,res) => {
  const email = cleanEmail(req.body.email); const password = String(req.body.password || '');
