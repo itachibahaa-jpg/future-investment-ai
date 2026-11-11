@@ -1386,7 +1386,7 @@ app.get('/api/admin/reviews', async (req, res) => {
 });
 
 // قبول التقييم أو رفضه
-app.patch('/api/admin/reviews/:id', (req, res) => {
+app.patch('/api/admin/reviews/:id', async (req, res) => {
   const key = req.get('x-admin-key') || '';
 
   if (!safeEqual(key, process.env.ADMIN_API_KEY)) {
@@ -1401,19 +1401,25 @@ app.patch('/api/admin/reviews/:id', (req, res) => {
     return res.status(400).json({ error: 'البيانات غير صحيحة.' });
   }
 
-  const result = db.prepare(`
-    UPDATE platform_reviews
-    SET status = ?
-    WHERE id = ? AND status = 'pending'
-  `).run(status, id);
+  try {
+    const result = await pgPool.query(`
+      UPDATE platform_reviews
+      SET status = $1
+      WHERE id = $2 AND status = 'pending'
+      RETURNING id
+    `, [status, id]);
 
-  if (!result.changes) {
-    return res.status(404).json({
-      error: 'التقييم غير موجود أو تمت مراجعته سابقًا.'
-    });
+    if (!result.rowCount) {
+      return res.status(404).json({
+        error: 'التقييم غير موجود أو تمت مراجعته سابقًا.'
+      });
+    }
+
+    res.json({ success: true, message: 'تم تحديث حالة التقييم.' });
+  } catch (error) {
+    console.error('Review moderation error:', error);
+    res.status(500).json({ error: 'تعذر تحديث حالة التقييم.' });
   }
-
-  res.json({ success: true, message: 'تم تحديث حالة التقييم.' });
 });
 app.use(express.static(path.join(__dirname,'public')));
 app.use((err,_req,res,_next) => { console.error(err); res.status(500).json({ error: 'خطأ داخلي.' }); });
