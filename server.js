@@ -575,12 +575,45 @@ app.post('/api/login', async (req, res) => {
   }
 });
   
-app.get('/api/me', auth, (req,res) => {
- const user = db.prepare("SELECT * FROM users WHERE id=? AND status='active'").get(req.userId);
- if (!user) return res.status(401).json({ error: 'الحساب غير موجود أو غير نشط.' });
- const referralCount = countRefs.get(user.id).n;
- res.json({ user: publicUser(user), referralCount, referralGoal: 10, proposedRewardDA: referralCount >= 10 ? 5000 : null, rewardStatus: 'not_enabled_no_payment', notice: 'الوصول إلى 10 دعوات لا ينشئ رصيدًا ماليًا أو حقًا بالدفع تلقائيًا؛ المكافأة غير مفعّلة في النسخة التجريبية.' });
+
+app.get('/api/me', auth, async (req, res) => {
+  try {
+    const result = await pgPool.query(
+      "SELECT * FROM users WHERE id = $1 AND status = 'active'",
+      [req.userId]
+    );
+
+    const user = result.rows[0];
+
+    if (!user) {
+      return res.status(401).json({
+        error: 'الحساب غير موجود أو غير نشط.'
+      });
+    }
+
+    const referrals = await pgPool.query(
+      "SELECT COUNT(*)::int AS n FROM users WHERE referred_by = $1 AND status = 'active'",
+      [req.userId]
+    );
+
+    const referralCount = referrals.rows[0].n;
+
+    res.json({
+      user: publicUser(user),
+      referralCount,
+      referralGoal: 10,
+      proposedRewardDA: referralCount >= 10 ? 5000 : null,
+      rewardStatus: 'not_enabled_no_payment',
+      notice: 'الوصول إلى 10 دعوات لا ينشئ رصيدًا ماليًا أو حقًا بالدفع تلقائيًا؛ المكافأة غير مفعّلة في النسخة التجريبية.'
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: 'تعذر تحميل بيانات الحساب.'
+    });
+  }
 });
+
 app.post('/api/withdrawals', auth, (req, res) => {
   const amount = Number(req.body?.amount);
   const method = String(req.body?.method || '');
