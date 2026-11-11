@@ -590,7 +590,7 @@ app.post('/api/register', async (req, res) => {
     res.status(500).json({ error: 'تعذر إنشاء الحساب حاليًا.' });
   }
 });
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', loginLimiter, async (req, res) => {
   try {
     const email = cleanEmail(req.body.email);
     const password = String(req.body.password || '');
