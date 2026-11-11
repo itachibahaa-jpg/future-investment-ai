@@ -1109,6 +1109,7 @@ header {
 <div class="card">
   <h3>طلب شراء رصيد إلكتروني</h3>
 
+  <div class="field">
   <label for="balanceService">نوع الرصيد</label>
   <select id="balanceService">
     <option>RedotPay USD</option>
@@ -1117,24 +1118,43 @@ header {
     <option>Payoneer USD</option>
     <option>Binance USDT</option>
   </select>
+</div>
 
-  <label for="balanceAmount">المبلغ</label>
-  <input id="balanceAmount" type="number" min="1"
-    placeholder="أدخل المبلغ">
+<div class="field">
+  <label for="balanceAmount">المبلغ بالدينار الجزائري (DA)</label>
+  <input
+    id="balanceAmount"
+    type="number"
+    min="1"
+    placeholder="اكتب المبلغ بالدينار الجزائري"
+  >
+  <small class="muted">
+    اكتب المبلغ بالدينار الجزائري الذي تريد الشراء به، وسيقوم الموقع باحتساب قيمة الرصيد المقابلة وعرضها لك.
+  </small>
+</div>
 
+<div class="field">
   <label for="balancePaymentMethod">طريقة التحويل</label>
   <select id="balancePaymentMethod">
     <option value="BaridiMob">BaridiMob</option>
     <option value="CCP">CCP</option>
   </select>
+</div>
 
+<div class="field">
   <label for="balanceReceipt">صورة وصل التحويل</label>
-  <input id="balanceReceipt" type="file"
-    accept="image/png,image/jpeg,image/webp">
+  <input
+    id="balanceReceipt"
+    type="file"
+    accept="image/png,image/jpeg,image/webp"
+  >
+</div>
 
-  <button class="btn full" onclick="submitBalanceRequest()">
-    إرسال طلب الشراء
-  </button>
+<button class="btn full" onclick="submitBalanceRequest()">
+  إرسال طلب الشراء
+</button>
+
+<div id="balanceRequestMessage" class="message"></div>
 
   <div id="balanceRequestMessage" class="message"></div>
 </div>
