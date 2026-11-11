@@ -1326,31 +1326,39 @@ app.get('/api/reviews', async (req, res) => {
   }
 });
 // استقبال تقييم جديد ووضعه قيد المراجعة
-app.post('/api/reviews', (req, res) => {
-  const name = String(req.body?.name || '').trim();
-  const reviewText = String(req.body?.text || '').trim();
-  const rating = Number(req.body?.rating);
+app.post('/api/reviews', async (req, res) => {
+  try {
+    const name = String(req.body?.name || '').trim();
+    const reviewText = String(req.body?.text || '').trim();
+    const rating = Number(req.body?.rating);
 
-  if (
-    name.length < 2 || name.length > 60 ||
-    reviewText.length < 5 || reviewText.length > 1000 ||
-    !Number.isInteger(rating) || rating < 1 || rating > 5
-  ) {
-    return res.status(400).json({
-      error: 'يرجى إدخال اسم وتعليق صحيحين واختيار تقييم من 1 إلى 5.'
+    if (
+      name.length < 2 || name.length > 60 ||
+      reviewText.length < 5 || reviewText.length > 1000 ||
+      !Number.isInteger(rating) || rating < 1 || rating > 5
+    ) {
+      return res.status(400).json({
+        error: 'يرجى إدخال اسم وتعليق صحيحين واختيار تقييم من 1 إلى 5.'
+      });
+    }
+
+    const result = await pgPool.query(`
+      INSERT INTO platform_reviews (name, review_text, rating, status)
+      VALUES ($1, $2, $3, 'pending')
+      RETURNING id
+    `, [name, reviewText, rating]);
+
+    res.status(201).json({
+      success: true,
+      id: result.rows[0].id,
+      message: 'تم استلام تقييمك وسيظهر بعد مراجعته.'
+    });
+  } catch (error) {
+    console.error('Review submission error:', error);
+    res.status(500).json({
+      error: 'تعذر إرسال التقييم حاليًا.'
     });
   }
-
-  const result = db.prepare(`
-    INSERT INTO platform_reviews (name, review_text, rating)
-    VALUES (?, ?, ?)
-  `).run(name, reviewText, rating);
-
-  res.status(201).json({
-    success: true,
-    id: result.lastInsertRowid,
-    message: 'تم استلام تقييمك وسيظهر بعد مراجعته.'
-  });
 });
 
 // عرض التقييمات المعلقة للإدارة
