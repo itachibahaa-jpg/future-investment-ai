@@ -542,12 +542,39 @@ app.post('/api/register', async (req, res) => {
     console.error(e);
     res.status(500).json({ error: 'تعذر إنشاء الحساب حاليًا.' });
   }
+
+app.post('/api/login', async (req, res) => {
+  try {
+    const email = cleanEmail(req.body.email);
+    const password = String(req.body.password || '');
+
+    const result = await pgPool.query(
+      'SELECT * FROM users WHERE email = $1',
+      [email]
+    );
+
+    const user = result.rows[0];
+
+    if (!user || user.status !== 'active' ||
+        !(await bcrypt.compare(password, user.password_hash))) {
+      return res.status(401).json({
+        error: 'البريد أو كلمة المرور غير صحيحة.'
+      });
+    }
+
+    res.json({
+      token: issueToken(user),
+      user: publicUser(user)
+    });
+
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({
+      error: 'تعذر تسجيل الدخول حاليًا.'
+    });
+  }
 });
-app.post('/api/login', async (req,res) => {
- const email = cleanEmail(req.body.email); const password = String(req.body.password || '');
- const user = findByEmail.get(email);
- if (!user || user.status !== 'active' || !(await bcrypt.compare(password,user.password_hash))) return res.status(401).json({ error: 'البريد أو كلمة المرور غير صحيحة.' });
- res.json({ token: issueToken(user), user: publicUser(user) });
+  
 });
 app.get('/api/me', auth, (req,res) => {
  const user = db.prepare("SELECT * FROM users WHERE id=? AND status='active'").get(req.userId);
