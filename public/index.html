@@ -2670,7 +2670,59 @@ function checkDailyTask(taskIndex, optionIndex) {
 
   renderDailyTasks();
   }
+async function loadMyBalanceRequests() {
+  const list = document.getElementById("myBalanceRequestsList");
+  if (!list) return;
 
+  if (!localStorage.getItem(TOKEN_KEY)) {
+    list.textContent = "سجّل الدخول لعرض طلباتك.";
+    return;
+  }
+
+  list.textContent = "جارٍ تحميل طلباتك...";
+
+  try {
+    const data = await api("/my-balance-requests");
+    const requests = Array.isArray(data.requests) ? data.requests : [];
+
+    list.replaceChildren();
+
+    if (requests.length === 0) {
+      list.textContent = "لا توجد لديك طلبات شراء أرصدة.";
+      return;
+    }
+
+    requests.forEach(request => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const details = document.createElement("p");
+      details.textContent =
+        "الخدمة: " + request.balance_type +
+        " | المبلغ: " + request.amount + " DA" +
+        " | طريقة الدفع: " + request.payment_method;
+
+      const status = document.createElement("p");
+
+      if (request.status === "approved") {
+        status.textContent = "تم تحويل الرصيد بنجاح ✅";
+        status.style.color = "#35e0a1";
+      } else if (request.status === "rejected") {
+        status.textContent = "تم رفض طلبك ❌";
+        status.style.color = "#ff6b6b";
+      } else {
+        status.textContent = "طلبك قيد المراجعة ⏳";
+      }
+
+      card.appendChild(details);
+      card.appendChild(status);
+      list.appendChild(card);
+    });
+
+  } catch (error) {
+    list.textContent = "تعذر تحميل طلبات الأرصدة.";
+  }
+}
 async function submitBalanceRequest() {
   const service = document.getElementById("balanceService").value;
   const amount = Number(document.getElementById("balanceAmount").value);
