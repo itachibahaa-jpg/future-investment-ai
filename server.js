@@ -1362,22 +1362,27 @@ app.post('/api/reviews', async (req, res) => {
 });
 
 // عرض التقييمات المعلقة للإدارة
-app.get('/api/admin/reviews', (req, res) => {
+app.get('/api/admin/reviews', async (req, res) => {
   const key = req.get('x-admin-key') || '';
 
   if (!safeEqual(key, process.env.ADMIN_API_KEY)) {
     return res.status(403).json({ error: 'غير مصرح.' });
   }
 
-  const reviews = db.prepare(`
-    SELECT id, name, review_text AS text, rating, created_at
-    FROM platform_reviews
-    WHERE status = 'pending'
-    ORDER BY id ASC
-    LIMIT 500
-  `).all();
+  try {
+    const result = await pgPool.query(`
+      SELECT id, name, review_text AS text, rating, created_at
+      FROM platform_reviews
+      WHERE status = 'pending'
+      ORDER BY id ASC
+      LIMIT 500
+    `);
 
-  res.json({ reviews });
+    res.json({ reviews: result.rows });
+  } catch (error) {
+    console.error('Admin reviews fetch error:', error);
+    res.status(500).json({ error: 'تعذر تحميل التقييمات.' });
+  }
 });
 
 // قبول التقييم أو رفضه
