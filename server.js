@@ -575,7 +575,6 @@ app.post('/api/login', async (req, res) => {
   }
 });
   
-});
 app.get('/api/me', auth, (req,res) => {
  const user = db.prepare("SELECT * FROM users WHERE id=? AND status='active'").get(req.userId);
  if (!user) return res.status(401).json({ error: 'الحساب غير موجود أو غير نشط.' });
