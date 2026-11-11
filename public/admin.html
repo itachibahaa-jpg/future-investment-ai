@@ -643,13 +643,15 @@ async function loadWithdrawals() {
     document.getElementById("refreshUsers")
       .addEventListener("click", loadUsers);
     document.getElementById("refreshWithdrawals")
+      document.getElementById("refreshBalanceRequests")
+  .addEventListener("click", loadBalanceRequests);
   .addEventListener("click", loadWithdrawals);
     document.getElementById("refreshSupport")
   .addEventListener("click", loadSupportMessages);
 
     if (!adminKey) {
       showMessage("لم تدخل مفتاح الإدارة. أعد فتح الصفحة وحاول مجددًا.");
-    } else {
+    } else loadBalanceRequests();{
       loadPayments();
       loadUsers();
       loadSupportMessages();
