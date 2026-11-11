@@ -359,6 +359,97 @@ async function updateReview(id, status) {
         showMessage("تعذر معالجة الطلب: " + error.message);
       }
     }
+    
+const balanceRequestsBox = document.getElementById("balanceRequests");
+
+async function loadBalanceRequests() {
+  balanceRequestsBox.replaceChildren();
+  showMessage("جارٍ تحميل طلبات شراء الأرصدة...");
+
+  try {
+    const data = await api("/api/admin/balance-requests");
+    const requests = data.requests || [];
+
+    if (!requests.length) {
+      addText(balanceRequestsBox, "p", "لا توجد طلبات شراء أرصدة حاليًا.");
+      showMessage("تم تحميل طلبات الأرصدة.");
+      return;
+    }
+
+    requests.forEach(item => {
+      const card = document.createElement("article");
+      card.className = "card";
+
+      addText(card, "h3", "طلب رصيد رقم #" + item.id);
+      addText(card, "p", "المستخدم: " + (item.user_name || item.name || "غير معروف"));
+      addText(card, "p", "البريد: " + (item.email || "غير متوفر"));
+      addText(card, "p", "نوع الرصيد: " + item.balance_type);
+      addText(card, "p", "المبلغ: " + item.amount + " DA");
+      addText(card, "p", "طريقة الدفع: " + item.payment_method);
+      addText(card, "p", "التاريخ: " + item.created_at);
+      addText(card, "p", "الحالة: " + item.status);
+
+      if (item.receipt_data) {
+        const image = document.createElement("img");
+        image.src = item.receipt_data;
+        image.alt = "إيصال تحويل الرصيد";
+        image.className = "receipt";
+        image.loading = "lazy";
+        card.appendChild(image);
+      }
+
+      if (item.status === "pending") {
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const approve = document.createElement("button");
+        approve.className = "approve";
+        approve.textContent = "قبول الطلب";
+        approve.addEventListener("click", () =>
+          reviewBalanceRequest(item.id, "approved")
+        );
+
+        const reject = document.createElement("button");
+        reject.className = "reject";
+        reject.textContent = "رفض الطلب";
+        reject.addEventListener("click", () =>
+          reviewBalanceRequest(item.id, "rejected")
+        );
+
+        actions.append(approve, reject);
+        card.appendChild(actions);
+      }
+
+      balanceRequestsBox.appendChild(card);
+    });
+
+    showMessage("تم تحميل طلبات الأرصدة.");
+  } catch (error) {
+    showMessage("تعذر تحميل طلبات الأرصدة: " + error.message);
+  }
+}
+
+async function reviewBalanceRequest(id, status) {
+  const action = status === "approved" ? "قبول" : "رفض";
+
+  if (!confirm("هل تريد " + action + " طلب الرصيد رقم " + id + "؟")) return;
+
+  if (status === "approved" &&
+      !confirm("هل تحققت بنفسك من وصول المبلغ إلى حسابك؟")) return;
+
+  try {
+    await api("/api/admin/balance-requests/" + id, {
+      method: "PATCH",
+      body: JSON.stringify({ status })
+    });
+
+    showMessage("تمت معالجة طلب الرصيد.");
+    await loadBalanceRequests();
+  } catch (error) {
+    showMessage("تعذر معالجة طلب الرصيد: " + error.message);
+  }
+}
+    
 const withdrawalsBox = document.getElementById("withdrawals");
 
 async function loadWithdrawals() {
