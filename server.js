@@ -19,6 +19,10 @@ app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, limit: 100, standardHeade
 const dbPath = process.env.DB_PATH || path.join(__dirname, 'data.sqlite');
 const db = new Database(dbPath);
 const { Pool } = require('pg');
+const pgPool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 db.exec(`
