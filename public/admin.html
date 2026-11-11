@@ -653,6 +653,7 @@ async function loadWithdrawals() {
       showMessage("لم تدخل مفتاح الإدارة. أعد فتح الصفحة وحاول مجددًا.");
     } else loadBalanceRequests();{
       loadPayments();
+      loadBalanceRequests();
       loadUsers();
       loadSupportMessages();
       loadWithdrawals();
