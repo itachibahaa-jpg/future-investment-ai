@@ -1105,30 +1105,40 @@ header {
     تحقّق من بيانات الحساب وشروط الخدمة قبل إجراء أي تحويل.
   </p>
 </div>
-  <div class="card">
-    <h3>طلب استفسار</h3>
-    <label for="balanceService">الخدمة</label>
-    <select id="balanceService">
-      <option>RedotPay USD</option>
-      <option>Wise USD</option>
-      <option>Paysera EUR</option>
-      <option>Payoneer USD</option>
-      <option>Binance USDT</option>
-    </select>
 
-    <label for="balanceOperation">نوع العملية</label>
-    <select id="balanceOperation">
-      <option>شراء رصيد</option>
-      <option>بيع رصيد</option>
-    </select>
+<div class="card">
+  <h3>طلب شراء رصيد إلكتروني</h3>
 
-    <label for="balanceAmount">المبلغ</label>
-    <input id="balanceAmount" type="number" min="1"
-      placeholder="أدخل المبلغ">
+  <label for="balanceService">نوع الرصيد</label>
+  <select id="balanceService">
+    <option>RedotPay USD</option>
+    <option>Wise USD</option>
+    <option>Paysera EUR</option>
+    <option>Payoneer USD</option>
+    <option>Binance USDT</option>
+  </select>
 
-    <p class="notice">
-    </p>
-  </div>
+  <label for="balanceAmount">المبلغ</label>
+  <input id="balanceAmount" type="number" min="1"
+    placeholder="أدخل المبلغ">
+
+  <label for="balancePaymentMethod">طريقة التحويل</label>
+  <select id="balancePaymentMethod">
+    <option value="BaridiMob">BaridiMob</option>
+    <option value="CCP">CCP</option>
+  </select>
+
+  <label for="balanceReceipt">صورة وصل التحويل</label>
+  <input id="balanceReceipt" type="file"
+    accept="image/png,image/jpeg,image/webp">
+
+  <button class="btn full" onclick="submitBalanceRequest()">
+    إرسال طلب الشراء
+  </button>
+
+  <div id="balanceRequestMessage" class="message"></div>
+</div>
+    
   </section>
   <section class="section hidden" id="account">
     <h2 class="section-title">الملف الشخصي</h2>
