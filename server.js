@@ -746,6 +746,53 @@ app.get('/api/admin/balance-requests', (req, res) => {
   }
 });
 
+// قبول أو رفض طلب شراء الرصيد
+app.patch('/api/admin/balance-requests/:id', (req, res) => {
+  const key = req.get('x-admin-key') || '';
+
+  if (!process.env.ADMIN_API_KEY ||
+      !safeEqual(key, process.env.ADMIN_API_KEY)) {
+    return res.status(403).json({ error: 'غير مصرح.' });
+  }
+
+  const id = Number(req.params.id);
+  const status = String(req.body?.status || '');
+
+  if (!Number.isSafeInteger(id) || id < 1 ||
+      !['approved', 'rejected'].includes(status)) {
+    return res.status(400).json({
+      error: 'بيانات الطلب غير صحيحة.'
+    });
+  }
+
+  try {
+    const result = db.prepare(`
+      UPDATE balance_requests
+      SET status = ?, reviewed_at = datetime('now')
+      WHERE id = ? AND status = 'pending'
+    `).run(status, id);
+
+    if (!result.changes) {
+      return res.status(404).json({
+        error: 'الطلب غير موجود أو تمت مراجعته سابقاً.'
+      });
+    }
+
+    res.json({
+      success: true,
+      status,
+      message: status === 'approved'
+        ? 'تم قبول طلب الرصيد.'
+        : 'تم رفض طلب الرصيد.'
+    });
+  } catch (error) {
+    console.error('Balance review error:', error);
+    res.status(500).json({
+      error: 'تعذرت مراجعة الطلب.'
+    });
+  }
+});
+
 app.get('/api/admin/users', (req,res) => {
   if (!safeEqual(req.get('x-admin-key') || '', process.env.ADMIN_API_KEY)) return res.status(403).json({ error: 'غير مصرح.' });
  const rows = db.prepare(`SELECT u.id,u.name,u.email,u.referral_code,u.created_at,u.status,
