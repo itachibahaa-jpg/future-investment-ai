@@ -2436,8 +2436,8 @@ function renderReviews() {
   list.innerHTML = pageReviews.map(review => `
     <article class="card" style="margin-top:12px">
       <div style="color:#f5c542;font-size:20px">★★★★★</div>
-      <h3>${review.name}</h3>
-      <p>${review.text}</p>
+      <h3>${escapeHTML(review.name)}</h3>
+<p>${escapeHTML(review.text)}</p>
     </article>
   `).join("");
 
