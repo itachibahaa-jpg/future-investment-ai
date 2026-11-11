@@ -1071,21 +1071,47 @@ header {
     </div>
   </section>
   <section class="section hidden" id="balances">
-  <h2 class="section-title">الأرصدة الإلكترونية</h2>
-  <p class="section-subtitle">تعرّف على أنواع الأرصدة المتاحة.</p>
+  <h2 class="section-title">شراء وبيع الأرصدة الإلكترونية</h2>
+  <p class="section-subtitle">اختر الخدمة للاطلاع على أسعارها.</p>
 
   <div class="card">
-    <h3>الأرصدة المتاحة</h3>
-    <ul>
-      <li>RedotPay USD</li>
-      <li>Wise USD</li>
-      <li>Paysera EUR</li>
-      <li>Payoneer USD</li>
-      <li>Binance USDT</li>
-    </ul>
-    <div class="notice">
-      هذه الصفحة للاستفسار عن الخدمات فقط. لا ترسل أموالًا أو بيانات دفع قبل التحقق من الجهة وشروط الخدمة بمساعدة شخص بالغ موثوق.
-    </div>
+    <h3>قائمة الأرصدة</h3>
+    <div class="balance-item">RedotPay USD</div>
+    <div class="balance-item">Wise USD</div>
+    <div class="balance-item">Paysera EUR</div>
+    <div class="balance-item">Payoneer USD</div>
+    <div class="balance-item">Binance USDT</div>
+  </div>
+
+  <div class="card">
+    <h3>أسعار الصرف</h3>
+    <p>الدولار USD — شراء: 230 دج | بيع: 240 دج</p>
+    <p>اليورو EUR — شراء: 240 دج | بيع: 250 دج</p>
+  </div>
+
+  <div class="card">
+    <h3>طلب استفسار</h3>
+    <label for="balanceService">الخدمة</label>
+    <select id="balanceService">
+      <option>RedotPay USD</option>
+      <option>Wise USD</option>
+      <option>Paysera EUR</option>
+      <option>Payoneer USD</option>
+      <option>Binance USDT</option>
+    </select>
+
+    <label for="balanceOperation">نوع العملية</label>
+    <select id="balanceOperation">
+      <option>شراء رصيد</option>
+      <option>بيع رصيد</option>
+    </select>
+
+    <label for="balanceAmount">المبلغ</label>
+    <input id="balanceAmount" type="number" min="1"
+      placeholder="أدخل المبلغ">
+
+    <p class="notice">
+    </p>
   </div>
   </section>
   <section class="section hidden" id="account">
