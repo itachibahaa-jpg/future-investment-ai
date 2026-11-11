@@ -136,6 +136,27 @@ CREATE TABLE IF NOT EXISTS platform_reviews (
 
 CREATE INDEX IF NOT EXISTS idx_platform_reviews_status
 ON platform_reviews(status, id);
+
+CREATE TABLE IF NOT EXISTS balance_requests (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  balance_type TEXT NOT NULL,
+  amount REAL NOT NULL,
+  payment_method TEXT NOT NULL
+    CHECK(payment_method IN ('BaridiMob', 'CCP')),
+  receipt_data TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending'
+    CHECK(status IN ('pending', 'approved', 'rejected')),
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  reviewed_at TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_balance_requests_user
+ON balance_requests(user_id, id);
+
+CREATE INDEX IF NOT EXISTS idx_balance_requests_status
+ON balance_requests(status, id);
+
 `);
 const findByEmail = db.prepare('SELECT * FROM users WHERE email = ?');
 const findByCode = db.prepare('SELECT * FROM users WHERE referral_code = ?');
