@@ -708,7 +708,32 @@ app.post('/api/balance-requests', auth, (req, res) => {
     res.status(500).json({ error: 'تعذر إرسال الطلب.' });
   }
 });
+// عرض طلبات الأرصدة الخاصة بالمستخدم
+app.get('/api/my-balance-requests', auth, (req, res) => {
+  try {
+    const requests = db.prepare(`
+      SELECT
+        id,
+        balance_type,
+        amount,
+        payment_method,
+        status,
+        created_at,
+        reviewed_at
+      FROM balance_requests
+      WHERE user_id = ?
+      ORDER BY id DESC
+      LIMIT 100
+    `).all(req.userId);
 
+    res.json({ requests });
+  } catch (error) {
+    console.error('My balance requests error:', error);
+    res.status(500).json({
+      error: 'تعذر جلب طلبات الأرصدة.'
+    });
+  }
+});
 // عرض طلبات شراء الأرصدة للإدارة
 app.get('/api/admin/balance-requests', (req, res) => {
   const key = req.get('x-admin-key') || '';
