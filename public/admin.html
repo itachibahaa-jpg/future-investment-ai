@@ -637,27 +637,32 @@ async function loadWithdrawals() {
         showMessage("تعذر إرسال الرد: " + error.message);
       }
     }
+    
     document.getElementById("refreshPayments")
       .addEventListener("click", loadPayments);
 
     document.getElementById("refreshUsers")
       .addEventListener("click", loadUsers);
+
     document.getElementById("refreshWithdrawals")
-      document.getElementById("refreshBalanceRequests")
-  .addEventListener("click", loadBalanceRequests);
-  .addEventListener("click", loadWithdrawals);
+      .addEventListener("click", loadWithdrawals);
+
+    document.getElementById("refreshBalanceRequests")
+      .addEventListener("click", loadBalanceRequests);
+
     document.getElementById("refreshSupport")
-  .addEventListener("click", loadSupportMessages);
+      .addEventListener("click", loadSupportMessages);
 
     if (!adminKey) {
       showMessage("لم تدخل مفتاح الإدارة. أعد فتح الصفحة وحاول مجددًا.");
-    } else loadBalanceRequests();{
+    } else {
       loadPayments();
       loadBalanceRequests();
       loadUsers();
       loadSupportMessages();
       loadWithdrawals();
     }
+    
   </script>
 </body>
 </html>
