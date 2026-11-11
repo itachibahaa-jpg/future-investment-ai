@@ -187,6 +187,33 @@ async function initializePersistentUsers() {
       created_at TIMESTAMP NOT NULL DEFAULT NOW()
     )
   `);
+    const oldReviews = db.prepare(
+    'SELECT * FROM platform_reviews ORDER BY id'
+  ).all();
+
+  for (const review of oldReviews) {
+    await pgPool.query(`
+      INSERT INTO platform_reviews
+      (id, name, review_text, rating, status, created_at)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      ON CONFLICT (id) DO NOTHING
+    `, [
+      review.id,
+      review.name,
+      review.review_text,
+      review.rating,
+      review.status,
+      review.created_at
+    ]);
+  }
+
+  await pgPool.query(`
+    SELECT setval(
+      pg_get_serial_sequence('platform_reviews', 'id'),
+      GREATEST(COALESCE((SELECT MAX(id) FROM platform_reviews), 1), 1),
+      EXISTS(SELECT 1 FROM platform_reviews)
+    )
+  `);
   const oldUsers = db.prepare('SELECT * FROM users ORDER BY id').all();
 
   for (const u of oldUsers) {
