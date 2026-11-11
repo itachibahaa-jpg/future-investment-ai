@@ -709,6 +709,43 @@ app.post('/api/balance-requests', auth, (req, res) => {
   }
 });
 
+// عرض طلبات شراء الأرصدة للإدارة
+app.get('/api/admin/balance-requests', (req, res) => {
+  const key = req.get('x-admin-key') || '';
+
+  if (!process.env.ADMIN_API_KEY ||
+      !safeEqual(key, process.env.ADMIN_API_KEY)) {
+    return res.status(403).json({ error: 'غير مصرح.' });
+  }
+
+  try {
+    const requests = db.prepare(`
+      SELECT
+        b.id,
+        b.user_id,
+        u.name AS user_name,
+        u.email,
+        b.balance_type,
+        b.amount,
+        b.payment_method,
+        b.receipt_data,
+        b.status,
+        b.created_at
+      FROM balance_requests b
+      LEFT JOIN users u ON u.id = b.user_id
+      ORDER BY b.id DESC
+      LIMIT 200
+    `).all();
+
+    res.json({ requests });
+  } catch (error) {
+    console.error('Balance requests error:', error);
+    res.status(500).json({
+      error: 'تعذر جلب طلبات شراء الأرصدة.'
+    });
+  }
+});
+
 app.get('/api/admin/users', (req,res) => {
   if (!safeEqual(req.get('x-admin-key') || '', process.env.ADMIN_API_KEY)) return res.status(403).json({ error: 'غير مصرح.' });
  const rows = db.prepare(`SELECT u.id,u.name,u.email,u.referral_code,u.created_at,u.status,
