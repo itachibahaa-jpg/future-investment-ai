@@ -584,6 +584,134 @@ header {
     font-size: 13px;
   }
 }
+  /* بطاقة العضوية الفاخرة */
+.member-card-wrap {
+  width: min(100%, 560px);
+  margin: 0 auto 28px;
+}
+
+.member-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 218px;
+  padding: 25px 28px;
+  border-radius: 23px;
+  color: #f5fff9;
+  direction: ltr;
+  text-align: left;
+  background:
+    radial-gradient(ellipse at 85% 12%, rgba(72,255,190,.25), transparent 35%),
+    radial-gradient(ellipse at 5% 100%, rgba(22,111,87,.55), transparent 45%),
+    linear-gradient(125deg, #101a20, #142d2a 48%, #071310);
+  border: 1px solid rgba(142,235,195,.55);
+  box-shadow: 0 18px 45px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+.member-card:before {
+  content: "";
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  border: 1px solid rgba(196,255,222,.13);
+  border-radius: 50%;
+  right: -75px;
+  top: -105px;
+  box-shadow: 0 0 0 18px rgba(196,255,222,.025), 0 0 0 38px rgba(196,255,222,.02);
+}
+
+.member-card-top, .member-card-bottom {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.member-card-brand {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  color: #eafff3;
+}
+
+.member-card-subtitle {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #9dd9bd;
+  margin-top: 4px;
+}
+
+.member-card-mark {
+  font-size: 35px;
+  color: #b6f2d2;
+  text-shadow: 0 0 18px #65e6aa;
+}
+
+.member-card-chip {
+  position: relative;
+  z-index: 1;
+  width: 43px;
+  height: 32px;
+  margin: 21px 0 14px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f7e8b2, #b7a16a 48%, #f3e2a2);
+  border: 1px solid #f7e6b3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+.member-card-chip span {
+  border: 1px solid rgba(91,72,35,.45);
+}
+
+.member-card-label {
+  position: relative;
+  z-index: 1;
+  font-size: 8px;
+  letter-spacing: 2.5px;
+  color: #a9cdb9;
+}
+
+.member-card-name {
+  position: relative;
+  z-index: 1;
+  margin-top: 2px;
+  font-size: 23px;
+  font-weight: 800;
+  color: #fff;
+  overflow-wrap: anywhere;
+  direction: rtl;
+  text-align: left;
+}
+
+.member-card-bottom {
+  margin-top: 15px;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #a8d9bf;
+}
+
+.member-card-emblem {
+  font-size: 25px;
+  color: #d5f5df;
+}
+
+.member-card-note {
+  margin: 8px 4px 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+@media (max-width: 480px) {
+  .member-card {
+    min-height: 205px;
+    padding: 21px 19px;
+    border-radius: 19px;
+  }
+  }
 </style>
 </head>
 
