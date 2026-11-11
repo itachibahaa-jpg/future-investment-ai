@@ -2785,7 +2785,7 @@ async function submitBalanceRequest() {
 
     document.getElementById("balanceAmount").value = "";
     document.getElementById("balanceReceipt").value = "";
-
+await loadMyBalanceRequests();
   } catch (error) {
     showMessage(
       "balanceRequestMessage",
