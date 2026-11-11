@@ -1501,6 +1501,9 @@ function showSection(sectionId) {
   });
 
   window.scrollTo({top: 0, behavior: "smooth"});
+  if (sectionId === "balances") {
+  loadMyBalanceRequests();
+  }
   if (sectionId === "dailyTasks") {
   renderDailyTasks();
   }
