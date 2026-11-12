@@ -3113,7 +3113,31 @@ await loadMyBalanceRequests();
     );
   }
 }
+function updateVaulfiEstimate() {
+  const service = document.getElementById("balanceService").value;
+  const amount = Number(document.getElementById("balanceAmount").value);
+  const estimate = document.getElementById("vaulfiEstimate");
 
+  if (service !== "Vaulfi USD") {
+    estimate.textContent = "";
+    return;
+  }
+
+  if (amount > 0) {
+    estimate.textContent =
+      "الرصيد الذي ستحصل عليه: " +
+      (amount / 240).toFixed(2) +
+      " USD Vaulfi";
+  } else {
+    estimate.textContent = "كل 240 دج تساوي 1 دولار Vaulfi.";
+  }
+}
+
+document.getElementById("balanceService")
+  .addEventListener("change", updateVaulfiEstimate);
+
+document.getElementById("balanceAmount")
+  .addEventListener("input", updateVaulfiEstimate);
 </script>
 <section class="section hidden" id="withdrawal">
   <h2 class="section-title">طلب سحب</h2>
