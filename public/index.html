@@ -3107,6 +3107,7 @@ async function submitBalanceRequest() {
         balance_type: service,
         amount: amount,
         payment_method: method,
+        receiver_type: document.getElementById("balanceReceivingType").value,
 receiver_id: document.getElementById("balanceReceivingDetails").value.trim(),
 receipt_data: receiptData
       })
