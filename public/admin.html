@@ -389,6 +389,7 @@ async function loadBalanceRequests() {
         addText(card, "p", "الكمية بالدولار: " + item.requested_quantity + " USD");
         addText(card, "p", "البطاقة أو المحفظة: " + (item.custom_balance_name || "غير محدد"));
         addText(card, "p", "معلومات الاستلام: " + (item.receiver_id || "غير متوفرة"));
+              addText(card, "p", "نوع معلومات الاستلام: " + (item.receiver_type || "غير محدد"));
             }
       addText(card, "p", "طريقة الدفع: " + item.payment_method);
       addText(card, "p", "التاريخ: " + item.created_at);
