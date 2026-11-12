@@ -3144,6 +3144,18 @@ function updateVaulfiEstimate() {
 
 document.getElementById("balanceService")
   .addEventListener("change", updateVaulfiEstimate);
+  function toggleCustomBalanceName() {
+  const service = document.getElementById("balanceService").value;
+  const field = document.getElementById("customBalanceNameField");
+
+  field.style.display =
+    service === "__all_balances__" ? "block" : "none";
+}
+
+document.getElementById("balanceService")
+  .addEventListener("change", toggleCustomBalanceName);
+
+toggleCustomBalanceName();
 
 document.getElementById("balanceAmount")
   .addEventListener("input", updateVaulfiEstimate);
