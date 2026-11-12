@@ -173,6 +173,17 @@ CREATE INDEX IF NOT EXISTS idx_balance_requests_status
 ON balance_requests(status, id);
 
 `);
+const balanceColumns = db.prepare(
+  "PRAGMA table_info(balance_requests)"
+).all().map(column => column.name);
+
+if (!balanceColumns.includes("receiver_id")) {
+  db.exec("ALTER TABLE balance_requests ADD COLUMN receiver_id TEXT");
+}
+
+if (!balanceColumns.includes("requested_quantity")) {
+  db.exec("ALTER TABLE balance_requests ADD COLUMN requested_quantity REAL");
+}
 async function initializePersistentUsers() {
   await pgPool.query(`
     CREATE TABLE IF NOT EXISTS users (
