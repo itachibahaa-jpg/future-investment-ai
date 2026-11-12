@@ -1685,7 +1685,55 @@ async function api(path, options = {}) {
 
   return data;
 }
+async function loadNotifications() {
+  const list = $("notificationList");
+  const count = $("notificationCount");
 
+  if (!localStorage.getItem(TOKEN_KEY)) {
+    list.textContent = "سجّل الدخول لعرض إشعاراتك.";
+    count.textContent = "0";
+    return;
+  }
+
+  try {
+    const data = await api("/notifications");
+    count.textContent = data.unreadCount || 0;
+
+    if (!data.notifications || !data.notifications.length) {
+      list.textContent = "لا توجد إشعارات حتى الآن.";
+      return;
+    }
+
+    list.innerHTML = data.notifications.map(n => `
+      <div style="text-align:right;padding:10px;margin-bottom:8px;border-bottom:1px solid #263b55;${n.is_read ? "opacity:.65" : ""}">
+        <strong style="color:#d4af37">${escapeHTML(n.title)}</strong>
+        <p style="margin:6px 0;color:#dce6f2">${escapeHTML(n.message)}</p>
+        <button onclick="markNotificationRead(${Number(n.id)})"
+          style="background:#263b55;color:white;border:0;border-radius:8px;padding:6px 10px;cursor:pointer">
+          ${n.is_read ? "مقروء" : "تحديد كمقروء"}
+        </button>
+      </div>
+    `).join("");
+  } catch (error) {
+    list.textContent = error.message || "تعذر تحميل الإشعارات.";
+  }
+}
+
+async function markNotificationRead(id) {
+  try {
+    await api("/notifications/" + id + "/read", { method: "PATCH" });
+    await loadNotifications();
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+async function toggleNotifications() {
+  $("notificationPanel").classList.toggle("hidden");
+  if (!$("notificationPanel").classList.contains("hidden")) {
+    await loadNotifications();
+  }
+  }
 function showSection(sectionId) {
   const sections = ["home", "dashboard", "packages", "balances", "about", "account", "referrals", "auth", "help", "payment", "reviews", "withdrawal", "dailyTasks"];
   sections.forEach(id => {
