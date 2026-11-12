@@ -1347,17 +1347,23 @@ header {
   >
 </div>
 <div class="field">
-  <label for="balanceReceivingDetails">معرّف الحساب (ID)</label>
+  <label for="balanceReceivingType">نوع معلومات الاستلام</label>
+  <select id="balanceReceivingType" required
+    style="width:100%;padding:12px;border:1px solid #263952;border-radius:10px;background:#0b1629;color:white">
+    <option value="">اختر نوع المعلومات</option>
+    <option value="ID">ID</option>
+    <option value="TRC20">TRC20</option>
+    <option value="BEP20">BEP20</option>
+  </select>
+
+  <label for="balanceReceivingDetails">أدخل معلومات الاستلام</label>
   <input
     id="balanceReceivingDetails"
     type="text"
     maxlength="120"
-    placeholder="أدخل ID الحساب الذي تريد استلام الرصيد فيه"
+    placeholder="أدخل ID أو عنوان المحفظة"
     required
   >
-  <small class="muted">
-    أدخل معرّف الحساب فقط، ولا تضع كلمة المرور أو رموز الدخول.
-  </small>
 </div>
   
 <div class="field">
