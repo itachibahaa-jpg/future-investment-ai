@@ -675,7 +675,68 @@ app.get('/api/me', auth, async (req, res) => {
     });
   }
 });
+// جلب إشعارات المستخدم
+app.get('/api/notifications', auth, async (req, res) => {
+  try {
+    const result = await pgPool.query(
+      `SELECT id, title, message, is_read, created_at
+       FROM notifications
+       WHERE user_id = $1
+       ORDER BY id DESC
+       LIMIT 50`,
+      [req.userId]
+    );
 
+    const count = await pgPool.query(
+      `SELECT COUNT(*)::int AS count
+       FROM notifications
+       WHERE user_id = $1 AND is_read = FALSE`,
+      [req.userId]
+    );
+
+    res.json({
+      notifications: result.rows,
+      unreadCount: count.rows[0].count
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'تعذر تحميل الإشعارات.' });
+  }
+});
+
+// تحديد إشعار كمقروء
+app.patch('/api/notifications/:id/read', auth, async (req, res) => {
+  try {
+    await pgPool.query(
+      `UPDATE notifications
+       SET is_read = TRUE
+       WHERE id = $1 AND user_id = $2`,
+      [req.params.id, req.userId]
+    );
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'تعذر تحديث الإشعار.' });
+  }
+});
+
+// تحديد جميع الإشعارات كمقروءة
+app.patch('/api/notifications/read-all', auth, async (req, res) => {
+  try {
+    await pgPool.query(
+      `UPDATE notifications
+       SET is_read = TRUE
+       WHERE user_id = $1`,
+      [req.userId]
+    );
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'تعذر تحديث الإشعارات.' });
+  }
+});
 app.post('/api/withdrawals', auth, (req, res) => {
   const amount = Number(req.body?.amount);
   const method = String(req.body?.method || '');
