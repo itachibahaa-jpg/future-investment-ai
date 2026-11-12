@@ -1337,7 +1337,15 @@ header {
     <option value="__all_balances__">كل الأرصدة</option>
   </select>
 </div>
-
+<div class="field" id="customBalanceNameField" style="display:none">
+  <label for="customBalanceName">اسم البطاقة أو المحفظة المطلوبة</label>
+  <input
+    id="customBalanceName"
+    type="text"
+    maxlength="100"
+    placeholder="اكتب اسم البطاقة أو المحفظة"
+  >
+</div>
 <div class="field">
   <label for="balanceReceivingDetails">معرّف الحساب (ID)</label>
   <input
