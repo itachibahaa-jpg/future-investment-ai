@@ -184,6 +184,9 @@ if (!balanceColumns.includes("receiver_id")) {
 if (!balanceColumns.includes("requested_quantity")) {
   db.exec("ALTER TABLE balance_requests ADD COLUMN requested_quantity REAL");
 }
+if (!balanceColumns.includes("custom_balance_name")) {
+  db.exec("ALTER TABLE balance_requests ADD COLUMN custom_balance_name TEXT");
+}
 async function initializePersistentUsers() {
   await pgPool.query(`
     CREATE TABLE IF NOT EXISTS users (
