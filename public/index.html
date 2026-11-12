@@ -712,6 +712,44 @@ header {
     border-radius: 19px;
   }
   }
+  /* إصلاح تداخل رأس الصفحة على الهاتف */
+@media (max-width: 600px) {
+  .brand {
+    display: grid !important;
+    grid-template-columns: 65px minmax(0, 1fr);
+    align-items: start !important;
+    gap: 10px 14px !important;
+    width: 100%;
+    max-width: 100% !important;
+  }
+
+  .brand > .logo {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .brand > div {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .brand > p {
+    grid-column: 2;
+    margin: 0 !important;
+  }
+
+  .brand > div > div:first-child {
+    align-items: flex-start !important;
+    flex-wrap: wrap;
+  }
+
+  .brand > div > div:first-child > span {
+    font-size: 14px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+}
 </style>
 </head>
 
