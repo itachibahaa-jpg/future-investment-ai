@@ -3104,12 +3104,16 @@ async function submitBalanceRequest() {
     const result = await api("/balance-requests", {
       method: "POST",
       body: JSON.stringify({
-        balance_type: service,
-        amount: amount,
-        payment_method: method,
-        receiver_type: document.getElementById("balanceReceivingType").value,
-receiver_id: document.getElementById("balanceReceivingDetails").value.trim(),
-receipt_data: receiptData
+        body: JSON.stringify({
+  balance_type: service,
+  amount: amount,
+  requested_quantity: amount,
+  custom_balance_name: document.getElementById("customBalanceName").value.trim(),
+  payment_method: method,
+  receiver_type: document.getElementById("balanceReceivingType").value,
+  receiver_id: document.getElementById("balanceReceivingDetails").value.trim(),
+  receipt_data: receiptData
+})
       })
     });
 
