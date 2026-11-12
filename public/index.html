@@ -2016,7 +2016,7 @@ async function refreshAccount(silent = false) {
 
     await loadReferrals();
     await loadSubscription();
-
+await loadNotifications();
     if (!silent) {
       showMessage("accountMessage", "تم تحديث بيانات الحساب.", "success");
     }
