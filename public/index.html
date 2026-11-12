@@ -3130,39 +3130,17 @@ await loadMyBalanceRequests();
   }
 }
 function updateVaulfiEstimate() {
-  const service = document.getElementById("balanceService").value;
   const amount = Number(document.getElementById("balanceAmount").value);
   const estimate = document.getElementById("vaulfiEstimate");
   const amountLabel = document.querySelector('label[for="balanceAmount"]');
   const amountInput = document.getElementById("balanceAmount");
 
-  if (service === "__all_balances__") {
-    amountLabel.textContent = "الكمية بالدولار (USD)";
-    amountInput.placeholder = "اكتب كمية الرصيد بالدولار";
+  amountLabel.textContent = "الكمية بالدولار (USD)";
+  amountInput.placeholder = "اكتب كمية الرصيد بالدولار";
 
-    estimate.textContent = amount > 0
-      ? "المبلغ المطلوب تحويله: " + (amount * 240).toLocaleString("en-US") + " دج. سعر الصرف: 240 دج لكل دولار."
-      : "سعر الصرف: كل 1 دولار = 240 دج.";
-
-    return;
-  }
-
-  amountLabel.textContent = "المبلغ بالدينار الجزائري (DA)";
-  amountInput.placeholder = "اكتب المبلغ بالدينار الجزائري";
-
-  if (service !== "Vaulfi USD") {
-    estimate.textContent = "";
-    return;
-  }
-
-  if (amount > 0) {
-    estimate.textContent =
-      "الرصيد الذي ستحصل عليه: " +
-      (amount / 240).toFixed(2) +
-      " USD Vaulfi";
-  } else {
-    estimate.textContent = "كل 240 دج تساوي 1 دولار Vaulfi.";
-  }
+  estimate.textContent = amount > 0
+    ? "المبلغ المطلوب تحويله: " + (amount * 240).toLocaleString("en-US") + " دج. سعر الصرف: 240 دج لكل دولار."
+    : "اكتب كمية الرصيد بالدولار، وسيحسب الموقع المبلغ المطلوب تحويله بسعر 240 دج لكل دولار.";
 }
   
 
