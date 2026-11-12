@@ -978,6 +978,7 @@ app.post('/api/balance-requests', auth, (req, res) => {
     requested_quantity,
     custom_balance_name,
     receiver_id,
+      receiver_type,
     payment_method,
     receipt_data
   } = req.body || {};
