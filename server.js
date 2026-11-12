@@ -1053,10 +1053,11 @@ app.post('/api/balance-requests', auth, (req, res) => {
         payment_method,
         receipt_data,
         receiver_id,
+        receiver_type,
         requested_quantity,
         custom_balance_name
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       req.userId,
       balance_type.trim(),
