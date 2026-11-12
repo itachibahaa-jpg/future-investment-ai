@@ -970,9 +970,12 @@ res.status(201).json({
 
 // إرسال طلب شراء رصيد إلكتروني
 app.post('/api/balance-requests', auth, (req, res) => {
-  const {
+    const {
     balance_type,
     amount,
+    requested_quantity,
+    custom_balance_name,
+    receiver_id,
     payment_method,
     receipt_data
   } = req.body || {};
