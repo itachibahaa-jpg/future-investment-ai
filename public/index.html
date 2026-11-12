@@ -1337,19 +1337,16 @@ header {
 </div>
 
 <div class="field">
-  <label for="balanceReceivingDetails">
-    معلومات الحساب الذي تريد استلام الرصيد فيه
-  </label>
-  <textarea
+  <label for="balanceReceivingDetails">معرّف الحساب (ID)</label>
+  <input
     id="balanceReceivingDetails"
-    rows="3"
-    maxlength="250"
-    placeholder="أدخل ID الحساب أو البريد أو عنوان المحفظة مع تحديد الشبكة"
+    type="text"
+    maxlength="120"
+    placeholder="أدخل ID الحساب الذي تريد استلام الرصيد فيه"
     required
-  ></textarea>
+  >
   <small class="muted">
-    تأكد من صحة معلومات الاستلام قبل إرسال الطلب.
-    لا تضع كلمة المرور أو رموز الدخول.
+    أدخل معرّف الحساب فقط، ولا تضع كلمة المرور أو رموز الدخول.
   </small>
 </div>
   
