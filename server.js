@@ -1052,7 +1052,7 @@ if (balance_type.trim() === "__all_balances__") {
       receipt_data,
       receiver_id || null,
           receiver_type || null,
-      balance_type.trim() === "__all_balances__" ? requested_quantity : null,
+      requested_quantity,
       balance_type.trim() === "__all_balances__" ? custom_balance_name.trim() : null
     );
 
