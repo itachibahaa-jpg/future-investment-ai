@@ -1041,16 +1041,28 @@ app.post('/api/balance-requests', auth, (req, res) => {
   }
 
   try {
-    const result = db.prepare(`
+        const result = db.prepare(`
       INSERT INTO balance_requests
-      (user_id, balance_type, amount, payment_method, receipt_data)
-      VALUES (?, ?, ?, ?, ?)
+      (
+        user_id,
+        balance_type,
+        amount,
+        payment_method,
+        receipt_data,
+        receiver_id,
+        requested_quantity,
+        custom_balance_name
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       req.userId,
       balance_type.trim(),
-      amount,
+      finalAmount,
       payment_method,
-      receipt_data
+      receipt_data,
+      receiver_id || null,
+      balance_type.trim() === "__all_balances__" ? requested_quantity : null,
+      balance_type.trim() === "__all_balances__" ? custom_balance_name.trim() : null
     );
 
     res.status(201).json({
