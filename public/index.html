@@ -3078,7 +3078,8 @@ async function submitBalanceRequest() {
         balance_type: service,
         amount: amount,
         payment_method: method,
-        receipt_data: receiptData
+receiver_id: document.getElementById("balanceReceivingDetails").value.trim(),
+receipt_data: receiptData
       })
     });
 
