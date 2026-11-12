@@ -180,7 +180,9 @@ const balanceColumns = db.prepare(
 if (!balanceColumns.includes("receiver_id")) {
   db.exec("ALTER TABLE balance_requests ADD COLUMN receiver_id TEXT");
 }
-
+if (!balanceColumns.includes("receiver_type")) {
+  db.exec("ALTER TABLE balance_requests ADD COLUMN receiver_type TEXT");
+}
 if (!balanceColumns.includes("requested_quantity")) {
   db.exec("ALTER TABLE balance_requests ADD COLUMN requested_quantity REAL");
 }
