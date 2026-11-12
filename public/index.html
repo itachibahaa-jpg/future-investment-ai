@@ -2594,18 +2594,19 @@ function changeReviewPage(direction) {
     const response = await fetch(API_BASE + "/reviews");
     const data = await response.json();
 
-    if (!response.ok) {
-      const approvedPositiveCount = (data.reviews || []).filter(
-  review => Number(review.rating) >= 3
-).length;
-
-const totalDisplayedComments = platformReviews.length + approvedPositiveCount;
-
-const reviewCount = document.getElementById("reviewCount");
-if (reviewCount) {
-  reviewCount.textContent = "إجمالي التعليقات المعروضة: " + totalDisplayedComments;
-}
+        if (!response.ok) {
       throw new Error(data.error || "تعذر تحميل التقييمات.");
+    }
+
+    const approvedPositiveCount = (data.reviews || []).filter(
+      review => Number(review.rating) >= 3
+    ).length;
+
+    const totalDisplayedComments = platformReviews.length + approvedPositiveCount;
+
+    const reviewCount = document.getElementById("reviewCount");
+    if (reviewCount) {
+      reviewCount.textContent = "إجمالي التعليقات المعروضة: " + totalDisplayedComments;
     }
 
     if (!data.reviews || data.reviews.length === 0) {
