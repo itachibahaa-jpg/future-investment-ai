@@ -1128,6 +1128,7 @@ app.get('/api/admin/balance-requests', (req, res) => {
         b.requested_quantity,
 b.custom_balance_name,
 b.receiver_id,
+b.receiver_type,
         b.payment_method,
         b.receipt_data,
         b.status,
