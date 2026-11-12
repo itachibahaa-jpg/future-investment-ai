@@ -1337,6 +1337,23 @@ header {
 </div>
 
 <div class="field">
+  <label for="balanceReceivingDetails">
+    معلومات الحساب الذي تريد استلام الرصيد فيه
+  </label>
+  <textarea
+    id="balanceReceivingDetails"
+    rows="3"
+    maxlength="250"
+    placeholder="أدخل ID الحساب أو البريد أو عنوان المحفظة مع تحديد الشبكة"
+    required
+  ></textarea>
+  <small class="muted">
+    تأكد من صحة معلومات الاستلام قبل إرسال الطلب.
+    لا تضع كلمة المرور أو رموز الدخول.
+  </small>
+</div>
+  
+<div class="field">
   <label for="balanceAmount">المبلغ بالدينار الجزائري (DA)</label>
   <input
     id="balanceAmount"
