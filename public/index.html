@@ -2595,6 +2595,16 @@ function changeReviewPage(direction) {
     const data = await response.json();
 
     if (!response.ok) {
+      const approvedPositiveCount = (data.reviews || []).filter(
+  review => Number(review.rating) >= 3
+).length;
+
+const totalDisplayedComments = platformReviews.length + approvedPositiveCount;
+
+const reviewCount = document.getElementById("reviewCount");
+if (reviewCount) {
+  reviewCount.textContent = "إجمالي التعليقات المعروضة: " + totalDisplayedComments;
+}
       throw new Error(data.error || "تعذر تحميل التقييمات.");
     }
 
