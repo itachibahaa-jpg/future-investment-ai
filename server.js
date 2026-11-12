@@ -1065,6 +1065,7 @@ app.post('/api/balance-requests', auth, (req, res) => {
       payment_method,
       receipt_data,
       receiver_id || null,
+          receiver_type || null,
       balance_type.trim() === "__all_balances__" ? requested_quantity : null,
       balance_type.trim() === "__all_balances__" ? custom_balance_name.trim() : null
     );
