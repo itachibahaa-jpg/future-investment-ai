@@ -991,41 +991,27 @@ app.post('/api/balance-requests', auth, (req, res) => {
     return res.status(400).json({ error: 'نوع الرصيد غير صحيح.' });
   }
 
-    let finalAmount = amount;
+    let finalAmount;
 
-  if (balance_type.trim() === "__all_balances__") {
-    if (
-      typeof requested_quantity !== 'number' ||
-      !Number.isFinite(requested_quantity) ||
-      requested_quantity <= 0
-    ) {
-      return res.status(400).json({ error: 'كمية الدولار غير صحيحة.' });
-    }
+if (
+  typeof requested_quantity !== 'number' ||
+  !Number.isFinite(requested_quantity) ||
+  requested_quantity <= 0
+) {
+  return res.status(400).json({ error: 'كمية الدولار غير صحيحة.' });
+}
 
-    if (
-      typeof custom_balance_name !== 'string' ||
-      !custom_balance_name.trim() ||
-      custom_balance_name.length > 100
-    ) {
-      return res.status(400).json({ error: 'اسم البطاقة أو المحفظة غير صحيح.' });
-    }
+finalAmount = Math.round(requested_quantity * 240);
 
-    if (
-      typeof receiver_id !== 'string' ||
-      !receiver_id.trim() ||
-      receiver_id.length > 200
-    ) {
-      return res.status(400).json({ error: 'معلومات الاستلام غير صحيحة.' });
-    }
-
-    finalAmount = Math.round(requested_quantity * 240);
-  } else if (
-    typeof amount !== 'number' ||
-    !Number.isFinite(amount) ||
-    amount <= 0
+if (balance_type.trim() === "__all_balances__") {
+  if (
+    typeof custom_balance_name !== 'string' ||
+    !custom_balance_name.trim() ||
+    custom_balance_name.length > 100
   ) {
-    return res.status(400).json({ error: 'المبلغ غير صحيح.' });
+    return res.status(400).json({ error: 'اسم البطاقة أو المحفظة غير صحيح.' });
   }
+}
 
   if (!Number.isFinite(finalAmount) || finalAmount <= 0 || finalAmount > 1000000) {
     return res.status(400).json({ error: 'المبلغ المحسوب غير صحيح.' });
