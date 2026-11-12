@@ -385,6 +385,11 @@ async function loadBalanceRequests() {
       addText(card, "p", "البريد: " + (item.email || "غير متوفر"));
       addText(card, "p", "نوع الرصيد: " + item.balance_type);
       addText(card, "p", "المبلغ: " + item.amount + " DA");
+            if (item.balance_type === "__all_balances__") {
+        addText(card, "p", "الكمية بالدولار: " + item.requested_quantity + " USD");
+        addText(card, "p", "البطاقة أو المحفظة: " + (item.custom_balance_name || "غير محدد"));
+        addText(card, "p", "معلومات الاستلام: " + (item.receiver_id || "غير متوفرة"));
+            }
       addText(card, "p", "طريقة الدفع: " + item.payment_method);
       addText(card, "p", "التاريخ: " + item.created_at);
       addText(card, "p", "الحالة: " + item.status);
