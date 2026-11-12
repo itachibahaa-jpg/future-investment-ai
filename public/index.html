@@ -805,6 +805,24 @@ header {
 
 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;max-width:100%">
   <span class="pill" id="topStatus">مرحبًا بك</span>
+  <div style="position:relative;display:inline-block">
+  <button
+    type="button"
+    onclick="document.getElementById('notificationPanel').classList.toggle('hidden')"
+    aria-label="الإشعارات"
+    style="position:relative;background:#14253b;border:1px solid #d4af37;border-radius:13px;padding:9px 14px;color:#fff;font-size:22px;cursor:pointer"
+  >
+    🔔
+    <span id="notificationCount" style="font-size:11px;color:#fff;background:#e04444;border-radius:50%;padding:2px 6px;position:absolute;top:-7px;right:-7px">0</span>
+  </button>
+
+  <div id="notificationPanel" class="hidden" style="position:absolute;top:48px;left:0;width:min(320px,85vw);z-index:100;background:#101e31;border:1px solid #d4af37;border-radius:15px;padding:16px;box-shadow:0 12px 35px #0009">
+    <h3 style="margin:0 0 12px;color:#d4af37">🔔 الإشعارات</h3>
+    <div id="notificationList" style="color:#b5c6dc;text-align:center;padding:18px 5px">
+      لا توجد إشعارات جديدة.
+    </div>
+  </div>
+</div>
   <span class="pill" id="topNotice" style="display:inline-block;max-width:560px;white-space:normal;line-height:1.8;color:#e7c65c;border-color:#d4af37;border-radius:14px;padding:9px 13px">
     📢 ملاحظة : الاستثمار الخاص بشركتنا استثمار قصير المدى يعني تستفيد يوميا لمدة شهر فقط ويلزم بان تعيد التسجيل مرة اخرى ولا نشترط منك ان تزيد مبلغ الإستثمار تستطيع البقاء في نفس باقة الإستثمار انت حر دون اي تدخل من طرفنا
   </span>
