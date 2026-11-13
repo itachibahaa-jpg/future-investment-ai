@@ -1539,12 +1539,12 @@ app.get('/api/admin/reviews', async (req, res) => {
 
   try {
     const result = await pgPool.query(`
-      SELECT id, name, review_text AS text, rating, created_at
-      FROM platform_reviews
-      WHERE status = 'pending'
-      ORDER BY id ASC
-      LIMIT 500
-    `);
+  SELECT id, name, review_text AS text, rating, status, created_at
+  FROM platform_reviews
+  WHERE status IN ('pending', 'approved')
+  ORDER BY id DESC
+  LIMIT 500
+`);
 
     res.json({ reviews: result.rows });
   } catch (error) {
