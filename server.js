@@ -1589,6 +1589,39 @@ app.patch('/api/admin/reviews/:id', async (req, res) => {
     res.status(500).json({ error: 'تعذر تحديث حالة التقييم.' });
   }
 });
+// حذف التقييمات المقبولة فقط
+app.delete('/api/admin/reviews/:id', async (req, res) => {
+  const key = req.get('x-admin-key') || '';
+
+  if (!safeEqual(key, process.env.ADMIN_API_KEY)) {
+    return res.status(403).json({ error: 'غير مصرح.' });
+  }
+
+  const id = Number(req.params.id);
+
+  if (!Number.isSafeInteger(id) || id < 1) {
+    return res.status(400).json({ error: 'رقم التقييم غير صحيح.' });
+  }
+
+  try {
+    const result = await pgPool.query(`
+      DELETE FROM platform_reviews
+      WHERE id = $1 AND status = 'approved'
+      RETURNING id
+    `, [id]);
+
+    if (!result.rowCount) {
+      return res.status(404).json({
+        error: 'التقييم غير موجود أو ليس مقبولاً.'
+      });
+    }
+
+    res.json({ success: true, message: 'تم حذف التقييم.' });
+  } catch (error) {
+    console.error('Review deletion error:', error);
+    res.status(500).json({ error: 'تعذر حذف التقييم.' });
+  }
+});
 app.use(express.static(path.join(__dirname,'public')));
 app.use((err,_req,res,_next) => { console.error(err); res.status(500).json({ error: 'خطأ داخلي.' }); });
 const port = Number(process.env.PORT || 3000);
