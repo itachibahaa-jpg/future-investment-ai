@@ -212,7 +212,7 @@ async function loadReviews() {
     const data = await api("/api/admin/reviews");
 
     if (!data.reviews || data.reviews.length === 0) {
-      addText(box, "p", "لا توجد تعليقات معلقة حاليًا.");
+      addText(box, "p", "لا توجد تقييمات حاليًا.");
       return;
     }
 
@@ -223,14 +223,23 @@ async function loadReviews() {
       addText(card, "h3", review.name);
       addText(card, "p", "التقييم: " + review.rating + " / 5");
       addText(card, "p", review.text);
+      addText(card, "p", "الحالة: " + (review.status === "approved" ? "مقبول" : "معلق"));
 
-      const approve = addText(card, "button", "قبول التعليق");
-      approve.style.margin = "5px";
-      approve.onclick = () => updateReview(review.id, "approved");
+      if (review.status === "pending") {
+        const approve = addText(card, "button", "قبول التعليق");
+        approve.style.margin = "5px";
+        approve.onclick = () => updateReview(review.id, "approved");
 
-      const reject = addText(card, "button", "رفض التعليق");
-      reject.style.margin = "5px";
-      reject.onclick = () => updateReview(review.id, "rejected");
+        const reject = addText(card, "button", "رفض التعليق");
+        reject.style.margin = "5px";
+        reject.onclick = () => updateReview(review.id, "rejected");
+      }
+
+      if (review.status === "approved") {
+        const remove = addText(card, "button", "حذف التقييم");
+        remove.style.margin = "5px";
+        remove.onclick = () => deleteReview(review.id);
+      }
 
       box.appendChild(card);
     });
@@ -240,6 +249,20 @@ async function loadReviews() {
   }
 }
 
+async function deleteReview(id) {
+  if (!confirm("هل أنت متأكد من حذف هذا التقييم؟")) return;
+
+  try {
+    await api("/api/admin/reviews/" + id, {
+      method: "DELETE"
+    });
+
+    showMessage("تم حذف التقييم.");
+    await loadReviews();
+  } catch (error) {
+    showMessage(error.message);
+  }
+}
 async function updateReview(id, status) {
   try {
     await api("/api/admin/reviews/" + id, {
