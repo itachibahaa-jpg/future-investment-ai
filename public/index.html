@@ -2623,7 +2623,7 @@ function changeReviewPage(direction) {
 
     const reviewCount = document.getElementById("reviewCount");
     if (reviewCount) {
-      reviewCount.textContent = "إجمالي التعليقات المعروضة: " + totalDisplayedComments;
+      reviewCount.textContent = "إجمالي التعليقات المعروضة: " + totalDisplayedComments + " — ملاحظة: كل التعليقات هنا تعرض في المنصة بشكل دائم وبكل شفافية لمعرفة مصداقية المنصة";
     }
 
     if (!data.reviews || data.reviews.length === 0) {
