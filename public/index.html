@@ -2390,12 +2390,18 @@ const packageName = packageText === "—" ? "" : packageText;
   renderPackages();
   updateLoggedOutUI();
 
-  if (localStorage.getItem(TOKEN_KEY)) {
-    const success = await refreshAccount(true);
-    if (success) {
-      $("topStatus").textContent = "أهلًا " + (currentUser?.name || "");
-    }
+if (localStorage.getItem(TOKEN_KEY)) {
+  const success = await refreshAccount(true);
+  if (success) {
+    $("topStatus").textContent = "أهلًا " + (currentUser?.name || "");
+  } else {
+    toggleAuth();
+    showSection("auth");
   }
+} else {
+  toggleAuth();
+  showSection("auth");
+}
 }
 async function spinDailyWheel() {
   const button = document.getElementById("spinWheelBtn");
